@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdl.MultiSelectComboBox", "MultiSelectComboBox\Sdl.MultiSelectComboBox.csproj", "{0378F38F-5BF3-497F-91C2-1EE77C874593}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sdl.MultiSelectComboBox.Example", "MultiSelectComboBox.Example\Sdl.MultiSelectComboBox.Example.csproj", "{969D0130-A3EB-48C6-9EEB-76D22827EBFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0378F38F-5BF3-497F-91C2-1EE77C874593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0378F38F-5BF3-497F-91C2-1EE77C874593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0378F38F-5BF3-497F-91C2-1EE77C874593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0378F38F-5BF3-497F-91C2-1EE77C874593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{969D0130-A3EB-48C6-9EEB-76D22827EBFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{969D0130-A3EB-48C6-9EEB-76D22827EBFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{969D0130-A3EB-48C6-9EEB-76D22827EBFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{969D0130-A3EB-48C6-9EEB-76D22827EBFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {39A7B59B-BAC0-4F37-8C98-06A9FA5ACC8A}
+	EndGlobalSection
+EndGlobal
