@@ -222,8 +222,7 @@ The following example defines the data context (i.e. models:LanguageItems) that 
 ```c#
 public class LanguageItems : INotifyPropertyChanged
 {
-    private List<LanguageItem> _items;
-    private ObservableCollection<LanguageItem> _selectedItems;
+    private List<LanguageItem> _items;   
  
     public LanguageItems()
     {
@@ -259,16 +258,6 @@ public class LanguageItems : INotifyPropertyChanged
     {
         get => _items ?? (_items = new List<LanguageItem>());
         set => _items = value;
-    }
- 
-    public ObservableCollection<LanguageItem> SelectedItems
-    {
-        get => _selectedItems ?? (_selectedItems = new ObservableCollection<LanguageItem>());
-        set
-        {
-            _selectedItems = value;
-            OnPropertyChanged(nameof(SelectedItems));
-        }
     }
  
     public string EventLog { get; set; }
