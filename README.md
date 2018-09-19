@@ -2,10 +2,10 @@
 
 ## Overview
 The multi selection combo box is a WPF custom control with multiple item selection capabilities, along with customizable features to group, sort and filter items in the collection.
-![Usage Demonstration](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/SDL.MultiSelectComboBox.Usage.gif)
+![Usage Demonstration Gif](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/SDL.MultiSelectComboBox.Usage.gif)
 
 ## Components and Features
-![Components](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.Components.png)
+![Components Image](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.Components.png)
 
 ## Selected Items Panel
 The selected items are displayed like tags with a remove button  They can be added or removed from the selected items collection, by selecting them from the items present in the [Dropdown Menu](#dropdown-menu) list.  Additionally, items can also be removed by interacting with them directly from the Selected Items Panel, as follows:
@@ -20,12 +20,12 @@ The control has two visual states, Readonly and EditMode, which is identified by
 
 | Visual state | Description | Example |
 | ------ | ------ | ------ |
-| Readonly | The [Dropdown Menu](#dropdown-menu) is collapsed and items present in the **Selected Items Panel** cannot be edited. | ![Readonly](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.Readonly.png) |
-| EditMode | The [Dropdown Menu](#dropdown-menu) can be expanded or collapsed when the button is clicked and items present in the **Selected Items Panel** can be edited. | ![EditMode](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.EditMode.png) |
+| Readonly | The [Dropdown Menu](#dropdown-menu) is collapsed and items present in the **Selected Items Panel** cannot be edited. | ![Readonly Image](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.Readonly.png) |
+| EditMode | The [Dropdown Menu](#dropdown-menu) can be expanded or collapsed when the button is clicked and items present in the **Selected Items Panel** can be edited. | ![EditMode Image](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.EditMode.png) |
 
 ### Filter Criteria
 When you type a character in the text area, the control applies a filter on the collection and suggests a list of items matching that criteria in the [Dropdown Menu](#dropdown-menu) list.  The developer can override the default filter service, based on their own business logic requirements, that implements [IFilterService](#ifilterservice).
-![Readonly](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.Filter.png)
+![Filter Criteria Image](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.Filter.png)
 
 Depending on whether or not the ClearFilterOnDropdownClosing property is set to true and [Dropdown Menu](#dropdown-menu) list as keyboard focus, the filter criteria is cleared automatically as the [Dropdown Menu](#dropdown-menu) is closing.
 
@@ -77,7 +77,7 @@ The **Dropdown Menu** can be expanded only when the control is in EditMode.
 
 ### Item Group
 The items in the collection can be grouped by implementing [IItemGroupAware](#iitemgroupaware).  In addition to the header name, this interface exposes a property to manage the order in which the group headers are displayed. 
-![Readonly](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.ItemGroup.png)
+![Item Group Image](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.ItemGroup.png)
 
 ### Item Sorting
 The sort order is based on the order of the items in the collection that was received when the ItemsSource is set.
@@ -102,7 +102,7 @@ Items in the [Dropdown Menu](#dropdown-menu) list can be selected/unselected via
 
 ## Example Project
 The example project demonstrates how to implement the Sdl.MultiSelectComboBox custom control to your project, and provides good examples in understanding the controls behaviours.
-![Readonly](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.ExampleProject.png)
+![Example Project Image](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.ExampleProject.png)
 
 ## Examples
 The following example creates an Sdl.MultiSelectComboBox.  The example populates the control by binding the ItemsSource property to a collection of type object, that implements [IItemEnabledAware](#iitemenabledaware) and [IItemGroupAware](#iitemgroupaware).  The example also binds the SelectedItemsChangedBehaviour to a command to receive a notification of SelectedItemsChangedEventArgs whenever the selected items collection changes and then display those results in a TextBlock on the view.
@@ -549,8 +549,8 @@ The Sdl.MultiSelectComboBox allows the user to select an item from a [Dropdown M
 
 |  | SelectionMode.**Multiple** _(default)_ | SelectionMode.**Single** |
 | ------ | ------ | ------ |
-| IsEditable is **true** _(default)_ | Multiple items can be selected/unselected from the [Dropdown Menu](#dropdown-menu) list<br/>The **Remove Item Button** is displayed in each of the selected items in the [Selected Items Panel](#selected-items-panel).<br/>Items in the [Selected Items Panel](#selected-items-panel) can be removed when the user hits the Delete or Back key | A single item can be selected from the [Dropdown Menu](#dropdown-menu) list.  When a new item is selected, it substitutes the previously selected item in the [Selected Items Panel](#selected-items-panel).<br/>The **Remove Item Button** is displayed in each of the selected items in the [Selected Items Panel](#selected-items-panel).<br/>Items in the [Selected Items Panel](#selected-items-panel) can be removed when the user hits the Delete or Back key |
-| IsEditable is **false** | Multiple items can be selected/unselected from the [Dropdown Menu](#dropdown-menu) list.<br/>The **Remove Item Button** is **not** displayed in each of the selected items in the [Selected Items Panel](#selected-items-panel).<br/>Items in the [Selected Items Panel](#selected-items-panel) **cannot** be removed when the user hits the Delete or Back key | A single item can be selected from the [Dropdown Menu](#dropdown-menu) list.  When a new item is selected, it substitutes the previously selected item in the [Selected Items Panel](#selected-items-panel).<br/>The **Remove Item Button** is **not** displayed in each of the selected items in the [Selected Items Panel](#selected-items-panel).<br/>Items in the [Selected Items Panel](#selected-items-panel) **cannot** be removed when the user hits the Delete or Back key |
+| IsEditable is **true** _(default)_ | Multiple items can be selected/unselected from the [Dropdown Menu](#dropdown-menu) list<br/><br/>The **Remove Item Button** is displayed in each of the selected items in the [Selected Items Panel](#selected-items-panel).<br/><br/>Items in the [Selected Items Panel](#selected-items-panel) can be removed when the user hits the Delete or Back key | A single item can be selected from the [Dropdown Menu](#dropdown-menu) list.  When a new item is selected, it substitutes the previously selected item in the [Selected Items Panel](#selected-items-panel).<br/><br/>The **Remove Item Button** is displayed in each of the selected items in the [Selected Items Panel](#selected-items-panel).<br/><br/>Items in the [Selected Items Panel](#selected-items-panel) can be removed when the user hits the Delete or Back key |
+| IsEditable is **false** | Multiple items can be selected/unselected from the [Dropdown Menu](#dropdown-menu) list.<br/><br/>The **Remove Item Button** is **not** displayed in each of the selected items in the [Selected Items Panel](#selected-items-panel).<br/><br/>Items in the [Selected Items Panel](#selected-items-panel) **cannot** be removed when the user hits the Delete or Back key | A single item can be selected from the [Dropdown Menu](#dropdown-menu) list.  When a new item is selected, it substitutes the previously selected item in the [Selected Items Panel](#selected-items-panel).<br/><br/>The **Remove Item Button** is **not** displayed in each of the selected items in the [Selected Items Panel](#selected-items-panel).<br/><br/>Items in the [Selected Items Panel](#selected-items-panel) **cannot** be removed when the user hits the Delete or Back key |
 
 ### Customizing the Style and template
 You can modify the default [Style](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.style) and [ControlTemplate](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.controls.controltemplate) to give the control a unique appearance. For information about modifying a controls style and template, see [Customizing the Appearance of an Existing Control by Creating a ControlTemplate](https://docs.microsoft.com/en-us/dotnet/framework/wpf/controls/customizing-the-appearance-of-an-existing-control?view=netframework-4.7.2) and [Styling controls](https://msdn.microsoft.com/windows/uwp/controls-and-patterns/styling-controls). The default style, template, and resources that define the look of the control are included in the generic.xaml file.
@@ -584,7 +584,7 @@ MultiSelectComboBox.Text.FontFamily |	Default FontFamily for all text in the con
 MultiSelectComboBox.Text.Foreground |	Default text foreground color
 
 The sample project includes an example of a customized version of control template style for the Sdl.MultiSelectComboBox control, where the item selection styles are modified and a popup control is displayed with the CultureInfo properties when hovering over the language items in the [Selected Items Panel](#selected-items-panel).  Make reference to the following.
-![Components](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.CustomControlTemplate.png)
+![Custom Control Template image](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.CustomControlTemplate.png)
 
 ## API
 
