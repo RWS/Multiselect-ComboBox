@@ -2,10 +2,10 @@
 
 ## Overview
 The multi selection combo box is a WPF custom control with multiple item selection capabilities, along with customizable features to group, sort and filter items in the collection.
-TODO: gif
+![Usage Demonstration](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/SDL.MultiSelectComboBox.Usage.gif)
 
 ## Components and Features
-TODO: image
+![Components](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.Components.png)
 
 ## Selected Items Panel
 The selected items are displayed like tags with a remove button  They can be added or removed from the selected items collection, by selecting them from the items present in the Dropdown Menu list.  Additionally, items can also be removed by interacting with them directly from the Selected Items Panel, as follows:
@@ -157,7 +157,7 @@ Additionally, both the selected and dropdown list item templates are customized 
     <Setter Property="Margin" Value="0,0,4,0"/>
     <Setter Property="Width" Value="{Binding Path=ImageSize.Width}"/>
     <Setter Property="Height" Value="{Binding Path=ImageSize.Height}"/>
-</Style
+</Style>
 ```
 **Style: MultiSelectComboBox.DefaultTextBlock.Style**
 ```html
@@ -464,17 +464,17 @@ public class SelectedItemsChangedCommand : ICommand
             var removedItems = GetAggregatedText(args.Removed);
             var selectedItems = GetAggregatedText(args.Selected);
  
-            var report = "Added: " + args.Added?.Count + (!string.IsNullOrEmpty(addedItems) ? " (" + TrimToLength(addedItems, 100) + ") " : string.Empty)
-                            + ", Removed: " + args.Removed?.Count + (!string.IsNullOrEmpty(removedItems) ? " (" + TrimToLength(removedItems, 100) + ") " : string.Empty)
-                            + ", Selected: " + args.Selected?.Count + (!string.IsNullOrEmpty(selectedItems) ? " (" + TrimToLength(selectedItems, 100) + ") " : string.Empty);
- 
-            _updateEventLog?.Invoke("Selected Changed", report);
+            var report = "Added - " + args.Added?.Count + (!string.IsNullOrEmpty(addedItems) ? " (" + TrimToLength(addedItems, 100) + ") " : string.Empty)
+							+ ", Removed - " + args.Removed?.Count + (!string.IsNullOrEmpty(removedItems) ? " (" + TrimToLength(removedItems, 100) + ") " : string.Empty)
+							+ ", Selected - " + args.Selected?.Count + (!string.IsNullOrEmpty(selectedItems) ? " (" + TrimToLength(selectedItems, 100) + ") " : string.Empty);
+
+				_updateEventLog?.Invoke("Selected Changed", report);
         }
     }
          
     public event EventHandler CanExecuteChanged;
  
-    private static string TrimToLength(string text, int length)
+    private string TrimToLength(string text, int length)
     {
         if (text?.Length > length)
         {
@@ -667,7 +667,7 @@ public class SelectedItemsChangedEventArgs : RoutedEventArgs
 ## Fields
 | Dependency Property | Description |
 | ------ | ------ |
-AutoCompleteBackgroundProperty |	Identified the AutoCompleteBackground dependency property.
+AutoCompleteBackgroundProperty |	Identified the [AutoCompleteBackground](#autocompletebackground) dependency property.
 AutoCompleteForegroundProperty |	Identified the AutoCompleteForeground dependency property.
 AutoCompleteMaxLengthProperty |	Identified the AutoCompleteMaxLength dependency property.
 ClearFilterOnDropdownClosingProperty |	Identifies the ClearFilterOnDropdownClosing dependency property.
@@ -689,7 +689,7 @@ SelectionModeProperty |	Identified the SelectionMode dependency property.
 | Property | Description |
 | ------ | ------ |
 AllowDrop |	Gets or sets a value indicating whether this element can be used as the target of a drag-and-drop operation. This is a dependency property. (Inherited from UIElement)
-AutoCompleteBackground | Gets or sets background brush used when displaying the autocomplete content for the Filter Criteria
+<a name="autocompletebackground"></a>AutoCompleteBackground | Gets or sets background brush used when displaying the autocomplete content for the Filter Criteria
 AutoCompleteForeground | Gets or sets foreground brush used when displaying the autocomplete content for the Filter Criteria
 AutoCompleteMaxLength | Gets or sets the maximum length of autocomplete content displayed for the Filter Criteria
 Background	| Gets or sets a brush that describes the background of a control.(Inherited from Control)

@@ -53,7 +53,7 @@ using System.Windows.Markup;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.17")]
+[assembly: AssemblyFileVersion("1.0.0.18")]
 
 [assembly: XmlnsPrefix("http://schemas.sdl.com/xaml", "sdl")]
 [assembly: XmlnsDefinition("http://schemas.sdl.com/xaml", "Sdl.MultiSelectComboBox.Themes.Generic")]

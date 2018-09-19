@@ -17,7 +17,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 	public class LanguageItems : INotifyPropertyChanged
 	{
 		private List<LanguageItem> _items;
-		private ObservableCollection<LanguageItem> _selectedItems;
+		private List<LanguageItem> _selectedItems;
 		private bool _toggleCustomStyle;
 		private bool _enableAlternateItems;
 		private bool _listenToFilterTextChanged;
@@ -82,9 +82,9 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 			get => _items ?? (_items = new List<LanguageItem>());
 			set => _items = value;
 		}
-		public ObservableCollection<LanguageItem> SelectedItems
+		public List<LanguageItem> SelectedItems
 		{
-			get => _selectedItems ?? (_selectedItems = new ObservableCollection<LanguageItem>());
+			get => _selectedItems ?? (_selectedItems = new List<LanguageItem>());
 			set
 			{
 				_selectedItems = value;
