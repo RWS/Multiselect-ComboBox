@@ -1,0 +1,713 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{969D0130-A3EB-48C6-9EEB-76D22827EBFF}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Sdl.MultiSelectComboBox.Example</RootNamespace>
+    <AssemblyName>Sdl.MultiSelectComboBox.Example</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="API\IGroupIdentityService.cs" />
+    <Compile Include="Commands\SelectRandomItemsCommand.cs" />
+    <Compile Include="Commands\ClearSelectedItemsCommand.cs" />
+    <Compile Include="Commands\ClearLogCommand.cs" />
+    <Compile Include="Commands\StyleChangedCommand.cs" />
+    <Compile Include="Commands\SelectedItemsChangedCommand.cs" />
+    <Compile Include="Commands\FilterTextChangedCommand.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="ImageResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ImageResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LanguageItemGroup.cs" />
+    <Compile Include="Services\CustomFilterService.cs" />
+    <Compile Include="Services\ImageService.cs" />
+    <Compile Include="Services\DefaultGroupService.cs" />
+    <Compile Include="Services\RecentlyUsedService.cs" />
+    <Compile Include="StringResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StringResources.resx</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Styles\MultiSelectComboBox.Custom.ControlTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\MultiSelectComboBox.Custom.DropdownItemTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\MultiSelectComboBox.Custom.SelectedItemTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\MultiSelectComboBox.Custom.Image.Resources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\MultiSelectComboBox.Custom.Tooltip.Resources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\MultiSelectComboBox.Resources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\LanguageItem.cs" />
+    <Compile Include="Models\LanguageItems.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="ImageResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>ImageResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StringResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MultiSelectComboBox\Sdl.MultiSelectComboBox.csproj">
+      <Project>{0378f38f-5bf3-497f-91c2-1ee77c874593}</Project>
+      <Name>Sdl.MultiSelectComboBox</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Flags\aa-DJ.ico" />
+    <Resource Include="Resources\Flags\aa-ER.ico" />
+    <Resource Include="Resources\Flags\aa-ET.ico" />
+    <Resource Include="Resources\Flags\af-NA.ico" />
+    <Resource Include="Resources\Flags\af-ZA.ico" />
+    <Resource Include="Resources\Flags\agq-CM.ico" />
+    <Resource Include="Resources\Flags\ak-GH.ico" />
+    <Resource Include="Resources\Flags\am-ET.ico" />
+    <Resource Include="Resources\Flags\ar-AE.ico" />
+    <Resource Include="Resources\Flags\ar-BH.ico" />
+    <Resource Include="Resources\Flags\ar-DJ.ico" />
+    <Resource Include="Resources\Flags\ar-DZ.ico" />
+    <Resource Include="Resources\Flags\ar-EG.ico" />
+    <Resource Include="Resources\Flags\ar-ER.ico" />
+    <Resource Include="Resources\Flags\ar-IQ.ico" />
+    <Resource Include="Resources\Flags\ar-JO.ico" />
+    <Resource Include="Resources\Flags\ar-KM.ico" />
+    <Resource Include="Resources\Flags\ar-KW.ico" />
+    <Resource Include="Resources\Flags\ar-LB.ico" />
+    <Resource Include="Resources\Flags\ar-LY.ico" />
+    <Resource Include="Resources\Flags\ar-MA.ico" />
+    <Resource Include="Resources\Flags\ar-MR.ico" />
+    <Resource Include="Resources\Flags\ar-OM.ico" />
+    <Resource Include="Resources\Flags\ar-QA.ico" />
+    <Resource Include="Resources\Flags\ar-SA.ico" />
+    <Resource Include="Resources\Flags\ar-SD.ico" />
+    <Resource Include="Resources\Flags\ar-SS.ico" />
+    <Resource Include="Resources\Flags\ar-SY.ico" />
+    <Resource Include="Resources\Flags\ar-TD.ico" />
+    <Resource Include="Resources\Flags\ar-TN.ico" />
+    <Resource Include="Resources\Flags\ar-YE.ico" />
+    <Resource Include="Resources\Flags\arn-CL.ico" />
+    <Resource Include="Resources\Flags\as-IN.ico" />
+    <Resource Include="Resources\Flags\asa-TZ.ico" />
+    <Resource Include="Resources\Flags\ast-ES.ico" />
+    <Resource Include="Resources\Flags\az-cyrl-az.ico" />
+    <Resource Include="Resources\Flags\az-latn-az.ico" />
+    <Resource Include="Resources\Flags\ba-RU.ico" />
+    <Resource Include="Resources\Flags\bas-CM.ico" />
+    <Resource Include="Resources\Flags\be-BY.ico" />
+    <Resource Include="Resources\Flags\bem-ZM.ico" />
+    <Resource Include="Resources\Flags\bez-TZ.ico" />
+    <Resource Include="Resources\Flags\bg-BG.ico" />
+    <Resource Include="Resources\Flags\bin-NG.ico" />
+    <Resource Include="Resources\Flags\bm-Latn-ML.ico" />
+    <Resource Include="Resources\Flags\bn-BD.ico" />
+    <Resource Include="Resources\Flags\bn-IN.ico" />
+    <Resource Include="Resources\Flags\bo-CN.ico" />
+    <Resource Include="Resources\Flags\bo-IN.ico" />
+    <Resource Include="Resources\Flags\br-FR.ico" />
+    <Resource Include="Resources\Flags\brx-IN.ico" />
+    <Resource Include="Resources\Flags\bs-cyrl-ba.ico" />
+    <Resource Include="Resources\Flags\bs-latn-ba.ico" />
+    <Resource Include="Resources\Flags\byn-ER.ico" />
+    <Resource Include="Resources\Flags\ca-AD.ico" />
+    <Resource Include="Resources\Flags\ca-ES-valencia.ico" />
+    <Resource Include="Resources\Flags\ca-ES.ico" />
+    <Resource Include="Resources\Flags\ca-FR.ico" />
+    <Resource Include="Resources\Flags\ca-IT.ico" />
+    <Resource Include="Resources\Flags\cgg-UG.ico" />
+    <Resource Include="Resources\Flags\chr-Cher.ico" />
+    <Resource Include="Resources\Flags\co-FR.ico" />
+    <Resource Include="Resources\Flags\cs-CZ.ico" />
+    <Resource Include="Resources\Flags\cy-GB.ico" />
+    <Resource Include="Resources\Flags\da-DK.ico" />
+    <Resource Include="Resources\Flags\da-GL.ico" />
+    <Resource Include="Resources\Flags\dav-KE.ico" />
+    <Resource Include="Resources\Flags\de-AT.ico" />
+    <Resource Include="Resources\Flags\de-BE.ico" />
+    <Resource Include="Resources\Flags\de-CH.ico" />
+    <Resource Include="Resources\Flags\de-DE.ico" />
+    <Resource Include="Resources\Flags\de-LI.ico" />
+    <Resource Include="Resources\Flags\de-LU.ico" />
+    <Resource Include="Resources\Flags\dje-NE.ico" />
+    <Resource Include="Resources\Flags\dsb-DE.ico" />
+    <Resource Include="Resources\Flags\dua-CM.ico" />
+    <Resource Include="Resources\Flags\dv-MV.ico" />
+    <Resource Include="Resources\Flags\dyo-SN.ico" />
+    <Resource Include="Resources\Flags\dz-BT.ico" />
+    <Resource Include="Resources\Flags\ebu-KE.ico" />
+    <Resource Include="Resources\Flags\ee-GH.ico" />
+    <Resource Include="Resources\Flags\ee-TG.ico" />
+    <Resource Include="Resources\Flags\el-CY.ico" />
+    <Resource Include="Resources\Flags\el-GR.ico" />
+    <Resource Include="Resources\Flags\en-001.ico" />
+    <Resource Include="Resources\Flags\en-029.ico" />
+    <Resource Include="Resources\Flags\en-150.ico" />
+    <Resource Include="Resources\Flags\en-AG.ico" />
+    <Resource Include="Resources\Flags\en-AI.ico" />
+    <Resource Include="Resources\Flags\en-AS.ico" />
+    <Resource Include="Resources\Flags\en-AU.ico" />
+    <Resource Include="Resources\Flags\en-BB.ico" />
+    <Resource Include="Resources\Flags\en-BE.ico" />
+    <Resource Include="Resources\Flags\en-BM.ico" />
+    <Resource Include="Resources\Flags\en-BS.ico" />
+    <Resource Include="Resources\Flags\en-BW.ico" />
+    <Resource Include="Resources\Flags\en-BZ.ico" />
+    <Resource Include="Resources\Flags\en-CA.ico" />
+    <Resource Include="Resources\Flags\en-CC.ico" />
+    <Resource Include="Resources\Flags\en-CK.ico" />
+    <Resource Include="Resources\Flags\en-CM.ico" />
+    <Resource Include="Resources\Flags\en-CR.ico" />
+    <Resource Include="Resources\Flags\en-CX.ico" />
+    <Resource Include="Resources\Flags\en-DM.ico" />
+    <Resource Include="Resources\Flags\en-ER.ico" />
+    <Resource Include="Resources\Flags\en-FK.ico" />
+    <Resource Include="Resources\Flags\en-FM.ico" />
+    <Resource Include="Resources\Flags\en-GB.ico" />
+    <Resource Include="Resources\Flags\en-GD.ico" />
+    <Resource Include="Resources\Flags\en-GG.ico" />
+    <Resource Include="Resources\Flags\en-GH.ico" />
+    <Resource Include="Resources\Flags\en-GI.ico" />
+    <Resource Include="Resources\Flags\en-GM.ico" />
+    <Resource Include="Resources\Flags\en-GU.ico" />
+    <Resource Include="Resources\Flags\en-GY.ico" />
+    <Resource Include="Resources\Flags\en-ID.ico" />
+    <Resource Include="Resources\Flags\en-IE.ico" />
+    <Resource Include="Resources\Flags\en-IM.ico" />
+    <Resource Include="Resources\Flags\en-IN.ico" />
+    <Resource Include="Resources\Flags\en-IO.ico" />
+    <Resource Include="Resources\Flags\en-JE.ico" />
+    <Resource Include="Resources\Flags\en-JM.ico" />
+    <Resource Include="Resources\Flags\en-KE.ico" />
+    <Resource Include="Resources\Flags\en-KI.ico" />
+    <Resource Include="Resources\Flags\en-KN.ico" />
+    <Resource Include="Resources\Flags\en-KY.ico" />
+    <Resource Include="Resources\Flags\en-LC.ico" />
+    <Resource Include="Resources\Flags\en-LS.ico" />
+    <Resource Include="Resources\Flags\en-MG.ico" />
+    <Resource Include="Resources\Flags\en-MH.ico" />
+    <Resource Include="Resources\Flags\en-MO.ico" />
+    <Resource Include="Resources\Flags\en-MP.ico" />
+    <Resource Include="Resources\Flags\en-MS.ico" />
+    <Resource Include="Resources\Flags\en-MT.ico" />
+    <Resource Include="Resources\Flags\en-MU.ico" />
+    <Resource Include="Resources\Flags\en-MW.ico" />
+    <Resource Include="Resources\Flags\en-MY.ico" />
+    <Resource Include="Resources\Flags\en-NA.ico" />
+    <Resource Include="Resources\Flags\en-NF.ico" />
+    <Resource Include="Resources\Flags\en-NG.ico" />
+    <Resource Include="Resources\Flags\en-NR.ico" />
+    <Resource Include="Resources\Flags\en-NU.ico" />
+    <Resource Include="Resources\Flags\en-NZ.ico" />
+    <Resource Include="Resources\Flags\en-PG.ico" />
+    <Resource Include="Resources\Flags\en-PH.ico" />
+    <Resource Include="Resources\Flags\en-PK.ico" />
+    <Resource Include="Resources\Flags\en-PN.ico" />
+    <Resource Include="Resources\Flags\en-PR.ico" />
+    <Resource Include="Resources\Flags\en-PW.ico" />
+    <Resource Include="Resources\Flags\en-RW.ico" />
+    <Resource Include="Resources\Flags\en-SB.ico" />
+    <Resource Include="Resources\Flags\en-SC.ico" />
+    <Resource Include="Resources\Flags\en-SD.ico" />
+    <Resource Include="Resources\Flags\en-SG.ico" />
+    <Resource Include="Resources\Flags\en-SH.ico" />
+    <Resource Include="Resources\Flags\en-SL.ico" />
+    <Resource Include="Resources\Flags\en-SS.ico" />
+    <Resource Include="Resources\Flags\en-SX.ico" />
+    <Resource Include="Resources\Flags\en-SZ.ico" />
+    <Resource Include="Resources\Flags\en-TC.ico" />
+    <Resource Include="Resources\Flags\en-TK.ico" />
+    <Resource Include="Resources\Flags\en-TO.ico" />
+    <Resource Include="Resources\Flags\en-TT.ico" />
+    <Resource Include="Resources\Flags\en-TV.ico" />
+    <Resource Include="Resources\Flags\en-TZ.ico" />
+    <Resource Include="Resources\Flags\en-UG.ico" />
+    <Resource Include="Resources\Flags\en-UM.ico" />
+    <Resource Include="Resources\Flags\en-US.ico" />
+    <Resource Include="Resources\Flags\en-VC.ico" />
+    <Resource Include="Resources\Flags\en-VG.ico" />
+    <Resource Include="Resources\Flags\en-VI.ico" />
+    <Resource Include="Resources\Flags\en-VU.ico" />
+    <Resource Include="Resources\Flags\en-WS.ico" />
+    <Resource Include="Resources\Flags\en-x-bi-SDL.ico" />
+    <Resource Include="Resources\Flags\en-x-fj-SDL.ico" />
+    <Resource Include="Resources\Flags\en-ZA.ico" />
+    <Resource Include="Resources\Flags\en-ZM.ico" />
+    <Resource Include="Resources\Flags\en-ZW.ico" />
+    <Resource Include="Resources\Flags\eo-001.ico" />
+    <Resource Include="Resources\Flags\es-419.ico" />
+    <Resource Include="Resources\Flags\es-AR.ico" />
+    <Resource Include="Resources\Flags\es-BO.ico" />
+    <Resource Include="Resources\Flags\es-CL.ico" />
+    <Resource Include="Resources\Flags\es-CO.ico" />
+    <Resource Include="Resources\Flags\es-CR.ico" />
+    <Resource Include="Resources\Flags\es-CU.ico" />
+    <Resource Include="Resources\Flags\es-DO.ico" />
+    <Resource Include="Resources\Flags\es-EC.ico" />
+    <Resource Include="Resources\Flags\es-ES.ico" />
+    <Resource Include="Resources\Flags\es-GQ.ico" />
+    <Resource Include="Resources\Flags\es-GT.ico" />
+    <Resource Include="Resources\Flags\es-HN.ico" />
+    <Resource Include="Resources\Flags\es-MX.ico" />
+    <Resource Include="Resources\Flags\es-NI.ico" />
+    <Resource Include="Resources\Flags\es-PA.ico" />
+    <Resource Include="Resources\Flags\es-PE.ico" />
+    <Resource Include="Resources\Flags\es-PH.ico" />
+    <Resource Include="Resources\Flags\es-PR.ico" />
+    <Resource Include="Resources\Flags\es-PY.ico" />
+    <Resource Include="Resources\Flags\es-SV.ico" />
+    <Resource Include="Resources\Flags\es-US.ico" />
+    <Resource Include="Resources\Flags\es-UY.ico" />
+    <Resource Include="Resources\Flags\es-VE.ico" />
+    <Resource Include="Resources\Flags\es-x-mo-SDL.ico" />
+    <Resource Include="Resources\Flags\et-EE.ico" />
+    <Resource Include="Resources\Flags\eu-ES.ico" />
+    <Resource Include="Resources\Flags\ewo-CM.ico" />
+    <Resource Include="Resources\Flags\fa-IR.ico" />
+    <Resource Include="Resources\Flags\ff-CM.ico" />
+    <Resource Include="Resources\Flags\ff-GN.ico" />
+    <Resource Include="Resources\Flags\ff-Latn-SN.ico" />
+    <Resource Include="Resources\Flags\ff-MR.ico" />
+    <Resource Include="Resources\Flags\ff-NG.ico" />
+    <Resource Include="Resources\Flags\fi-FI.ico" />
+    <Resource Include="Resources\Flags\fil-PH.ico" />
+    <Resource Include="Resources\Flags\fo-FO.ico" />
+    <Resource Include="Resources\Flags\fr-029.ico" />
+    <Resource Include="Resources\Flags\fr-BE.ico" />
+    <Resource Include="Resources\Flags\fr-BF.ico" />
+    <Resource Include="Resources\Flags\fr-BI.ico" />
+    <Resource Include="Resources\Flags\fr-BJ.ico" />
+    <Resource Include="Resources\Flags\fr-BL.ico" />
+    <Resource Include="Resources\Flags\fr-CA.ico" />
+    <Resource Include="Resources\Flags\fr-CD.ico" />
+    <Resource Include="Resources\Flags\fr-CF.ico" />
+    <Resource Include="Resources\Flags\fr-CG.ico" />
+    <Resource Include="Resources\Flags\fr-CH.ico" />
+    <Resource Include="Resources\Flags\fr-CI.ico" />
+    <Resource Include="Resources\Flags\fr-CM.ico" />
+    <Resource Include="Resources\Flags\fr-DJ.ico" />
+    <Resource Include="Resources\Flags\fr-DZ.ico" />
+    <Resource Include="Resources\Flags\fr-FR.ico" />
+    <Resource Include="Resources\Flags\fr-GA.ico" />
+    <Resource Include="Resources\Flags\fr-GF.ico" />
+    <Resource Include="Resources\Flags\fr-GN.ico" />
+    <Resource Include="Resources\Flags\fr-GP.ico" />
+    <Resource Include="Resources\Flags\fr-GQ.ico" />
+    <Resource Include="Resources\Flags\fr-HT.ico" />
+    <Resource Include="Resources\Flags\fr-KM.ico" />
+    <Resource Include="Resources\Flags\fr-LU.ico" />
+    <Resource Include="Resources\Flags\fr-MA.ico" />
+    <Resource Include="Resources\Flags\fr-MC.ico" />
+    <Resource Include="Resources\Flags\fr-MF.ico" />
+    <Resource Include="Resources\Flags\fr-MG.ico" />
+    <Resource Include="Resources\Flags\fr-ML.ico" />
+    <Resource Include="Resources\Flags\fr-MQ.ico" />
+    <Resource Include="Resources\Flags\fr-MR.ico" />
+    <Resource Include="Resources\Flags\fr-MU.ico" />
+    <Resource Include="Resources\Flags\fr-NC.ico" />
+    <Resource Include="Resources\Flags\fr-NE.ico" />
+    <Resource Include="Resources\Flags\fr-PF.ico" />
+    <Resource Include="Resources\Flags\fr-PM.ico" />
+    <Resource Include="Resources\Flags\fr-RE.ico" />
+    <Resource Include="Resources\Flags\fr-RW.ico" />
+    <Resource Include="Resources\Flags\fr-SC.ico" />
+    <Resource Include="Resources\Flags\fr-SN.ico" />
+    <Resource Include="Resources\Flags\fr-SY.ico" />
+    <Resource Include="Resources\Flags\fr-TD.ico" />
+    <Resource Include="Resources\Flags\fr-TG.ico" />
+    <Resource Include="Resources\Flags\fr-TN.ico" />
+    <Resource Include="Resources\Flags\fr-VU.ico" />
+    <Resource Include="Resources\Flags\fr-WF.ico" />
+    <Resource Include="Resources\Flags\fr-YT.ico" />
+    <Resource Include="Resources\Flags\fur-IT.ico" />
+    <Resource Include="Resources\Flags\fy-NL.ico" />
+    <Resource Include="Resources\Flags\ga-IE.ico" />
+    <Resource Include="Resources\Flags\gd-GB.ico" />
+    <Resource Include="Resources\Flags\gl-ES.ico" />
+    <Resource Include="Resources\Flags\gn-PY.ico" />
+    <Resource Include="Resources\Flags\gsw-CH.ico" />
+    <Resource Include="Resources\Flags\gsw-FR.ico" />
+    <Resource Include="Resources\Flags\gsw-LI.ico" />
+    <Resource Include="Resources\Flags\gu-IN.ico" />
+    <Resource Include="Resources\Flags\guz-KE.ico" />
+    <Resource Include="Resources\Flags\gv-IM.ico" />
+    <Resource Include="Resources\Flags\ha-Latn-GH.ico" />
+    <Resource Include="Resources\Flags\ha-Latn-NE.ico" />
+    <Resource Include="Resources\Flags\ha-Latn-NG.ico" />
+    <Resource Include="Resources\Flags\haw-US.ico" />
+    <Resource Include="Resources\Flags\haw-x-na-SDL.ico" />
+    <Resource Include="Resources\Flags\haw-x-sm-SDL.ico" />
+    <Resource Include="Resources\Flags\he-IL.ico" />
+    <Resource Include="Resources\Flags\hi-IN.ico" />
+    <Resource Include="Resources\Flags\hi-x-bh-SDL.ico" />
+    <Resource Include="Resources\Flags\hr-BA.ico" />
+    <Resource Include="Resources\Flags\hr-HR.ico" />
+    <Resource Include="Resources\Flags\hsb-DE.ico" />
+    <Resource Include="Resources\Flags\hu-HU.ico" />
+    <Resource Include="Resources\Flags\hy-AM.ico" />
+    <Resource Include="Resources\Flags\ia-001.ico" />
+    <Resource Include="Resources\Flags\ia-FR.ico" />
+    <Resource Include="Resources\Flags\ibb-NG.ico" />
+    <Resource Include="Resources\Flags\id-ID.ico" />
+    <Resource Include="Resources\Flags\ii-CN.ico" />
+    <Resource Include="Resources\Flags\is-IS.ico" />
+    <Resource Include="Resources\Flags\it-CH.ico" />
+    <Resource Include="Resources\Flags\it-IT.ico" />
+    <Resource Include="Resources\Flags\it-SM.ico" />
+    <Resource Include="Resources\Flags\iu-Cans-CA.ico" />
+    <Resource Include="Resources\Flags\iu-Latn-CA.ico" />
+    <Resource Include="Resources\Flags\ja-JP.ico" />
+    <Resource Include="Resources\Flags\jgo-CM.ico" />
+    <Resource Include="Resources\Flags\jmc-TZ.ico" />
+    <Resource Include="Resources\Flags\jv-Latn.ico" />
+    <Resource Include="Resources\Flags\jv.ico" />
+    <Resource Include="Resources\Flags\ka-GE.ico" />
+    <Resource Include="Resources\Flags\kab-DZ.ico" />
+    <Resource Include="Resources\Flags\kam-KE.ico" />
+    <Resource Include="Resources\Flags\kde-TZ.ico" />
+    <Resource Include="Resources\Flags\kea-CV.ico" />
+    <Resource Include="Resources\Flags\khq-ML.ico" />
+    <Resource Include="Resources\Flags\ki-KE.ico" />
+    <Resource Include="Resources\Flags\kk-KZ.ico" />
+    <Resource Include="Resources\Flags\kkj-CM.ico" />
+    <Resource Include="Resources\Flags\kl-GL.ico" />
+    <Resource Include="Resources\Flags\kln-KE.ico" />
+    <Resource Include="Resources\Flags\km-KH.ico" />
+    <Resource Include="Resources\Flags\kn-IN.ico" />
+    <Resource Include="Resources\Flags\ko-KR.ico" />
+    <Resource Include="Resources\Flags\kok-IN.ico" />
+    <Resource Include="Resources\Flags\kr-NG.ico" />
+    <Resource Include="Resources\Flags\ks-Arab.ico" />
+    <Resource Include="Resources\Flags\ks-Deva-IN.ico" />
+    <Resource Include="Resources\Flags\ksb-TZ.ico" />
+    <Resource Include="Resources\Flags\ksf-CM.ico" />
+    <Resource Include="Resources\Flags\ksh-DE.ico" />
+    <Resource Include="Resources\Flags\ku-Arab-IQ.ico" />
+    <Resource Include="Resources\Flags\kw-GB.ico" />
+    <Resource Include="Resources\Flags\ky-KG.ico" />
+    <Resource Include="Resources\Flags\lag-TZ.ico" />
+    <Resource Include="Resources\Flags\lb-LU.ico" />
+    <Resource Include="Resources\Flags\lg-UG.ico" />
+    <Resource Include="Resources\Flags\lkt-US.ico" />
+    <Resource Include="Resources\Flags\ln-AO.ico" />
+    <Resource Include="Resources\Flags\ln-CD.ico" />
+    <Resource Include="Resources\Flags\ln-CF.ico" />
+    <Resource Include="Resources\Flags\ln-CG.ico" />
+    <Resource Include="Resources\Flags\lo-LA.ico" />
+    <Resource Include="Resources\Flags\lt-LT.ico" />
+    <Resource Include="Resources\Flags\lu-CD.ico" />
+    <Resource Include="Resources\Flags\luo-KE.ico" />
+    <Resource Include="Resources\Flags\luy-KE.ico" />
+    <Resource Include="Resources\Flags\lv-LV.ico" />
+    <Resource Include="Resources\Flags\mas-KE.ico" />
+    <Resource Include="Resources\Flags\mas-TZ.ico" />
+    <Resource Include="Resources\Flags\mer-KE.ico" />
+    <Resource Include="Resources\Flags\mfe-MU.ico" />
+    <Resource Include="Resources\Flags\mg-MG.ico" />
+    <Resource Include="Resources\Flags\mg.ico" />
+    <Resource Include="Resources\Flags\mgh-MZ.ico" />
+    <Resource Include="Resources\Flags\mgo-CM.ico" />
+    <Resource Include="Resources\Flags\mi-NZ.ico" />
+    <Resource Include="Resources\Flags\mk-mk.ico" />
+    <Resource Include="Resources\Flags\mk.ico" />
+    <Resource Include="Resources\Flags\ml-IN.ico" />
+    <Resource Include="Resources\Flags\ml-x-su-SDL.ico" />
+    <Resource Include="Resources\Flags\mn-Cyrl.ico" />
+    <Resource Include="Resources\Flags\mn-MN.ico" />
+    <Resource Include="Resources\Flags\mn-Mong-CN.ico" />
+    <Resource Include="Resources\Flags\mn-Mong-MN.ico" />
+    <Resource Include="Resources\Flags\mn-Mong.ico" />
+    <Resource Include="Resources\Flags\mni-IN.ico" />
+    <Resource Include="Resources\Flags\moh-CA.ico" />
+    <Resource Include="Resources\Flags\mr-IN.ico" />
+    <Resource Include="Resources\Flags\ms-BN.ico" />
+    <Resource Include="Resources\Flags\ms-MY.ico" />
+    <Resource Include="Resources\Flags\ms-SG.ico" />
+    <Resource Include="Resources\Flags\mt-MT.ico" />
+    <Resource Include="Resources\Flags\mua-CM.ico" />
+    <Resource Include="Resources\Flags\my-MM.ico" />
+    <Resource Include="Resources\Flags\my.ico" />
+    <Resource Include="Resources\Flags\naq-NA.ico" />
+    <Resource Include="Resources\Flags\nb-NO.ico" />
+    <Resource Include="Resources\Flags\nb-SJ.ico" />
+    <Resource Include="Resources\Flags\nd-ZW.ico" />
+    <Resource Include="Resources\Flags\ne-IN.ico" />
+    <Resource Include="Resources\Flags\ne-NP.ico" />
+    <Resource Include="Resources\Flags\nl-AW.ico" />
+    <Resource Include="Resources\Flags\nl-BE.ico" />
+    <Resource Include="Resources\Flags\nl-BQ.ico" />
+    <Resource Include="Resources\Flags\nl-CW.ico" />
+    <Resource Include="Resources\Flags\nl-NL.ico" />
+    <Resource Include="Resources\Flags\nl-SR.ico" />
+    <Resource Include="Resources\Flags\nl-SX.ico" />
+    <Resource Include="Resources\Flags\nmg-CM.ico" />
+    <Resource Include="Resources\Flags\nn-NO.ico" />
+    <Resource Include="Resources\Flags\nnh-CM.ico" />
+    <Resource Include="Resources\Flags\no-flag.ico" />
+    <Resource Include="Resources\Flags\nqo-GN.ico" />
+    <Resource Include="Resources\Flags\nr-ZA.ico" />
+    <Resource Include="Resources\Flags\nso-ZA.ico" />
+    <Resource Include="Resources\Flags\nus-SD.ico" />
+    <Resource Include="Resources\Flags\nyn-UG.ico" />
+    <Resource Include="Resources\Flags\oc-FR.ico" />
+    <Resource Include="Resources\Flags\om-ET.ico" />
+    <Resource Include="Resources\Flags\om-KE.ico" />
+    <Resource Include="Resources\Flags\om.ico" />
+    <Resource Include="Resources\Flags\or-IN.ico" />
+    <Resource Include="Resources\Flags\os-GE.ico" />
+    <Resource Include="Resources\Flags\os-RU.ico" />
+    <Resource Include="Resources\Flags\pa-Arab-PK.ico" />
+    <Resource Include="Resources\Flags\pa-IN.ico" />
+    <Resource Include="Resources\Flags\pl-PL.ico" />
+    <Resource Include="Resources\Flags\prs-AF.ico" />
+    <Resource Include="Resources\Flags\ps-AF.ico" />
+    <Resource Include="Resources\Flags\pt-AO.ico" />
+    <Resource Include="Resources\Flags\pt-BR.ico" />
+    <Resource Include="Resources\Flags\pt-CV.ico" />
+    <Resource Include="Resources\Flags\pt-GW.ico" />
+    <Resource Include="Resources\Flags\pt-MO.ico" />
+    <Resource Include="Resources\Flags\pt-MZ.ico" />
+    <Resource Include="Resources\Flags\pt-PT.ico" />
+    <Resource Include="Resources\Flags\pt-ST.ico" />
+    <Resource Include="Resources\Flags\pt-TL.ico" />
+    <Resource Include="Resources\Flags\quc-Latn-GT.ico" />
+    <Resource Include="Resources\Flags\qut-GT.ico" />
+    <Resource Include="Resources\Flags\quz-BO.ico" />
+    <Resource Include="Resources\Flags\quz-EC.ico" />
+    <Resource Include="Resources\Flags\quz-PE.ico" />
+    <Resource Include="Resources\Flags\rm-CH.ico" />
+    <Resource Include="Resources\Flags\rn-BI.ico" />
+    <Resource Include="Resources\Flags\ro-MD.ico" />
+    <Resource Include="Resources\Flags\ro-RO.ico" />
+    <Resource Include="Resources\Flags\rof-TZ.ico" />
+    <Resource Include="Resources\Flags\ru-BY.ico" />
+    <Resource Include="Resources\Flags\ru-KG.ico" />
+    <Resource Include="Resources\Flags\ru-KZ.ico" />
+    <Resource Include="Resources\Flags\ru-MD.ico" />
+    <Resource Include="Resources\Flags\ru-RU.ico" />
+    <Resource Include="Resources\Flags\ru-UA.ico" />
+    <Resource Include="Resources\Flags\rw-RW.ico" />
+    <Resource Include="Resources\Flags\rwk-TZ.ico" />
+    <Resource Include="Resources\Flags\sa-IN.ico" />
+    <Resource Include="Resources\Flags\sah-RU.ico" />
+    <Resource Include="Resources\Flags\saq-KE.ico" />
+    <Resource Include="Resources\Flags\sbp-TZ.ico" />
+    <Resource Include="Resources\Flags\sd-Arab-PK.ico" />
+    <Resource Include="Resources\Flags\sd-Deva-IN.ico" />
+    <Resource Include="Resources\Flags\se-FI.ico" />
+    <Resource Include="Resources\Flags\se-NO.ico" />
+    <Resource Include="Resources\Flags\se-SE.ico" />
+    <Resource Include="Resources\Flags\seh-MZ.ico" />
+    <Resource Include="Resources\Flags\ses-ML.ico" />
+    <Resource Include="Resources\Flags\sg-CF.ico" />
+    <Resource Include="Resources\Flags\shi-Latn-MA.ico" />
+    <Resource Include="Resources\Flags\shi-Tfng-MA.ico" />
+    <Resource Include="Resources\Flags\si-LK.ico" />
+    <Resource Include="Resources\Flags\sk-SK.ico" />
+    <Resource Include="Resources\Flags\sl-SI.ico" />
+    <Resource Include="Resources\Flags\sma-NO.ico" />
+    <Resource Include="Resources\Flags\sma-SE.ico" />
+    <Resource Include="Resources\Flags\smj-NO.ico" />
+    <Resource Include="Resources\Flags\smj-SE.ico" />
+    <Resource Include="Resources\Flags\smn-FI.ico" />
+    <Resource Include="Resources\Flags\sms-FI.ico" />
+    <Resource Include="Resources\Flags\sn-Latn-ZW.ico" />
+    <Resource Include="Resources\Flags\so-DJ.ico" />
+    <Resource Include="Resources\Flags\so-ET.ico" />
+    <Resource Include="Resources\Flags\so-KE.ico" />
+    <Resource Include="Resources\Flags\so-SO.ico" />
+    <Resource Include="Resources\Flags\so.ico" />
+    <Resource Include="Resources\Flags\sq-AL.ico" />
+    <Resource Include="Resources\Flags\sq-MK.ico" />
+    <Resource Include="Resources\Flags\sq-XK.ico" />
+    <Resource Include="Resources\Flags\sr-Cyrl-BA.ico" />
+    <Resource Include="Resources\Flags\sr-Cyrl-CS.ico" />
+    <Resource Include="Resources\Flags\sr-Cyrl-ME.ico" />
+    <Resource Include="Resources\Flags\sr-Cyrl-RS.ico" />
+    <Resource Include="Resources\Flags\sr-Cyrl.ico" />
+    <Resource Include="Resources\Flags\sr-Latn-BA.ico" />
+    <Resource Include="Resources\Flags\sr-Latn-CS.ico" />
+    <Resource Include="Resources\Flags\sr-Latn-ME.ico" />
+    <Resource Include="Resources\Flags\sr-Latn-RS.ico" />
+    <Resource Include="Resources\Flags\sr-Latn.ico" />
+    <Resource Include="Resources\Flags\ss-SZ.ico" />
+    <Resource Include="Resources\Flags\ss-ZA.ico" />
+    <Resource Include="Resources\Flags\ssy-ER.ico" />
+    <Resource Include="Resources\Flags\st-LS.ico" />
+    <Resource Include="Resources\Flags\st-ZA.ico" />
+    <Resource Include="Resources\Flags\st.ico" />
+    <Resource Include="Resources\Flags\sv-AX.ico" />
+    <Resource Include="Resources\Flags\sv-FI.ico" />
+    <Resource Include="Resources\Flags\sv-SE.ico" />
+    <Resource Include="Resources\Flags\sw-CD.ico" />
+    <Resource Include="Resources\Flags\sw-KE.ico" />
+    <Resource Include="Resources\Flags\sw-TZ.ico" />
+    <Resource Include="Resources\Flags\sw-UG.ico" />
+    <Resource Include="Resources\Flags\swc-CD.ico" />
+    <Resource Include="Resources\Flags\syr-SY.ico" />
+    <Resource Include="Resources\Flags\ta-IN.ico" />
+    <Resource Include="Resources\Flags\ta-LK.ico" />
+    <Resource Include="Resources\Flags\ta-MY.ico" />
+    <Resource Include="Resources\Flags\ta-SG.ico" />
+    <Resource Include="Resources\Flags\te-IN.ico" />
+    <Resource Include="Resources\Flags\teo-KE.ico" />
+    <Resource Include="Resources\Flags\teo-UG.ico" />
+    <Resource Include="Resources\Flags\tg-Cyrl-TJ.ico" />
+    <Resource Include="Resources\Flags\th-TH.ico" />
+    <Resource Include="Resources\Flags\ti-ER.ico" />
+    <Resource Include="Resources\Flags\ti-ET.ico" />
+    <Resource Include="Resources\Flags\tig-ER.ico" />
+    <Resource Include="Resources\Flags\tk-TM.ico" />
+    <Resource Include="Resources\Flags\tl-x-SDL.ico" />
+    <Resource Include="Resources\Flags\tn-BW.ico" />
+    <Resource Include="Resources\Flags\tn-ZA.ico" />
+    <Resource Include="Resources\Flags\to-TO.ico" />
+    <Resource Include="Resources\Flags\tr-CY.ico" />
+    <Resource Include="Resources\Flags\tr-TR.ico" />
+    <Resource Include="Resources\Flags\ts-ZA.ico" />
+    <Resource Include="Resources\Flags\twq-NE.ico" />
+    <Resource Include="Resources\Flags\tzm-Arab-MA.ico" />
+    <Resource Include="Resources\Flags\tzm-Latn-DZ.ico" />
+    <Resource Include="Resources\Flags\tzm-Latn-MA.ico" />
+    <Resource Include="Resources\Flags\tzm-Tfng-MA.ico" />
+    <Resource Include="Resources\Flags\ug-CN.ico" />
+    <Resource Include="Resources\Flags\uk-UA.ico" />
+    <Resource Include="Resources\Flags\ur-IN.ico" />
+    <Resource Include="Resources\Flags\ur-PK.ico" />
+    <Resource Include="Resources\Flags\uz-Arab-AF.ico" />
+    <Resource Include="Resources\Flags\uz-Cyrl-UZ.ico" />
+    <Resource Include="Resources\Flags\uz-Latn-UZ.ico" />
+    <Resource Include="Resources\Flags\vai-Latn-LR.ico" />
+    <Resource Include="Resources\Flags\vai-Vaii-LR.ico" />
+    <Resource Include="Resources\Flags\ve-ZA.ico" />
+    <Resource Include="Resources\Flags\vi-VN.ico" />
+    <Resource Include="Resources\Flags\vun-TZ.ico" />
+    <Resource Include="Resources\Flags\wae-CH.ico" />
+    <Resource Include="Resources\Flags\wal-ET.ico" />
+    <Resource Include="Resources\Flags\wo-SN.ico" />
+    <Resource Include="Resources\Flags\x-es-XL.ico" />
+    <Resource Include="Resources\Flags\xh-ZA.ico" />
+    <Resource Include="Resources\Flags\xog-UG.ico" />
+    <Resource Include="Resources\Flags\yav-CM.ico" />
+    <Resource Include="Resources\Flags\yo-BJ.ico" />
+    <Resource Include="Resources\Flags\yo-NG.ico" />
+    <Resource Include="Resources\Flags\zgh-Tfng-MA.ico" />
+    <Resource Include="Resources\Flags\zgh-Tfng.ico" />
+    <Resource Include="Resources\Flags\zgh.ico" />
+    <Resource Include="Resources\Flags\zh-SG.ico" />
+    <Resource Include="Resources\Flags\zu-ZA.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir)Resources\Flags\*" "$(ProjectDir)$(OutDir)Flags\" /c /s /y</PostBuildEvent>
+  </PropertyGroup>
+</Project>

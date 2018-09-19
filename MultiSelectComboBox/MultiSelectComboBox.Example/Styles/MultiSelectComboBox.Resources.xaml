@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Background" Color="Transparent"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Border" Color="#FF707070"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Disabled.Background" Color="#FFF4F4F4"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Disabled.Border" Color="#FFADB2B5"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Disabled.Foreground" Color="#FF838383"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.MouseOver.Background" Color="#FFF4F4F4"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.MouseOver.Border" Color="#FF3C7FB1"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Pressed.Background" Color="#FFF4F4F4"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Pressed.Border" Color="#FF2C628B"/>
+
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBox.GroupHeader.Background" Color="#f7f7f7"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBox.GroupHeader.Foreground" Color="Black"/>
+
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBoxItem.SelectedOrder.Foreground" Color="#5291DB"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBoxItem.Selector.Background" Color="#FCF3E6"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBoxItem.Selector.Border" Color="#CDE6F7"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background" Color="#FAE8CE"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBoxItem.Selected.Border" Color="#C3995C"/>
+
+  <SolidColorBrush x:Key="MultiSelectComboBox.SelectedItem.Border" Color="#D6B78A"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.SelectedItem.Button.Foreground" Color="#FF606060"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.SelectedItem.Button.Hover.Background" Color="#F7F7F7"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.SelectedItem.Button.Light.Foreground" Color="#FF808080"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.SelectedItemsPanel.Border" Color="#FFACACAC"/>
+
+  <FontFamily x:Key="MultiSelectComboBox.Text.FontFamily">Segoe UI</FontFamily>
+  <SolidColorBrush x:Key="MultiSelectComboBox.Text.Disabled.Foreground" Color="#FFB8B3B3"/>
+  <SolidColorBrush x:Key="MultiSelectComboBox.Text.Foreground" Color="#FF000000"/>
+
+</ResourceDictionary>

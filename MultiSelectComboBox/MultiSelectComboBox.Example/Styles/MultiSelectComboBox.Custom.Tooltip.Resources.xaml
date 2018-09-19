@@ -1,0 +1,69 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:models="clr-namespace:Sdl.MultiSelectComboBox.Example.Models">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="MultiSelectComboBox.Custom.ControlTemplate.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="PropertyTitleLabel.TextBlock.Style" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="Margin" Value="4,1,1,1"/>
+    </Style>
+
+    <Style x:Key="SelectedItem.ToolTip.Style" TargetType="ContentControl">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate DataType="models:LanguageItem">
+                    <Border Background="White" BorderThickness="0" Margin="-6,-4" Padding="2">
+                        <Grid Margin="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Id: " Style="{StaticResource PropertyTitleLabel.TextBlock.Style}" Grid.Column="0" Grid.Row="0" />
+                            <TextBlock Text="{Binding Path=CultureInfo.Name}" Grid.Column="1" Grid.Row="0" Margin="1"/>
+
+                            <TextBlock Text="Display Name: " Style="{StaticResource PropertyTitleLabel.TextBlock.Style}" Grid.Column="0" Grid.Row="1" />
+                            <TextBlock Text="{Binding Path=CultureInfo.DisplayName}" Grid.Column="1" Grid.Row="1" Margin="1"/>
+
+                            <TextBlock Text="Native Name: " Style="{StaticResource PropertyTitleLabel.TextBlock.Style}" Grid.Column="0" Grid.Row="2" />
+                            <TextBlock Text="{Binding Path=CultureInfo.NativeName}" Grid.Column="1" Grid.Row="2" Margin="1"/>
+
+                            <TextBlock Text="LCID: " Style="{StaticResource PropertyTitleLabel.TextBlock.Style}" Grid.Column="0" Grid.Row="3" />
+                            <TextBlock Text="{Binding Path=CultureInfo.LCID}" Grid.Column="1" Grid.Row="3" Margin="1"/>
+
+                            <TextBlock Text="Windows: " Style="{StaticResource PropertyTitleLabel.TextBlock.Style}" Grid.Column="0" Grid.Row="4" />
+                            <TextBlock Text="{Binding Path=CultureInfo.ThreeLetterWindowsLanguageName}" Grid.Column="1" Grid.Row="4" Margin="1"/>
+
+                            <TextBlock Text="ISO (2 letter): " Style="{StaticResource PropertyTitleLabel.TextBlock.Style}" Grid.Column="0" Grid.Row="5" />
+                            <TextBlock Text="{Binding Path=CultureInfo.TwoLetterISOLanguageName}" Grid.Column="1" Grid.Row="5" Margin="1"/>
+
+                            <TextBlock Text="ISO (3 letter): " Style="{StaticResource PropertyTitleLabel.TextBlock.Style}" Grid.Column="0" Grid.Row="6" />
+                            <TextBlock Text="{Binding Path=CultureInfo.ThreeLetterISOLanguageName}" Grid.Column="1" Grid.Row="6" Margin="1"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MultiSelectComboBox.CustomToolTip.TextBlock.Style" TargetType="TextBlock" BasedOn="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}">
+        <Setter Property="ToolTip">
+            <Setter.Value>
+                <ContentControl Content="{Binding}" Style="{StaticResource SelectedItem.ToolTip.Style}"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

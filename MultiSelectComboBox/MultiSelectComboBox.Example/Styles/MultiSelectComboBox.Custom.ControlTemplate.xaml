@@ -1,0 +1,373 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sdl="http://schemas.sdl.com/xaml"
+                    xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="MultiSelectComboBox.Resources.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="MultiSelectComboBox.FocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MultiSelectComboBox.Style" TargetType="Grid" >
+        <Setter Property="Height" Value="Auto"/>
+        <Setter Property="Width" Value="Auto"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="True"/>
+        <Setter Property="VirtualizingPanel.IsContainerVirtualizable" Value="True"/>
+    </Style>
+
+    <Style x:Key="MultiSelectComboBox.DefaultTextBlock.Style" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource MultiSelectComboBox.Text.FontFamily}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Control.VerticalContentAlignment" Value="Center"/>
+        <Setter Property="TextWrapping" Value="NoWrap"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Margin" Value="1"/>
+        <Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.Text.Foreground}"/>
+        <Setter Property="TextAlignment" Value="Left"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.Text.Disabled.Foreground}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="MultiSelectComboBox.SelectedItemsPanel.WrapableItemsSource.Style" TargetType="{x:Type ItemsControl}" >
+        <Setter Property="FontFamily" Value="{StaticResource MultiSelectComboBox.Text.FontFamily}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="False"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value >
+                <ControlTemplate>
+                    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ItemsPresenter/>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <Setter.Value >
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MultiSelectComboBox.DropDown.Button.Style" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Background}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Border}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="0,0,2,0"/>
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
+                                          Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                        <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}" RecognizesAccessKey="False"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.Button.MouseOver.Background}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.Button.MouseOver.Border}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Pressed.Background}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Pressed.Border}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Disabled.Background}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Disabled.Border}"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Disabled.Foreground}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemContainerStyle" TargetType="{x:Type sdl:ExtendedListBoxItem}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+        <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="IsEnabled" Value="{Binding Path=IsEnabled}"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource MultiSelectComboBox.FocusVisual}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type sdl:ExtendedListBoxItem}">
+                    <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                        <ToggleButton IsChecked="{TemplateBinding IsChecked}" BorderBrush="White" HorizontalContentAlignment="Stretch" BorderThickness="0" Margin="0" Padding="0">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="{x:Type ToggleButton}" >
+                                    <Border x:Name="border" BorderThickness="1" HorizontalAlignment="Stretch"  BorderBrush="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background }">
+                                        <ContentControl Margin="2,-2,0,-2" Content="{Binding}" ContentTemplateSelector="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type sdl:MultiSelectComboBox}}, Path=DropdownItemTemplateSelector}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="Button.IsDefaulted" Value="true">
+                                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Border}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter Property="Background" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background}"/>
+                                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsChecked" Value="false">
+                                            <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
+                                        </Trigger>
+                                        <Trigger Property="IsChecked" Value="true">
+                                            <Setter Property="Background" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background}" />
+                                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Border}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="Selector.IsSelected" Value="True">
+                            <Setter Property="Background" TargetName="Bd" Value="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selector.Background}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MultiSelectComboBox.Dropdown.ListBox.Style" TargetType="sdl:ExtendedListBox">
+        <Setter Property="FontFamily" Value="{StaticResource MultiSelectComboBox.Text.FontFamily}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="TextSearch.TextPath" Value="Name"/>
+        <Setter Property="IsTextSearchEnabled" Value="True"/>
+        <Setter Property="IsSynchronizedWithCurrentItem" Value="True"/>
+        <Setter Property="IsTextSearchCaseSensitive" Value="False"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="True"/>
+        <Setter Property="VirtualizingPanel.IsContainerVirtualizable" Value="True"/>
+        <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemContainerStyle}"/>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+    <Style x:Key="MultiSelectComboBox.SelectedItemsPanel.RemoveItem.Button.Style" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.SelectedItem.Button.Light.Foreground}"/>
+        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="BorderBrush" Value="{x:Null}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="-1,0,0,-1"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" TextBlock.Foreground="{TemplateBinding Foreground}" BorderThickness="1,0,1,1" BorderBrush="Transparent" Background="Transparent">
+                        <ContentPresenter Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="False" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource MultiSelectComboBox.SelectedItem.Button.Hover.Background}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{x:Null}"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type sdl:MultiSelectComboBox}}, Path=IsEditMode}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type sdl:MultiSelectComboBox}}, Path=IsEditable}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MultiSelectComboBox.SelectedItems.ItemContainer.Style" TargetType="ContentControl" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContentControl">
+                    <Border x:Name="Bd" BorderThickness="1" CornerRadius="5" Margin="1" BorderBrush="{StaticResource MultiSelectComboBox.SelectedItem.Border}">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl Content="{Binding}" Margin="2,2,2,4" ContentTemplateSelector="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type sdl:MultiSelectComboBox}}, Path=SelectedItemTemplateSelector}"/>
+
+                            <Button x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_RemoveItem_Button" ToolTip="Remove" Style="{StaticResource MultiSelectComboBox.SelectedItemsPanel.RemoveItem.Button.Style}">
+                                <Path SnapsToDevicePixels="False" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Fill="{StaticResource MultiSelectComboBox.SelectedItem.Button.Light.Foreground}"
+                                      Data="F1 M 26.9166,22.1667L 37.9999,33.25L 49.0832,22.1668L 53.8332,26.9168L 42.7499,38L 53.8332,49.0834L 49.0833,53.8334L 37.9999,42.75L 26.9166,53.8334L 22.1666,49.0833L 33.25,38L 22.1667,26.9167L 26.9166,22.1667 Z "/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding}" Value="{x:Null}"/>
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="BorderBrush" TargetName="Bd" Value="{x:Null}"/>
+                                <Setter Property="Margin" TargetName="Bd" Value="1,0,1,0"/>
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <DataTemplate x:Key="MultiSelectComboBox.SelectedItemsPanel.EditMode.Glyph.Template">
+        <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z" 
+              Fill="{StaticResource MultiSelectComboBox.SelectedItem.Button.Foreground}" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="MultiSelectComboBox.SelectedItemsPanel.Readonly.Glyph.Template">
+        <Path HorizontalAlignment="Center" VerticalAlignment="Center" Width="13"
+              Data="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" 
+              Fill="{StaticResource MultiSelectComboBox.SelectedItem.Button.Foreground}" Stretch="Uniform" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="MultiSelectComboBox.SelectedItemsPanel.Template">
+        <Border Background="White" BorderBrush="{StaticResource MultiSelectComboBox.SelectedItemsPanel.Border}" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Margin="1" Background="White" BorderThickness="0">
+                    <sdl:ContentItemsControl x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl"                            
+                            ItemContainerStyle="{StaticResource MultiSelectComboBox.SelectedItems.ItemContainer.Style}"                           
+                            Style="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WrapableItemsSource.Style}">
+                        <sdl:ContentItemsControl.Resources>
+                            <DataTemplate x:Key="MultiSelectComboBox.SelectedItems.ItemTemplate">
+                                <TextBlock Text="{Binding}" Style="{DynamicResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,0" />
+                            </DataTemplate>
+                            <DataTemplate x:Key="MultiSelectComboBox.SelectedItems.Searchable.ItemTemplate">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_TextBox" IsEnabled="{Binding IsEditMode, RelativeSource={RelativeSource TemplatedParent}}" 
+                                         Focusable="True" IsTabStop="False" Margin="0" ForceCursor="True" BorderThickness="0" BorderBrush="Transparent" Padding="1" TextWrapping="NoWrap"/>
+                                    <TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_AutoComplete_TextBox" IsReadOnly="True"
+                                         Focusable="False" IsTabStop="False" Margin="-2,0,0,0" BorderThickness="0" BorderBrush="Transparent" Padding="-3,1,0,1" TextWrapping="NoWrap"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </sdl:ContentItemsControl.Resources>
+                    </sdl:ContentItemsControl>
+                </Border>
+
+                <Button x:Name="PART_MultiSelectComboBox_Dropdown_Button" Grid.Column="1" Style="{StaticResource MultiSelectComboBox.DropDown.Button.Style}" >
+                    <ContentControl>
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Setter Property="IsTabStop" Value="False"/>
+                                <Setter Property="ContentTemplate" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.Readonly.Glyph.Template}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type sdl:MultiSelectComboBox}}, Path=IsEditMode}" Value="True">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.EditMode.Glyph.Template}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+
+                </Button>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.Header.Template" DataType="sdl:IItemGroup">
+        <TextBlock Text="{Binding Path=Name}" TextTrimming="CharacterEllipsis"  Padding="7, 5" Margin="0,0,0,2" FontWeight="Bold" FontFamily="{StaticResource MultiSelectComboBox.Text.FontFamily}" Foreground="{StaticResource MultiSelectComboBox.DropDown.ListBox.GroupHeader.Foreground}" Background="{StaticResource MultiSelectComboBox.DropDown.ListBox.GroupHeader.Background}" />
+    </DataTemplate>
+
+    <Style x:Key="MultiSelectComboBox.Custom.Style" TargetType="{x:Type sdl:MultiSelectComboBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type sdl:MultiSelectComboBox}">
+
+                    <Grid x:Name="PART_MultiSelectComboBox" MaxHeight="{TemplateBinding ActualHeight}" MaxWidth="{TemplateBinding ActualWidth}" Style="{StaticResource MultiSelectComboBox.Style}">
+                        <ToggleButton IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" IsTabStop="False">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <ContentControl ContentTemplate="{StaticResource MultiSelectComboBox.SelectedItemsPanel.Template}"/>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+
+                        <Popup x:Name="PART_MultiSelectComboBox_Dropdown" Margin="2" Grid.ColumnSpan="2" MaxHeight="{Binding Path=MaxDropDownHeight, RelativeSource={RelativeSource TemplatedParent} }" PlacementTarget="{Binding ElementName=PART_MultiSelectComboBox}" IsOpen="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" MaxWidth="{TemplateBinding ActualWidth}" Placement="Bottom" AllowsTransparency="True" PopupAnimation="Slide">
+                            <themes:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MinWidth="{Binding ActualWidth, ElementName=PART_MultiSelectComboBox}">
+                                <Border x:Name="dropDownBorder" Margin="0,1,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="0" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                                    <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                                        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                            <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                        </Canvas>
+                                        <sdl:ExtendedListBox x:Name="PART_MultiSelectComboBox_Dropdown_ListBox" Style="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Style}">
+                                            <sdl:ExtendedListBox.GroupStyle>
+                                                <GroupStyle HeaderTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Header.Template}"/>
+                                            </sdl:ExtendedListBox.GroupStyle>
+                                            <sdl:ExtendedListBox.Resources>
+                                                <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate">
+                                                    <TextBlock Text="{Binding}" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,2,2,3"/>
+                                                </DataTemplate>
+                                            </sdl:ExtendedListBox.Resources>
+                                        </sdl:ExtendedListBox>
+                                    </Grid>
+                                </Border>
+                            </themes:SystemDropShadowChrome>
+                        </Popup>
+                    </Grid>
+
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+</ResourceDictionary>

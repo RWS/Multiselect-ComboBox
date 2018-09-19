@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:models="clr-namespace:Sdl.MultiSelectComboBox.Example.Models">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="MultiSelectComboBox.Custom.Tooltip.Resources.xaml"/>
+        <ResourceDictionary Source="MultiSelectComboBox.Custom.Image.Resources.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate x:Key="MultiSelectComboBox.SelectedItems.ItemTemplate" DataType="models:LanguageItem">
+        <StackPanel Orientation="Horizontal" Margin="0,-4">
+            <Image Style="{StaticResource MultiSelectComboBox.Custom.Image.Style}" Margin="2,0,4,-1"/>
+            <TextBlock Text="{Binding Path=Name}" Style="{DynamicResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,0" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MultiSelectComboBox.SelectedItems.Custom.ItemTemplate" DataType="models:LanguageItem">
+        <StackPanel Orientation="Horizontal" Margin="0,-4">
+            <Image Style="{StaticResource MultiSelectComboBox.Custom.Image.Style}" Margin="2,0,4,-1"/>
+            <TextBlock Style="{StaticResource MultiSelectComboBox.CustomToolTip.TextBlock.Style}" Margin="2,0">
+                <Run Text="["/><Bold><Run Foreground="#FF4F68AA" Text="{Binding CultureInfo.Name, Mode=OneWay}"/></Bold><Run Text="]"/>
+                <Run Text="{Binding Name}"/>
+            </TextBlock>
+        </StackPanel>
+    </DataTemplate>
+
+</ResourceDictionary>
