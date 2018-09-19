@@ -2,6 +2,7 @@
 
 ## Overview
 The multi selection combo box is a WPF custom control with multiple item selection capabilities, along with customizable features to group, sort and filter items in the collection.
+
 ![Usage Demonstration Gif](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/SDL.MultiSelectComboBox.Usage.gif)
 
 ## Components and Features
@@ -25,6 +26,7 @@ The control has two visual states, Readonly and EditMode, which is identified by
 
 ### Filter Criteria
 When you type a character in the text area, the control applies a filter on the collection and suggests a list of items matching that criteria in the [Dropdown Menu](#dropdown-menu) list.  The developer can override the default filter service, based on their own business logic requirements, that implements [IFilterService](#ifilterservice).
+
 ![Filter Criteria Image](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.Filter.png)
 
 Depending on whether or not the ClearFilterOnDropdownClosing property is set to true and [Dropdown Menu](#dropdown-menu) list as keyboard focus, the filter criteria is cleared automatically as the [Dropdown Menu](#dropdown-menu) is closing.
