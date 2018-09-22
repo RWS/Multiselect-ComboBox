@@ -28,7 +28,7 @@ The control has two visual states, [Readonly](#readonlymode) and [EditMode](#edi
 
 
 ### Filter Criteria
-When you type a character in the text area, the control applies a filter on the collection and suggests a list of items matching that criteria in the [Dropdown Menu](#dropdown-menu) list.  The developer can override the default filter service, based on their own business logic requirements, that implements [IFilterService](#ifilterservice).
+When you type a character in the text area, the control applies a filter on the collection and suggests a list of items matching that criteria in the [Dropdown Menu](#dropdown-menu) list.  The developer can override the default [filter service](#filterservice), based on their own business logic requirements, that implements [IFilterService](#ifilterservice).
 
 ![Filter Criteria Image](https://github.com/sdl/Multiselect-ComboBox/blob/master/Resources/Sdl.MultiSelectComboBox.Filter.png)
 
@@ -58,7 +58,7 @@ The [Dropdown Menu](#dropdown-menu) can be expanded only when the control is in 
         <ul>
           <li>Left mouse click anywhere within the control area, with exception to the <strong>Remove Item Button</strong> of the item.</li>
           <li>Down arrow key on the keyboard when the control has focus.</li>
-          <li>Change the [Filter Criteria](#filter-criteria), by typing characters in the text area.</li>
+          <li>Change the *Filter Criteria*, by typing characters in the text area.</li>
         </ul>
       </td>
     </tr>
@@ -70,7 +70,7 @@ The [Dropdown Menu](#dropdown-menu) can be expanded only when the control is in 
           <li>Return key.
             <ul>
               <li>The item that has focus in the list is selected</li>
-              <li>The [Filter Criteria](#filter-criteria) is removed</li>
+              <li>The *Filter Criteria* is removed</li>
             </ul>
           </li>
           <li>Esc key</li>
@@ -499,10 +499,10 @@ public class SelectedItemsChangedCommand : ICommand
             var selectedItems = GetAggregatedText(args.Selected);
  
             var report = "Added - " + args.Added?.Count + (!string.IsNullOrEmpty(addedItems) ? " (" + TrimToLength(addedItems, 100) + ") " : string.Empty)
-							+ ", Removed - " + args.Removed?.Count + (!string.IsNullOrEmpty(removedItems) ? " (" + TrimToLength(removedItems, 100) + ") " : string.Empty)
-							+ ", Selected - " + args.Selected?.Count + (!string.IsNullOrEmpty(selectedItems) ? " (" + TrimToLength(selectedItems, 100) + ") " : string.Empty);
+				+ ", Removed - " + args.Removed?.Count + (!string.IsNullOrEmpty(removedItems) ? " (" + TrimToLength(removedItems, 100) + ") " : string.Empty)
+				+ ", Selected - " + args.Selected?.Count + (!string.IsNullOrEmpty(selectedItems) ? " (" + TrimToLength(selectedItems, 100) + ") " : string.Empty);
 
-				_updateEventLog?.Invoke("Selected Changed", report);
+			_updateEventLog?.Invoke("Selected Changed", report);
         }
     }
          
@@ -746,7 +746,7 @@ DataContext | Gets or sets the data context for an element when it participates 
 <a name="enablefiltering"></a>**EnableFiltering** | Gets or sets whether filtering is enabled
 <a name="enablegrouping"></a>**EnableGrouping** | Gets or sets whether grouping is enabled
 Effect | Gets or sets the bitmap effect to apply to the [UIElement](https://docs.microsoft.com/en-us/dotnet/api/system.windows.uielement?view=netframework-4.7.2). This is a dependency property.<br/>(Inherited from [UIElement](https://docs.microsoft.com/en-us/dotnet/api/system.windows.uielement?view=netframework-4.7.2))
-<a name="filterservice"></a>**FilterService** |	Gets or sets a custom filter service that is used when filtering items in the collection.  If the filter service is null, then a default service is used that applies a filter on the override string ToString()
+<a name="filterservice"></a>**FilterService** |	Gets or sets a custom *filter service* that is used when filtering items in the collection.  If the *filter service* is null, then a default service is used that applies a filter on the override string ToString()
 FlowDirection | Gets or sets the direction that text and other user interface (UI) elements flow within any parent element that controls their layout.<br/>(Inherited from [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/system.windows.frameworkelement?view=netframework-4.7.2))
 Focusable | Gets or sets a value that indicates whether the element can receive focus. This is a dependency property.<br/>(Inherited from [UIElement](https://docs.microsoft.com/en-us/dotnet/api/system.windows.uielement?view=netframework-4.7.2))
 FocusVisualStyle | Gets or sets a property that enables customization of appearance, effects, or other style characteristics that will apply to this element when it captures keyboard focus.<br/>(Inherited from [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/system.windows.frameworkelement?view=netframework-4.7.2))
@@ -806,13 +806,13 @@ Width | Gets or sets the width of the element.<br/>(Inherited from [FrameworkEle
 ## Events
 | Property | Description |
 | ------ | ------ |
-<a name="filtertextchanged"></a>**FilterTextChanged** |	Occurs when the criteria of the filter text has changed. The [FilterTextChangedEventArgs](#filtertextchangedeventargs) are passed with the event, identifying the filter criteria and list of item ids currently filtered.
-<a name="selecteditemschanged"></a>**SelectedItemsChanged** | Occurs when items in the selected items collection has changed.  The [SelectedItemsChangedEventArgs](#selecteditemschangedeventargs) are passed with the event, identifying the added, removed and currently selected item ids.
+<a name="filtertextchanged"></a>**FilterTextChanged** |	Occurs when the criteria of the filter text has changed. The [FilterTextChangedEventArgs](#filtertextchangedeventargs) are passed with the event, identifying the filter criteria and list of items currently filtered.
+<a name="selecteditemschanged"></a>**SelectedItemsChanged** | Occurs when items in the selected items collection has changed.  The [SelectedItemsChangedEventArgs](#selecteditemschangedeventargs) are passed with the event, identifying the added, removed and currently selected items.
 
 ### Event Behaviours
 We have introduced the following event behaviors to accommodate binding events to a command. This way, the bound command is invoked like an event handler when the event is raised.
 
 | Property | Description |
 | ------ | ------ |
-<a name="filtertextchangedbehaviour"></a>**FilterTextChangedBehaviour**.FilterTextChanged | Occurs when the criteria of the filter text has changed. The [FilterTextChangedEventArgs](#filtertextchangedeventargs) are passed with the event, identifying the filter criteria and list of item ids currently filtered.
-<a name="selecteditemschangedbehaviour"></a>**SelectedItemsChangedBehaviour**.SelectedItemsChanged | Occurs when items in the selected items collection has changed. The [SelectedItemsChangedEventArgs](#selecteditemschangedeventargs) are passed with the event, identifyin
+<a name="filtertextchangedbehaviour"></a>**FilterTextChangedBehaviour**.FilterTextChanged | Occurs when the criteria of the filter text has changed. The [FilterTextChangedEventArgs](#filtertextchangedeventargs) are passed with the event, identifying the filter criteria and list of items currently filtered.
+<a name="selecteditemschangedbehaviour"></a>**SelectedItemsChangedBehaviour**.SelectedItemsChanged | Occurs when items in the selected items collection has changed. The [SelectedItemsChangedEventArgs](#selecteditemschangedeventargs) are passed with the event, identifying the added, removed and currently selected items.
