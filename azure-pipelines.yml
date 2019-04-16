@@ -27,6 +27,15 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: NuGetCommand@2
+  displayName: 'Create Nuget Sdl.MultiSelectCombo'
+  inputs:
+    command: pack
+    packagesToPack: MultiSelectComboBox/MultiSelectComboBoxSdl/Sdl.MultiSelectComboBox.csproj
+    configuration: Release
+    versioningScheme: byBuildNumber
+    buildProperties: 'id=Sdl.MultiSelectCombo.Release;name=Sdl.MultiSelectCombo.Release;'
+
 - task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
