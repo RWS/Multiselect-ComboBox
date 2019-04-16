@@ -33,7 +33,7 @@ steps:
     command: pack
     packagesToPack: MultiSelectComboBox/MultiSelectComboBoxSdl/Sdl.MultiSelectComboBox.csproj
     configuration: Release
-    versioningScheme: byBuildNumber
+    versioningScheme: byEnvVar
     buildProperties: 'id=Sdl.MultiSelectCombo.Release;name=Sdl.MultiSelectCombo.Release;'
 
 - task: VSTest@2
