@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package>
-  <metadata>
+  <metadata minClientVersion="4.6">
     <id>Sdl.MultiSelectComboBox</id>
     <version>$version$</version>
     <authors>Sdl Community</authors>
