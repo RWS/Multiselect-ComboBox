@@ -11,7 +11,7 @@
     <projectUrl>https://github.com/remusp/Multiselect-ComboBox</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>WPF custom control with multiple item selection capabilities, along with customizable features to group, sort and filter items in the collection.</description>
-    <copyright>Copyright Sdl Community 2019</copyright>
+    <copyright>Copyright © Sdl Community 2019</copyright>
     <tags>WPF MultiSelectCombo</tags>
     <repository type="git" url="https://github.com/sdl/Multiselect-ComboBox" commit="$RepositoryCommit$" />
   </metadata>
