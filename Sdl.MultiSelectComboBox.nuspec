@@ -2,7 +2,7 @@
 <package>
   <metadata minClientVersion="4.6">
     <id>Sdl.MultiSelectComboBox</id>
-    <version>1.0.0</version>
+    <version>$version$</version>
     <authors>Sdl Community</authors>
     <owners>SDL</owners>
     <title>Sdl.MultiSelectComboBox</title>
