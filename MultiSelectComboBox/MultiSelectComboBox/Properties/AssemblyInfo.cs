@@ -9,7 +9,7 @@ using System.Windows.Markup;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Sdl.MultiSelectComboBox")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("WPF custom control with multiple item selection capabilities, customizable item grouping, sorting and filtering for the collection.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Sdl.MultiSelectComboBox")]
@@ -54,7 +54,6 @@ using System.Windows.Markup;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.3")]
 [assembly: AssemblyFileVersion("1.0.3.0")]
-[assembly: AssemblyInformationalVersion("1.0.3.0")]
 
 [assembly: XmlnsPrefix("http://schemas.sdl.com/xaml", "sdl")]
 [assembly: XmlnsDefinition("http://schemas.sdl.com/xaml", "Sdl.MultiSelectComboBox.Themes.Generic")]
