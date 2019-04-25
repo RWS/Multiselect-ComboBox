@@ -2,7 +2,7 @@
 <package>
   <metadata minClientVersion="4.6">
     <id>Sdl.MultiSelectComboBox</id>
-    <version>1.0.0</version>
+    <version>$version$</version>
     <authors>Sdl Community</authors>
     <owners>SDL</owners>
     <title>Sdl.MultiSelectComboBox</title>
@@ -15,4 +15,7 @@
     <tags>WPF MultiSelectCombo</tags>
     <repository type="git" url="https://github.com/sdl/Multiselect-ComboBox" />
   </metadata>
+  <files>
+    <file src="MultiSelectComboBox\MultiSelectComboBox\bin\Release\*.dll" target="lib\net47" />    
+  </files>
 </package>
