@@ -1,5 +1,7 @@
 # Sdl.MultiSelectComboBox (WPF Custom Control)
 
+[![NuGet Stats](https://img.shields.io/nuget/v/Sdl.MultiSelectComboBox.svg)](https://www.nuget.org/packages/Sdl.MultiSelectComboBox/)
+
 ## Overview
 The multi selection combo box is a WPF custom control with multiple [item selection](#item-selection) capabilities, along with customizable features to [group](#item-group), [sort](#item-sorting) and [filter](#filter-criteria) items in the collection.
 
