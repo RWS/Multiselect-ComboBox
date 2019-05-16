@@ -6,8 +6,8 @@
     <title>$title$</title>
     <authors>SDL Community</authors>
     <owners>SDL</owners>
-    <licenseUrl>https://github.com/remusp/Multiselect-ComboBox/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/remusp/Multiselect-ComboBox</projectUrl>
+    <licenseUrl>https://github.com/sdl/Multiselect-ComboBox/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/sdl/Multiselect-ComboBox</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>Copyright © Sdl Community 2019</copyright>
