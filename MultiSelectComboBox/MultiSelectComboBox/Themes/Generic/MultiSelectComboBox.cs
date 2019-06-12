@@ -162,7 +162,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			{
 				_itemsCollectionViewSource = value;
 
-				if (ItemsCollectionViewSource != null)
+				if (ItemsCollectionViewSource != null && ItemsSource != null)
 				{
 					if (EnableGrouping)
 					{
