@@ -107,6 +107,7 @@
                                                      EnableGrouping="{Binding EnableGrouping}"
                                                      ItemsSource="{Binding Items}" 
                                                      SelectedItems="{Binding SelectedItems}"
+                                                     OnDemandService="{Binding CustomOnDemandService}"
                                                      sdl:FilterTextChangedBehaviour.FilterTextChanged="{Binding FilterTextChangedCommand}"
                                                      sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"/>
 
@@ -126,6 +127,7 @@
                                                      EnableGrouping="{Binding EnableGrouping}"
                                                      ItemsSource="{Binding Items}"        
                                                      SelectedItems="{Binding SelectedItems}"
+                                                     OnDemandService="{Binding CustomOnDemandService}"
                                                      sdl:FilterTextChangedBehaviour.FilterTextChanged="{Binding FilterTextChangedCommand}"
                                                      sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"/>
 

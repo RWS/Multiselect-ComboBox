@@ -54,6 +54,7 @@
     <Compile Include="API\IItemGroup.cs" />
     <Compile Include="API\IItemEnabledAware.cs" />
     <Compile Include="API\IItemGroupAware.cs" />
+    <Compile Include="API\IOnDemandService.cs" />
     <Compile Include="Behaviours\EventBehaviourFactory.cs" />
     <Compile Include="Behaviours\FilterTextChangedBehaviour.cs" />
     <Compile Include="Behaviours\SelectedItemsChangedBehaviour.cs" />

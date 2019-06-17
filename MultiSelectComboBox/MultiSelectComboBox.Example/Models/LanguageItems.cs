@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Input;
 using Sdl.MultiSelectComboBox.API;
 using Sdl.MultiSelectComboBox.Example.Commands;
@@ -15,7 +17,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 {
 	public class LanguageItems : INotifyPropertyChanged
 	{
-		private List<LanguageItem> _items;
+		private ObservableCollection<LanguageItem> _items;
 		private List<LanguageItem> _selectedItems;
 		private bool _toggleCustomStyle;
 		private bool _enableAlternateItems;
@@ -25,12 +27,14 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 		private bool _enableGrouping;
 		private bool _useRecentlyUsedGroupingService;
 		private bool _enableFiltering;
-		private bool _useCustomFilterService;
+        private bool _enableOnDemand;
+        private bool _useCustomFilterService;
 		private bool _isEditable;
 		private bool _clearFilterOnDropdownClosing;
 		private string _selectionMode;
+        private List<LanguageItem> _allItems;
 
-		public LanguageItems()
+        public LanguageItems()
 		{
 			ListenToFilterTextChanged = true;
 			ListenToSelectedItemsChanged = true;
@@ -43,7 +47,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 			EnableFiltering = true;
 			UseCustomFilterService = true;
 
-			EnableGrouping = true;
+            EnableGrouping = true;
 			UseRecentlyUsedGroupingService = true;
 
 			EnableAutoComplete = true;
@@ -57,8 +61,11 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 
 			RecentlyUsedFilterService = new RecentlyUsedService(new List<string> { "en-US", "it-IT", "de-DE", "fr-FR" });
 
-			InitializeItemsCollection(new DefaultGroupService(_useRecentlyUsedGroupingService ? RecentlyUsedFilterService : null));
-		}
+            InitializeItemsCollection(new DefaultGroupService(_useRecentlyUsedGroupingService ? RecentlyUsedFilterService : null));
+
+            //we need to enable this after all source items are loaded
+            EnableOnDemand = true;
+        }
 
 		public ICommand FilterTextChangedCommand { get; }
 
@@ -76,12 +83,13 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 
 		public RecentlyUsedService RecentlyUsedFilterService { get; }
 
-		public List<LanguageItem> Items
+		public ObservableCollection<LanguageItem> Items
 		{
-			get => _items ?? (_items = new List<LanguageItem>());
+			get => _items ?? (_items = new ObservableCollection<LanguageItem>());
 			set => _items = value;
 		}
-		public List<LanguageItem> SelectedItems
+
+        public List<LanguageItem> SelectedItems
 		{
 			get => _selectedItems ?? (_selectedItems = new List<LanguageItem>());
 			set
@@ -321,7 +329,31 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 			}
 		}
 
-		public bool IsEditable
+        public bool EnableOnDemand
+        {
+            get => _enableOnDemand;
+            set
+            {
+                if (_enableOnDemand.Equals(value))
+                {
+                    return;
+                }
+
+                _enableOnDemand = value;
+
+                UpdateEventLog(nameof(EnableOnDemand), _enableOnDemand.ToString());
+
+                CustomOnDemandService = _enableOnDemand ? new CustomOnDemandService(Items, _allItems) : null;
+                _allItems.Where(x => x.Group != null && x.Group.Order != 1).ToList().ForEach(x => _items.Add(x));
+                if (!_items.Any())
+                    Items.Add(_allItems.First());
+
+                OnPropertyChanged(nameof(EnableOnDemand));
+                OnPropertyChanged(nameof(CustomOnDemandService));
+            }
+        }
+
+        public bool IsEditable
 		{
 			get => _isEditable;
 			set
@@ -399,7 +431,9 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 			}
 		}
 
-		private void UpdateSelectedItemsCount(int count)
+        public IOnDemandService CustomOnDemandService { get; private set; }
+
+        private void UpdateSelectedItemsCount(int count)
 		{
 			SelectedItemsCount = count;
 
@@ -484,14 +518,14 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 
 			}
 
-			Items = new List<LanguageItem>(items.OrderBy(a => a.Name));
-		}
+            _allItems = new List<LanguageItem>(items.OrderBy(a => a.Name));
+        }
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		}		
-	}
+		}
+    }
 }

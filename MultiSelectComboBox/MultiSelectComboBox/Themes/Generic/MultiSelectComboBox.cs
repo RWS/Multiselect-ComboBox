@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -129,7 +130,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 					_dropdownListBox.PreviewMouseUp -= DropdownListBoxPreviewMouseUp;
 					_dropdownListBox.PreviewKeyDown -= DropdownListBoxPreviewKeyDown;
 					_dropdownListBox.ItemContainerGenerator.StatusChanged -= DropDownListBoxItemContainerGenerator_StatusChanged;
-				}
+                    _dropdownListBox.RemoveHandler(ScrollViewer.ScrollChangedEvent, new RoutedEventHandler(DropDownListBoxScrolled));
+                }
 
 				_dropdownListBox = value;
 
@@ -150,11 +152,12 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 					_dropdownListBox.PreviewMouseUp += DropdownListBoxPreviewMouseUp;
 					_dropdownListBox.PreviewKeyDown += DropdownListBoxPreviewKeyDown;
 					_dropdownListBox.ItemContainerGenerator.StatusChanged += DropDownListBoxItemContainerGenerator_StatusChanged;
-				}
+                    _dropdownListBox.AddHandler(ScrollViewer.ScrollChangedEvent, new RoutedEventHandler(DropDownListBoxScrolled));
+                }
 			}
 		}
 
-		private CollectionViewSource _itemsCollectionViewSource;
+        private CollectionViewSource _itemsCollectionViewSource;
 		private CollectionViewSource ItemsCollectionViewSource
 		{
 			get => _itemsCollectionViewSource;
@@ -388,7 +391,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			set => SetValue(EnableFilteringProperty, value);
 		}
 
-		private static void EnableFilteringPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        private static void EnableFilteringPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
 		{
 			var control = dependencyObject as MultiSelectComboBox;
 
@@ -408,7 +411,17 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			set => SetValue(FilterServiceProperty, value);
 		}
 
-		private static void FilterServicePropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        public static readonly DependencyProperty OnDemandServiceProperty =
+            DependencyProperty.Register("OnDemandService", typeof(IOnDemandService), typeof(MultiSelectComboBox),
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None));
+
+        public IOnDemandService OnDemandService
+        {
+            get => (IOnDemandService)GetValue(OnDemandServiceProperty);
+            set => SetValue(OnDemandServiceProperty, value);
+        }
+
+        private static void FilterServicePropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
 		{
 			var control = dependencyObject as MultiSelectComboBox;
 
@@ -948,7 +961,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 							textBox.Text = string.Empty;
 							FilterTextApplied = string.Empty;
 
-							ApplyItemsFilter(string.Empty);
+                            LoadOnDemand(string.Empty);
 						}
 						else if (IsEditable)
 						{
@@ -965,14 +978,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 						SelectedItemsFilterTextBox.Text = string.Empty;
 						FilterTextApplied = string.Empty;
 
-						ApplyItemsFilter(string.Empty);
+                        LoadOnDemand(string.Empty);
 						break;
 					case Key.Escape:
 						IsDropDownOpen = false;
 						UpdateAutoCompleteFilterText(string.Empty, null);
 						break;
 					default:
-						ApplyItemsFilter(textBox.Text);
+                        LoadOnDemand(textBox.Text);
 
 						if (!IsDropDownOpen && EnableFiltering)
 						{
@@ -1046,7 +1059,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 						SelectedItemsFilterTextBox.Text = string.Empty;
 						FilterTextApplied = string.Empty;
 
-						ApplyItemsFilter(string.Empty);
+                        LoadOnDemand(string.Empty);
 
 						break;
 					case Key.Escape:
@@ -1242,6 +1255,30 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			DropdownMenu.HorizontalOffset = offset + 0.001;
 			DropdownMenu.HorizontalOffset = offset;
 		}
+
+        private CancellationTokenSource _onDemandToken;
+
+        private void LoadOnDemand(string criteria)
+        {
+            var onDemandService = OnDemandService;
+            if (onDemandService == null)
+            {
+                ApplyItemsFilter(criteria);
+                return;
+            }
+
+            _onDemandToken?.Cancel(true);
+            var onDemandToken = _onDemandToken = new CancellationTokenSource();
+            var items = onDemandService.GetMissingItems(criteria, _onDemandToken.Token);
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                foreach (var item in items)
+                    ItemsSource.Add(item);
+                if (!onDemandToken.IsCancellationRequested)
+                    ApplyItemsFilter(criteria);
+            }));
+        }
 
 		private void ApplyItemsFilter(string criteria)
 		{
@@ -1448,7 +1485,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				}
 
 				FilterTextApplied = string.Empty;
-				ApplyItemsFilter(string.Empty);
+                LoadOnDemand(string.Empty);
 			}
 
 			if (moveFocus)
@@ -1467,7 +1504,32 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			return !MultiSelectComboBoxHasFocus;
 		}
 
-		public void Dispose()
+        private DateTime _onDemandLastRequest;
+
+        private void DropDownListBoxScrolled(object sender, RoutedEventArgs e)
+        {
+            var onDemandService = OnDemandService;
+            if (_dropdownListBox == null || onDemandService == null)
+                return;
+            if (DateTime.Now.Subtract(_onDemandLastRequest).TotalSeconds < 0.5)
+                return;
+            var scrollViewer = VisualTreeService.FindVisualChild<ScrollViewer>(_dropdownListBox, null);
+            if (scrollViewer == null || scrollViewer.ContentVerticalOffset / scrollViewer.ScrollableHeight < 0.85)
+                return;
+            _onDemandLastRequest = DateTime.Now;
+            _onDemandToken?.Cancel(true);
+            _onDemandToken = new CancellationTokenSource();
+            if (!onDemandService.MoreDataAvailable)
+                return;
+            var items = onDemandService.GetMissingItems(_onDemandToken.Token);
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                foreach (var item in items)
+                    ItemsSource.Add(item);
+            }));
+        }
+
+        public void Dispose()
 		{
 			PreviewKeyUp -= MultiSelectComboBox_PreviewKeyUp;
 
