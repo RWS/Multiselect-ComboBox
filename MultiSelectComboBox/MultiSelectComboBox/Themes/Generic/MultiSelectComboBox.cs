@@ -517,7 +517,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 		}
 
-		private static readonly DependencyProperty SelectedItemsProperty =
+		public static readonly DependencyProperty SelectedItemsProperty =
 			DependencyProperty.Register("SelectedItems", typeof(IList), typeof(MultiSelectComboBox),
 				new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, SelectedItemsPropertyChangedCallback, SelectedItemsCoerceValueCallback));
 
