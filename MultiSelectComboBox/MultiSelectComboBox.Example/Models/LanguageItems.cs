@@ -31,6 +31,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
         private bool _useCustomFilterService;
 		private bool _isEditable;
 		private bool _clearFilterOnDropdownClosing;
+		private bool _clearSelectionOnFilterChanged;
 		private string _selectionMode;
         private List<LanguageItem> _allItems;
 
@@ -384,8 +385,23 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 				_clearFilterOnDropdownClosing = value;
 
 				UpdateEventLog(nameof(ClearFilterOnDropdownClosing), _clearFilterOnDropdownClosing.ToString());
-
 				OnPropertyChanged(nameof(ClearFilterOnDropdownClosing));
+			}
+		}
+
+		public bool ClearSelectionOnFilterChanged
+		{
+			get => _clearSelectionOnFilterChanged;
+			set
+			{
+				if (_clearSelectionOnFilterChanged == value)
+				{
+					return;
+				}
+
+				_clearSelectionOnFilterChanged = value;
+				UpdateEventLog(nameof(ClearSelectionOnFilterChanged), _clearSelectionOnFilterChanged.ToString());
+				OnPropertyChanged(nameof(ClearSelectionOnFilterChanged));				
 			}
 		}
 

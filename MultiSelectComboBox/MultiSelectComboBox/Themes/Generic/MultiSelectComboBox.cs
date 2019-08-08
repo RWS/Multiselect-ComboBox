@@ -165,7 +165,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			{
 				_itemsCollectionViewSource = value;
 
-				if (ItemsCollectionViewSource != null)
+				if (ItemsCollectionViewSource != null && ItemsSource != null)
 				{
 					if (EnableGrouping)
 					{
@@ -530,9 +530,19 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 		}
 
-		private static readonly DependencyProperty SelectedItemsProperty =
+		public static readonly DependencyProperty SelectedItemsProperty =
 			DependencyProperty.Register("SelectedItems", typeof(IList), typeof(MultiSelectComboBox),
 				new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, SelectedItemsPropertyChangedCallback, SelectedItemsCoerceValueCallback));
+
+		public bool ClearSelectionOnFilterChanged
+		{
+			get => (bool)GetValue(ClearSelectionOnFilterChangedProperty);
+			set => SetValue(ClearSelectionOnFilterChangedProperty, value);
+		}
+
+		public static readonly DependencyProperty ClearSelectionOnFilterChangedProperty =
+			DependencyProperty.Register("ClearSelectionOnFilterChanged", typeof(bool), typeof(MultiSelectComboBox),
+				new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 		private static object SelectedItemsCoerceValueCallback(DependencyObject dependencyObject, object baseValue)
 		{
@@ -1241,7 +1251,15 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		private void SelectedItemsFilterTextBoxTextChanged(object sender, TextChangedEventArgs e)
 		{
-			UpdateAutoCompleteFilterText(((TextBox)e.OriginalSource).Text, DropdownListBox != null && DropdownListBox.Items.Count > 0 ? DropdownListBox.Items[0] : null);
+			var criteria = ((TextBox) e.OriginalSource).Text;
+
+			if (ClearSelectionOnFilterChanged && !string.IsNullOrEmpty(criteria) && SelectionMode == SelectionModes.Single)
+			{
+				SelectedItems.Clear();
+				SetValue(SelectedItemsProperty, SelectedItems);
+			}
+
+			UpdateAutoCompleteFilterText(criteria, DropdownListBox != null && DropdownListBox.Items.Count > 0 ? DropdownListBox.Items[0] : null);
 		}
 
 		private void ResetDropdownMenu()
@@ -1310,7 +1328,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		}
 
 		private void UpdateAutoCompleteFilterText(string criteria, object item)
-		{
+		{			
 			if (EnableAutoComplete && IsDropDownOpen && item != null && !IsSelectedItem(item) && SelectedItemsFilterAutoCompleteTextBox != null)
 			{
 				var index = criteria?.Length > 0 ? item.ToString().IndexOf(criteria, StringComparison.InvariantCultureIgnoreCase) : 0;
