@@ -418,6 +418,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 		}
 
+
+
 		public static readonly DependencyProperty IsDropDownOpenProperty =
 			DependencyProperty.Register("IsDropDownOpen", typeof(bool), typeof(MultiSelectComboBox),
 				new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
@@ -664,8 +666,26 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		public DropdownItemTemplateService DropdownItemTemplateSelector { get; private set; }
 
+        public bool DisableFilterUpdateOnDropDownItemSelectionChange
+        {
+            get => (bool)GetValue(ClearSelectionOnFilterChangedProperty);
+            set => SetValue(ClearSelectionOnFilterChangedProperty, value);
+        }
 
-		private string FilterTextApplied { get; set; }
+        public static readonly DependencyProperty DisableFilterUpdateOnDropDownItemSelectionChangeProperty =
+            DependencyProperty.Register("DisableFilterUpdateOnDropDownItemSelectionChange", typeof(bool), typeof(MultiSelectComboBox),
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public bool SetFocusOnFirstSelectedItemOnDropDown
+        {
+            get => (bool)GetValue(ClearSelectionOnFilterChangedProperty);
+            set => SetValue(ClearSelectionOnFilterChangedProperty, value);
+        }
+
+        public static readonly DependencyProperty SetFocusOnFirstSelectedItemOnDropDownProperty =
+            DependencyProperty.Register("SetFocusOnFirstSelectedItemOnDropDown", typeof(bool), typeof(MultiSelectComboBox),
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        private string FilterTextApplied { get; set; }
 
 		private bool MultiSelectComboBoxHasFocus { get; set; }
 
@@ -998,9 +1018,16 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			FocusCursorOnFilterTextBox();
 		}
 
-		private void DropdownMenuOpened(object sender, System.EventArgs e)
+
+
+
+        private void DropdownMenuOpened(object sender, System.EventArgs e)
 		{
-			if (DropdownListBox?.Items.Count > 0)
+            if (SelectedItems?.Count > 0 && SetFocusOnFirstSelectedItemOnDropDown)
+            {
+                SetVisualFocusOnItem(SelectedItems[0]);
+            }
+            else if (DropdownListBox?.Items.Count > 0)
 			{
 				SetVisualFocusOnItem(DropdownListBox.Items[0]);
 			}
@@ -1023,17 +1050,20 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		{
 			ResetDropdownMenu();
 		}
-
-		private void DropdownListBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        
+        private void DropdownListBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (e.AddedItems.Count > 0 && e.AddedItems[0] is object comboBoxItemAdded)
-			{
-				UpdateAutoCompleteFilterText(FilterTextApplied, comboBoxItemAdded);
-			}
-			else if (e.RemovedItems.Count > 0 && e.RemovedItems[0] is object comboBoxItemRemoved)
-			{
-				UpdateAutoCompleteFilterText(FilterTextApplied, comboBoxItemRemoved);
-			}
+            if (!DisableFilterUpdateOnDropDownItemSelectionChange)
+            {
+                if (e.AddedItems.Count > 0 && e.AddedItems[0] is object comboBoxItemAdded)
+                {
+                    UpdateAutoCompleteFilterText(FilterTextApplied, comboBoxItemAdded);
+                }
+                else if (e.RemovedItems.Count > 0 && e.RemovedItems[0] is object comboBoxItemRemoved)
+                {
+                    UpdateAutoCompleteFilterText(FilterTextApplied, comboBoxItemRemoved);
+                }
+            }
 		}
 
 		private void DropdownListBoxPreviewKeyDown(object sender, KeyEventArgs e)
@@ -1081,6 +1111,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 						listBoxItem.IsChecked = !listBoxItem.IsChecked;
 
 						UpdateSelectedItemsContainer(ItemsSource);
+
 					}
 				}
 			}
@@ -1454,7 +1485,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 		}
 
-		private void CloseDropdownMenu(bool clearFilter, bool moveFocus)
+		public void CloseDropdownMenu(bool clearFilter, bool moveFocus)
 		{
 			IsDropDownOpen = false;
 
