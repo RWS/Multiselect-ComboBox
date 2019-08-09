@@ -30,12 +30,12 @@ namespace Sdl.MultiSelectComboBox.Example.Services
         public IList<object> GetMissingItems(string criteria, CancellationToken cancellationToken)
         {
             _criteria = criteria;
-            var newItems = _source.Where(x => x.Name.StartsWith(_criteria)).ToList();
-            if (cancellationToken.IsCancellationRequested)
+			var newItems = _source.Where(x => x.Name.IndexOf(_criteria, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+			if (cancellationToken.IsCancellationRequested)
                 return null;
             MoreDataAvailable = newItems.Count > batchSize;
             _skipCount = batchSize;
-            return newItems.Take(batchSize).Where(x => !_observableCollection.Any(y => y.Id == x.Id)).Cast<object>().ToList();
+            return newItems.Take(batchSize).Cast<object>().ToList();
         }
 
         public IList<object> GetMissingItems(CancellationToken cancellationToken)

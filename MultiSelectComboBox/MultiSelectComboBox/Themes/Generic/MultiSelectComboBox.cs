@@ -1284,14 +1284,15 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 ApplyItemsFilter(criteria);
                 return;
             }
-
             _onDemandToken?.Cancel(true);
             var onDemandToken = _onDemandToken = new CancellationTokenSource();
             var items = onDemandService.GetMissingItems(criteria, _onDemandToken.Token);
-
-            Dispatcher.BeginInvoke(new Action(() =>
+			Dispatcher.BeginInvoke(new Action(() =>
             {
-                foreach (var item in items)
+				if (onDemandToken.IsCancellationRequested)
+					return;
+				ItemsSource.Clear();
+				foreach (var item in items)
                     ItemsSource.Add(item);
                 if (!onDemandToken.IsCancellationRequested)
                     ApplyItemsFilter(criteria);
@@ -1529,12 +1530,12 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             var onDemandService = OnDemandService;
             if (_dropdownListBox == null || onDemandService == null)
                 return;
-            if (DateTime.Now.Subtract(_onDemandLastRequest).TotalSeconds < 0.5)
+            if (DateTime.Now.Subtract(_onDemandLastRequest).TotalSeconds < 0.2)
                 return;
             var scrollViewer = VisualTreeService.FindVisualChild<ScrollViewer>(_dropdownListBox, null);
             if (scrollViewer == null || scrollViewer.ContentVerticalOffset / scrollViewer.ScrollableHeight < 0.85)
-                return;
-            _onDemandLastRequest = DateTime.Now;
+               return;
+			_onDemandLastRequest = DateTime.Now;
             _onDemandToken?.Cancel(true);
             _onDemandToken = new CancellationTokenSource();
             if (!onDemandService.MoreDataAvailable)
@@ -1544,7 +1545,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             {
                 foreach (var item in items)
                     ItemsSource.Add(item);
-            }));
+				_onDemandLastRequest = _onDemandLastRequest.AddSeconds(-1);
+			}));
         }
 
         public void Dispose()

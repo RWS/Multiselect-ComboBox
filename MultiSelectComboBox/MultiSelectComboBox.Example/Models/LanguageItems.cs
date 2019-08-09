@@ -344,10 +344,18 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 
                 UpdateEventLog(nameof(EnableOnDemand), _enableOnDemand.ToString());
 
-                CustomOnDemandService = _enableOnDemand ? new CustomOnDemandService(Items, _allItems) : null;
-                _allItems.Where(x => x.Group != null && x.Group.Order != 1).ToList().ForEach(x => _items.Add(x));
-                if (!_items.Any())
-                    Items.Add(_allItems.First());
+				if (_enableOnDemand)
+				{
+					CustomOnDemandService = new CustomOnDemandService(Items, _allItems);
+					//if you want to use IItemGrupAware then add at least one item
+					if (!_items.Any())
+						Items.Add(_allItems.First());
+				}
+				else
+				{
+					CustomOnDemandService = null;
+					_allItems.ForEach(x => Items.Add(x));
+				}
 
                 OnPropertyChanged(nameof(EnableOnDemand));
                 OnPropertyChanged(nameof(CustomOnDemandService));
@@ -534,7 +542,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 
 			}
 
-            _allItems = new List<LanguageItem>(items.OrderBy(a => a.Name));
+            _allItems = new List<LanguageItem>(items.OrderBy(x => x.Group.Order).ThenBy(a => a.Name));
         }
 
 		public event PropertyChangedEventHandler PropertyChanged;
