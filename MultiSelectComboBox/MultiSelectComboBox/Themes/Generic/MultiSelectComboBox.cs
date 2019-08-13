@@ -286,20 +286,21 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
         private static void OnPreviewMouseDownOutside(object sender, MouseButtonEventArgs e)
         {
 
-            Console.WriteLine("I;ve lost capture " + e.Source + " Original Source" + e.OriginalSource);
-            var c = sender as MultiSelectComboBox;
-            c.CloseDropdownMenu(c.ClearFilterOnDropdownClosing, false);
-            Mouse.Capture(null);
+            MultiSelectComboBox comboBox = sender as MultiSelectComboBox;
+            if(comboBox != null)
+            {
+                comboBox.CloseDropdownMenu(comboBox.ClearFilterOnDropdownClosing, false);
+                Mouse.Capture(null);
+            }            
         }
 
         private static void OnLostMouseCapture(object sender, MouseEventArgs e)
         {
-            var c = sender as MultiSelectComboBox;
-            if(c.DropdownListBox.IsMouseCaptureWithin)
+            MultiSelectComboBox comboBox = sender as MultiSelectComboBox;
+            if(comboBox != null && comboBox.DropdownListBox.IsMouseCaptureWithin)
             {
-                Mouse.Capture(c, CaptureMode.SubTree);
+                Mouse.Capture(comboBox, CaptureMode.SubTree);                
             }
-            Console.WriteLine("I;ve lost capture " + e.Source + " Original Source" + e.OriginalSource);
         }
 
 
@@ -1091,6 +1092,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                     UpdateAutoCompleteFilterText(FilterTextApplied, comboBoxItemRemoved);
                 }
             }
+            
 		}
 
 		private void DropdownListBoxPreviewKeyDown(object sender, KeyEventArgs e)
@@ -1199,7 +1201,11 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 					SetKeyBoardFocusOnItem(comboBoxItem);
 					UpdateSelectedItemsContainer(ItemsSource);
-				}
+                    if (SelectionMode == SelectionModes.Single)
+                    {
+                        CloseDropdownMenu(true, false);
+                    }
+                }
 			}
 		}
 
