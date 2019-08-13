@@ -279,9 +279,33 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		static MultiSelectComboBox()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(MultiSelectComboBox), new FrameworkPropertyMetadata(typeof(MultiSelectComboBox)));
-		}
+            EventManager.RegisterClassHandler(typeof(MultiSelectComboBox), Mouse.LostMouseCaptureEvent, new MouseEventHandler(OnLostMouseCapture), true);
+            EventManager.RegisterClassHandler(typeof(MultiSelectComboBox), Mouse.PreviewMouseDownOutsideCapturedElementEvent, new MouseButtonEventHandler(OnPreviewMouseDownOutside), true);
+        }
 
-		public override void OnApplyTemplate()
+        private static void OnPreviewMouseDownOutside(object sender, MouseButtonEventArgs e)
+        {
+
+            Console.WriteLine("I;ve lost capture " + e.Source + " Original Source" + e.OriginalSource);
+            var c = sender as MultiSelectComboBox;
+            c.CloseDropdownMenu(c.ClearFilterOnDropdownClosing, false);
+            Mouse.Capture(null);
+        }
+
+        private static void OnLostMouseCapture(object sender, MouseEventArgs e)
+        {
+            var c = sender as MultiSelectComboBox;
+            if(c.DropdownListBox.IsMouseCaptureWithin)
+            {
+                Mouse.Capture(c, CaptureMode.SubTree);
+            }
+            Console.WriteLine("I;ve lost capture " + e.Source + " Original Source" + e.OriginalSource);
+        }
+
+
+
+
+        public override void OnApplyTemplate()
 		{
 			base.OnApplyTemplate();
 
@@ -882,7 +906,9 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		private void MultiSelectComboBoxOnPreviewMouseDown(object sender, MouseButtonEventArgs e)
 		{
-			if (IsScrollBar(e) || IsRemoveItemButton(e) || IsComboBoxItemDataContext(e))
+            
+
+            if (IsScrollBar(e) || IsRemoveItemButton(e) || IsComboBoxItemDataContext(e))
 			{
 				if (IsComboBoxItemDataContext(e))
 				{
@@ -920,7 +946,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		private void MultiSelectComboBoxGotFocus(object sender, RoutedEventArgs e)
 		{
 			MultiSelectComboBoxHasFocus = true;
-		}
+        }
 
 		private void MultiSelectComboBoxLostFocus(object sender, RoutedEventArgs e)
 		{
@@ -1031,7 +1057,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			{
 				SetVisualFocusOnItem(DropdownListBox.Items[0]);
 			}
-		}
+            Mouse.Capture(this, CaptureMode.SubTree);
+        }
 
 		private void ControlWindowLocationChanged(object sender, System.EventArgs e)
 		{
