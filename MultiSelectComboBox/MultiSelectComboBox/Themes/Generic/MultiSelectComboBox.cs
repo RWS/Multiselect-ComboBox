@@ -279,8 +279,26 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		static MultiSelectComboBox()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(MultiSelectComboBox), new FrameworkPropertyMetadata(typeof(MultiSelectComboBox)));
-            EventManager.RegisterClassHandler(typeof(MultiSelectComboBox), Mouse.LostMouseCaptureEvent, new MouseEventHandler(OnLostMouseCapture), true);
+            EventManager.RegisterClassHandler(typeof(MultiSelectComboBox), Mouse.MouseEnterEvent, new MouseEventHandler(OneMouseEnter), true);
+            EventManager.RegisterClassHandler(typeof(MultiSelectComboBox), Mouse.MouseLeaveEvent, new MouseEventHandler(OneMouseLeave), true);
             EventManager.RegisterClassHandler(typeof(MultiSelectComboBox), Mouse.PreviewMouseDownOutsideCapturedElementEvent, new MouseButtonEventHandler(OnPreviewMouseDownOutside), true);
+        }
+        private static void OneMouseLeave(object sender, MouseEventArgs e)
+        {
+            var comboBox = sender as MultiSelectComboBox;
+            if (comboBox.IsDropDownOpen && !comboBox.IsMouseCaptured)
+            {
+               Mouse.Capture(comboBox, CaptureMode.SubTree);
+            }
+        }
+        private static void OneMouseEnter(object sender, MouseEventArgs e)
+        {
+            
+            var comboBox = sender as MultiSelectComboBox;
+            if (comboBox.IsDropDownOpen && comboBox.IsMouseCaptured)
+            {
+                Mouse.Capture(null);
+            }
         }
 
         private static void OnPreviewMouseDownOutside(object sender, MouseButtonEventArgs e)
@@ -291,20 +309,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             {
                 comboBox.CloseDropdownMenu(comboBox.ClearFilterOnDropdownClosing, false);
                 Mouse.Capture(null);
-            }            
-        }
-
-        private static void OnLostMouseCapture(object sender, MouseEventArgs e)
-        {
-            MultiSelectComboBox comboBox = sender as MultiSelectComboBox;
-            if(comboBox != null && comboBox.DropdownListBox.IsMouseCaptureWithin)
-            {
-                Mouse.Capture(comboBox, CaptureMode.SubTree);                
             }
         }
-
-
-
 
         public override void OnApplyTemplate()
 		{
