@@ -283,6 +283,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             EventManager.RegisterClassHandler(typeof(MultiSelectComboBox), Mouse.MouseLeaveEvent, new MouseEventHandler(OneMouseLeave), true);
             EventManager.RegisterClassHandler(typeof(MultiSelectComboBox), Mouse.PreviewMouseDownOutsideCapturedElementEvent, new MouseButtonEventHandler(OnPreviewMouseDownOutside), true);
         }
+
+        private object _previousSelectedValue;
         private static void OneMouseLeave(object sender, MouseEventArgs e)
         {
             var comboBox = sender as MultiSelectComboBox;
@@ -572,7 +574,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				var itemsRemoved = new Collection<object>();
 
 				RemoveSelectedItems(control.SelectedItemsInternal, newCollection, ref itemsRemoved);
-				AddSelectedItems(control.SelectedItemsInternal, newCollection, ref itemsAdded);
+				AddSelectedItems(control.SelectedItemsInternal, newCollection, ref itemsAdded, control);
 
 				if (itemsAdded.Count > 0 || itemsRemoved.Count > 0)
 				{
@@ -607,13 +609,18 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			return false;
 		}
 
-		private static void AddSelectedItems(IList to, IList basedOn, ref Collection<object> itemsAdded)
+		private static void AddSelectedItems(IList to, IList basedOn, ref Collection<object> itemsAdded, MultiSelectComboBox control)
 		{
 			foreach (var item in basedOn)
 			{
 				if (AddSelectedItem(to, item))
 				{
 					itemsAdded.Add(item);
+                    if(control.SelectionMode == SelectionModes.Single)
+                    {
+                        control._previousSelectedValue = item;
+                    }
+                        
 				}
 			}
 		}
@@ -856,6 +863,10 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 					if (!SelectedItems.Contains(item))
 					{
 						SelectedItems.Add(item);
+                        if(SelectionMode == SelectionModes.Single && _previousSelectedValue != item)
+                        {
+                            _previousSelectedValue = item;
+                        }
 					}
 				}
 			}
@@ -940,7 +951,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 					if (!IsDropDownOpen)
 					{
-						UpdateAutoCompleteFilterText(FilterTextApplied, null);
+						UpdateAutoCompleteFilterText(FilterTextApplied, null);          
 					}
 				}
 
@@ -1087,7 +1098,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
         
         private void DropdownListBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-            if (!DisableFilterUpdateOnDropDownItemSelectionChange)
+            if ((SelectionMode == SelectionModes.Single && SelectedItems.Count == 0 && DisableFilterUpdateOnDropDownItemSelectionChange) || !DisableFilterUpdateOnDropDownItemSelectionChange)
             {
                 if (e.AddedItems.Count > 0 && e.AddedItems[0] is object comboBoxItemAdded)
                 {
@@ -1238,7 +1249,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				{
 					listBoxItemTo.Focus();
 					DropdownListBox.SelectedItem = listBoxItemTo;
-				}
+                }
 			}
 		}
 
@@ -1497,8 +1508,17 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 			return false;
 		}
-
-		private void AttemptToCloseEditMode()
+        private void RestorePreviousSelection()
+        {
+            SelectedItems.Clear();
+            SelectedItems.Add(_previousSelectedValue);
+            SetValue(SelectedItemsProperty, SelectedItems);
+            SelectedItemsFilterTextBox.Text = string.Empty;
+            SelectedItemsFilterAutoCompleteTextBox.Text = string.Empty;
+            FilterTextApplied = string.Empty;
+            ApplyItemsFilter(string.Empty);
+        }
+        private void AttemptToCloseEditMode()
 		{
 			if (SelectedItemsControl != null)
 			{
@@ -1548,7 +1568,15 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 				SetValue(IsEditModePropertyKey, false);
 			}
+
+            if(_previousSelectedValue != null && SelectedItems != null && SelectedItems.Count == 0)
+
+            {
+                RestorePreviousSelection();
+            }
 		}
+
+
 
 		private bool CanCloseEditMode()
 		{
