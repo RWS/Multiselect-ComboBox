@@ -299,7 +299,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             var comboBox = sender as MultiSelectComboBox;
             if (comboBox.IsDropDownOpen && comboBox.IsMouseCaptured)
             {
-                Mouse.Capture(null);
+                comboBox.CaptureMouse();
+                comboBox.ReleaseMouseCapture();
             }
         }
 
@@ -310,7 +311,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             if (comboBox != null)
             {
                 comboBox.CloseDropdownMenu(comboBox.ClearFilterOnDropdownClosing, false);
-                Mouse.Capture(null);
+                comboBox.CaptureMouse();
+                comboBox.ReleaseMouseCapture();
             }
         }
 
