@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
     xmlns:generic="clr-namespace:Sdl.MultiSelectComboBox.Themes.Generic"
     xmlns:api="clr-namespace:Sdl.MultiSelectComboBox.API"
     xmlns:controls="clr-namespace:Sdl.MultiSelectComboBox.Controls">
@@ -368,26 +367,24 @@
                             </ToggleButton.Template>
                         </ToggleButton>
 
-                        <Popup x:Name="PART_MultiSelectComboBox_Dropdown" Margin="2" Grid.ColumnSpan="2" MaxHeight="{Binding Path=MaxDropDownHeight, RelativeSource={RelativeSource TemplatedParent} }" PlacementTarget="{Binding ElementName=PART_MultiSelectComboBox}" IsOpen="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" MaxWidth="{TemplateBinding ActualWidth}" Placement="Bottom" AllowsTransparency="True" PopupAnimation="Slide">
-                            <themes:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MinWidth="{Binding ActualWidth, ElementName=PART_MultiSelectComboBox}">
-                                <Border x:Name="dropDownBorder" Margin="0,1,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="0" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                                    <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
-                                        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
-                                            <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
-                                        </Canvas>
-                                        <controls:ExtendedListBox x:Name="PART_MultiSelectComboBox_Dropdown_ListBox" Style="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Style}">
-                                            <controls:ExtendedListBox.GroupStyle>
-                                                <GroupStyle HeaderTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Header.Template}"/>
-                                            </controls:ExtendedListBox.GroupStyle>
-                                            <controls:ExtendedListBox.Resources>
-                                                <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate">
-                                                    <TextBlock Text="{Binding}" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,2,2,3"/>
-                                                </DataTemplate>
-                                            </controls:ExtendedListBox.Resources>
-                                        </controls:ExtendedListBox>
-                                    </Grid>
-                                </Border>
-                            </themes:SystemDropShadowChrome>
+                        <Popup x:Name="PART_MultiSelectComboBox_Dropdown" Margin="2" Grid.ColumnSpan="2" MinWidth="{Binding ActualWidth, ElementName=PART_MultiSelectComboBox}" MaxHeight="{Binding Path=MaxDropDownHeight, RelativeSource={RelativeSource TemplatedParent} }" PlacementTarget="{Binding ElementName=PART_MultiSelectComboBox}" IsOpen="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" MaxWidth="{TemplateBinding ActualWidth}" Placement="Bottom" AllowsTransparency="True" PopupAnimation="Slide">
+                            <Border x:Name="dropDownBorder" Margin="0,1,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="0" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                                <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                                    <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                        <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                    </Canvas>
+                                    <controls:ExtendedListBox x:Name="PART_MultiSelectComboBox_Dropdown_ListBox" Style="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Style}">
+                                        <controls:ExtendedListBox.GroupStyle>
+                                            <GroupStyle HeaderTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Header.Template}"/>
+                                        </controls:ExtendedListBox.GroupStyle>
+                                        <controls:ExtendedListBox.Resources>
+                                            <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate">
+                                                <TextBlock Text="{Binding}" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,2,2,3"/>
+                                            </DataTemplate>
+                                        </controls:ExtendedListBox.Resources>
+                                    </controls:ExtendedListBox>
+                                </Grid>
+                            </Border>
                         </Popup>
                     </Grid>
 
