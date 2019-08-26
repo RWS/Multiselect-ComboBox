@@ -157,12 +157,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MultiSelectComboBox\Sdl.MultiSelectComboBox.csproj">
-      <Project>{0378f38f-5bf3-497f-91c2-1ee77c874593}</Project>
+    <ProjectReference Include="..\Sdl.MultiSelectComboBox\Sdl.MultiSelectComboBox.csproj">
+      <Project>{9101fc75-3b4c-48f8-8173-7a1e3a990e42}</Project>
       <Name>Sdl.MultiSelectComboBox</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\Flags\aa-DJ.ico" />
     <None Include="Resources\Flags\aa-ER.ico" />
