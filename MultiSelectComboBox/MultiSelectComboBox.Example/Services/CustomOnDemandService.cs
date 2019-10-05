@@ -27,7 +27,7 @@ namespace Sdl.MultiSelectComboBox.Example.Services
 
         public bool MoreDataAvailable { get; private set; } = true;
 
-        public IList<object> GetMissingItems(string criteria, CancellationToken cancellationToken)
+        public Task<IList<object>> GetMissingItemsAsync(string criteria, CancellationToken cancellationToken)
         {
             _criteria = criteria;
 			var newItems = _source.Where(x => x.Name.IndexOf(_criteria, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
@@ -35,17 +35,17 @@ namespace Sdl.MultiSelectComboBox.Example.Services
                 return null;
             MoreDataAvailable = newItems.Count > batchSize;
             _skipCount = batchSize;
-            return newItems.Take(batchSize).Cast<object>().ToList();
+            return Task.Run(() => (IList<object>)newItems.Take(batchSize).Cast<object>().ToList());
         }
 
-        public IList<object> GetMissingItems(CancellationToken cancellationToken)
+        public Task<IList<object>> GetMissingItemsAsync(CancellationToken cancellationToken)
         {
             var newItems = _source.Where(x => x.Name.StartsWith(_criteria)).Skip(_skipCount).ToList();
             if (cancellationToken.IsCancellationRequested)
                 return null;
             MoreDataAvailable = newItems.Count > batchSize;
             _skipCount += batchSize;
-            return newItems.Take(batchSize).Where(x => !_observableCollection.Any(y => y.Id == x.Id)).Cast<object>().ToList();
+            return Task.Run(() => (IList<object>)newItems.Take(batchSize).Where(x => !_observableCollection.Any(y => y.Id == x.Id)).Cast<object>().ToList());
         }
     }
 }

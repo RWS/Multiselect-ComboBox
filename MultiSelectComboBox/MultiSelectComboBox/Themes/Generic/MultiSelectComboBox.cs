@@ -1295,17 +1295,20 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             }
             _onDemandToken?.Cancel(true);
             var onDemandToken = _onDemandToken = new CancellationTokenSource();
-            var items = onDemandService.GetMissingItems(criteria, _onDemandToken.Token);
-			Dispatcher.BeginInvoke(new Action(() =>
+            Task.Run(async () =>
             {
-				if (onDemandToken.IsCancellationRequested)
-					return;
-				ItemsSource.Clear();
-				foreach (var item in items)
-                    ItemsSource.Add(item);
-                if (!onDemandToken.IsCancellationRequested)
-                    ApplyItemsFilter(criteria);
-            }));
+                var items = await onDemandService.GetMissingItemsAsync(criteria, _onDemandToken.Token);
+                await Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (onDemandToken.IsCancellationRequested)
+                        return;
+                    ItemsSource.Clear();
+                    foreach (var item in items)
+                        ItemsSource.Add(item);
+                    if (!onDemandToken.IsCancellationRequested)
+                        ApplyItemsFilter(criteria);
+                }));
+            });
         }
 
 		private void ApplyItemsFilter(string criteria)
@@ -1549,13 +1552,16 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             _onDemandToken = new CancellationTokenSource();
             if (!onDemandService.MoreDataAvailable)
                 return;
-            var items = onDemandService.GetMissingItems(_onDemandToken.Token);
-            Dispatcher.BeginInvoke(new Action(() =>
+            Task.Run(async () =>
             {
-                foreach (var item in items)
-                    ItemsSource.Add(item);
-				_onDemandLastRequest = _onDemandLastRequest.AddSeconds(-1);
-			}));
+                var items = await onDemandService.GetMissingItemsAsync(_onDemandToken.Token);
+                await Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    foreach (var item in items)
+                        ItemsSource.Add(item);
+                    _onDemandLastRequest = _onDemandLastRequest.AddSeconds(-1);
+                }));
+            });
         }
 
         public void Dispose()

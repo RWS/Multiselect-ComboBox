@@ -9,8 +9,8 @@ namespace Sdl.MultiSelectComboBox.API
 {
     public interface IOnDemandService
     {
-        IList<object> GetMissingItems(string criteria, CancellationToken cancellationToken);
+        Task<IList<object>> GetMissingItemsAsync(string criteria, CancellationToken cancellationToken);
         bool MoreDataAvailable { get; }
-        IList<object> GetMissingItems(CancellationToken cancellationToken);
+        Task<IList<object>> GetMissingItemsAsync(CancellationToken cancellationToken);
     }
 }
