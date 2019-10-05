@@ -413,7 +413,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         public static readonly DependencyProperty OnDemandServiceProperty =
             DependencyProperty.Register("OnDemandService", typeof(IOnDemandService), typeof(MultiSelectComboBox),
-                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None));
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, OnDemandServicePropertyChangedCallback));
 
         public IOnDemandService OnDemandService
         {
@@ -431,7 +431,16 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 		}
 
-		public static readonly DependencyProperty IsDropDownOpenProperty =
+        private static void OnDemandServicePropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            var control = dependencyObject as MultiSelectComboBox;
+            if (control?.MultiSelectComboBoxGrid != null)
+            {
+                control.LoadOnDemand(string.Empty);
+            }
+        }
+
+        public static readonly DependencyProperty IsDropDownOpenProperty =
 			DependencyProperty.Register("IsDropDownOpen", typeof(bool), typeof(MultiSelectComboBox),
 				new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
