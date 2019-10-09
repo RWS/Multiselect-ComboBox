@@ -27,7 +27,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 		private bool _enableGrouping;
 		private bool _useRecentlyUsedGroupingService;
 		private bool _enableFiltering;
-        private bool _enableOnDemand;
+        private bool _enableSuggestionProvider;
         private bool _useCustomFilterService;
 		private bool _isEditable;
 		private bool _clearFilterOnDropdownClosing;
@@ -65,7 +65,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
             InitializeItemsCollection(new DefaultGroupService(_useRecentlyUsedGroupingService ? RecentlyUsedFilterService : null));
 
             //we need to enable this after all source items are loaded
-            EnableOnDemand = true;
+            EnableSuggestionProvider = true;
         }
 
 		public ICommand FilterTextChangedCommand { get; }
@@ -330,35 +330,35 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 			}
 		}
 
-        public bool EnableOnDemand
+        public bool EnableSuggestionProvider
         {
-            get => _enableOnDemand;
+            get => _enableSuggestionProvider;
             set
             {
-                if (_enableOnDemand.Equals(value))
+                if (_enableSuggestionProvider.Equals(value))
                 {
                     return;
                 }
 
-                _enableOnDemand = value;
+                _enableSuggestionProvider = value;
 
-                UpdateEventLog(nameof(EnableOnDemand), _enableOnDemand.ToString());
+                UpdateEventLog(nameof(EnableSuggestionProvider), _enableSuggestionProvider.ToString());
 
-				if (_enableOnDemand)
+				if (_enableSuggestionProvider)
 				{
-					CustomOnDemandService = new CustomOnDemandService(Items, _allItems);
+					CustomSuggestionProvider = new CustomSuggestionProvider(Items, _allItems);
 					//if you want to use IItemGrupAware then add at least one item
 					if (!_items.Any())
 						Items.Add(_allItems.First());
 				}
 				else
 				{
-					CustomOnDemandService = null;
+					CustomSuggestionProvider = null;
 					_allItems.ForEach(x => Items.Add(x));
 				}
 
-                OnPropertyChanged(nameof(EnableOnDemand));
-                OnPropertyChanged(nameof(CustomOnDemandService));
+                OnPropertyChanged(nameof(EnableSuggestionProvider));
+                OnPropertyChanged(nameof(CustomSuggestionProvider));
             }
         }
 
@@ -455,7 +455,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 			}
 		}
 
-        public IOnDemandService CustomOnDemandService { get; private set; }
+        public ISuggestionProvider CustomSuggestionProvider { get; private set; }
 
         private void UpdateSelectedItemsCount(int count)
 		{

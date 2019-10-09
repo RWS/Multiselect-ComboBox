@@ -411,14 +411,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			set => SetValue(FilterServiceProperty, value);
 		}
 
-        public static readonly DependencyProperty OnDemandServiceProperty =
-            DependencyProperty.Register("OnDemandService", typeof(IOnDemandService), typeof(MultiSelectComboBox),
-                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, OnDemandServicePropertyChangedCallback));
+        public static readonly DependencyProperty SuggestionProviderProperty =
+            DependencyProperty.Register("SuggestionProvider", typeof(ISuggestionProvider), typeof(MultiSelectComboBox),
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, SuggestionProviderPropertyChangedCallback));
 
-        public IOnDemandService OnDemandService
+        public ISuggestionProvider SuggestionProvider
         {
-            get => (IOnDemandService)GetValue(OnDemandServiceProperty);
-            set => SetValue(OnDemandServiceProperty, value);
+            get => (ISuggestionProvider)GetValue(SuggestionProviderProperty);
+            set => SetValue(SuggestionProviderProperty, value);
         }
 
         private static void FilterServicePropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
@@ -431,12 +431,12 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 		}
 
-        private static void OnDemandServicePropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        private static void SuggestionProviderPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
             var control = dependencyObject as MultiSelectComboBox;
             if (control?.MultiSelectComboBoxGrid != null)
             {
-                control.LoadOnDemand(string.Empty);
+                control.LoadSuggestions(string.Empty);
             }
         }
 
@@ -980,7 +980,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 							textBox.Text = string.Empty;
 							FilterTextApplied = string.Empty;
 
-                            LoadOnDemand(string.Empty);
+                            LoadSuggestions(string.Empty);
 						}
 						else if (IsEditable)
 						{
@@ -997,14 +997,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 						SelectedItemsFilterTextBox.Text = string.Empty;
 						FilterTextApplied = string.Empty;
 
-                        LoadOnDemand(string.Empty);
+                        LoadSuggestions(string.Empty);
 						break;
 					case Key.Escape:
 						IsDropDownOpen = false;
 						UpdateAutoCompleteFilterText(string.Empty, null);
 						break;
 					default:
-                        LoadOnDemand(textBox.Text);
+                        LoadSuggestions(textBox.Text);
 
 						if (!IsDropDownOpen && EnableFiltering)
 						{
@@ -1078,7 +1078,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 						SelectedItemsFilterTextBox.Text = string.Empty;
 						FilterTextApplied = string.Empty;
 
-                        LoadOnDemand(string.Empty);
+                        LoadSuggestions(string.Empty);
 
 						break;
 					case Key.Escape:
@@ -1283,29 +1283,29 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			DropdownMenu.HorizontalOffset = offset;
 		}
 
-        private CancellationTokenSource _onDemandToken;
+        private CancellationTokenSource _suggestionProviderToken;
 
-        private void LoadOnDemand(string criteria)
+        private void LoadSuggestions(string criteria)
         {
-            var onDemandService = OnDemandService;
-            if (onDemandService == null)
+            var suggestionProvider = SuggestionProvider;
+            if (suggestionProvider == null)
             {
                 ApplyItemsFilter(criteria);
                 return;
             }
-            _onDemandToken?.Cancel(true);
-            var onDemandToken = _onDemandToken = new CancellationTokenSource();
+            _suggestionProviderToken?.Cancel(true);
+            var suggestionProviderToken = _suggestionProviderToken = new CancellationTokenSource();
             Task.Run(async () =>
             {
-                var items = await onDemandService.GetMissingItemsAsync(criteria, _onDemandToken.Token);
+                var items = await suggestionProvider.GetSuggestions(criteria, _suggestionProviderToken.Token);
                 await Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    if (onDemandToken.IsCancellationRequested)
+                    if (suggestionProviderToken.IsCancellationRequested)
                         return;
                     ItemsSource.Clear();
                     foreach (var item in items)
                         ItemsSource.Add(item);
-                    if (!onDemandToken.IsCancellationRequested)
+                    if (!suggestionProviderToken.IsCancellationRequested)
                         ApplyItemsFilter(criteria);
                 }));
             });
@@ -1516,7 +1516,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				}
 
 				FilterTextApplied = string.Empty;
-                LoadOnDemand(string.Empty);
+                LoadSuggestions(string.Empty);
 			}
 
 			if (moveFocus)
@@ -1535,31 +1535,31 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			return !MultiSelectComboBoxHasFocus;
 		}
 
-        private DateTime _onDemandLastRequest;
+        private DateTime _suggestionProviderLastRequest;
 
         private void DropDownListBoxScrolled(object sender, RoutedEventArgs e)
         {
-            var onDemandService = OnDemandService;
-            if (_dropdownListBox == null || onDemandService == null)
+            var suggestionProvider = SuggestionProvider;
+            if (_dropdownListBox == null || suggestionProvider == null)
                 return;
-            if (DateTime.Now.Subtract(_onDemandLastRequest).TotalSeconds < 0.2)
+            if (DateTime.Now.Subtract(_suggestionProviderLastRequest).TotalSeconds < 0.2)
                 return;
             var scrollViewer = VisualTreeService.FindVisualChild<ScrollViewer>(_dropdownListBox, null);
             if (scrollViewer == null || scrollViewer.ContentVerticalOffset / scrollViewer.ScrollableHeight < 0.85)
                return;
-			_onDemandLastRequest = DateTime.Now;
-            _onDemandToken?.Cancel(true);
-            _onDemandToken = new CancellationTokenSource();
-            if (!onDemandService.MoreDataAvailable)
+			_suggestionProviderLastRequest = DateTime.Now;
+            _suggestionProviderToken?.Cancel(true);
+            _suggestionProviderToken = new CancellationTokenSource();
+            if (!suggestionProvider.HasMoreSuggestions)
                 return;
             Task.Run(async () =>
             {
-                var items = await onDemandService.GetMissingItemsAsync(_onDemandToken.Token);
+                var items = await suggestionProvider.GetSuggestions(_suggestionProviderToken.Token);
                 await Dispatcher.BeginInvoke(new Action(() =>
                 {
                     foreach (var item in items)
                         ItemsSource.Add(item);
-                    _onDemandLastRequest = _onDemandLastRequest.AddSeconds(-1);
+                    _suggestionProviderLastRequest = _suggestionProviderLastRequest.AddSeconds(-1);
                 }));
             });
         }

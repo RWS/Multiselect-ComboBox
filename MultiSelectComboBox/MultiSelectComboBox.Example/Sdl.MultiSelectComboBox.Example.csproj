@@ -74,7 +74,7 @@
     </Compile>
     <Compile Include="Models\LanguageItemGroup.cs" />
     <Compile Include="Services\CustomFilterService.cs" />
-    <Compile Include="Services\CustomOnDemandService.cs" />
+    <Compile Include="Services\CustomSuggestionProvider.cs" />
     <Compile Include="Services\ImageService.cs" />
     <Compile Include="Services\DefaultGroupService.cs" />
     <Compile Include="Services\RecentlyUsedService.cs" />
