@@ -4,6 +4,7 @@
     xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
     xmlns:generic="clr-namespace:Sdl.MultiSelectComboBox.Themes.Generic"
     xmlns:api="clr-namespace:Sdl.MultiSelectComboBox.API"
+    xmlns:converters="clr-namespace:Sdl.MultiSelectComboBox.Converters"
     xmlns:controls="clr-namespace:Sdl.MultiSelectComboBox.Controls">
 
     <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Background" Color="Transparent"/>
@@ -34,6 +35,7 @@
     <FontFamily x:Key="MultiSelectComboBox.Text.FontFamily">Segoe UI</FontFamily>
     <SolidColorBrush x:Key="MultiSelectComboBox.Text.Disabled.Foreground" Color="#FFB8B3B3"/>
     <SolidColorBrush x:Key="MultiSelectComboBox.Text.Foreground" Color="#FF000000"/>
+    <converters:BoolToVisibilityConverter x:Key="BoolToVis" />
 
     <Style x:Key="MultiSelectComboBox.FocusVisual">
         <Setter Property="Control.Template">
@@ -216,7 +218,6 @@
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
-
     </Style>
 
     <Style x:Key="MultiSelectComboBox.SelectedItemsPanel.RemoveItem.Button.Style" TargetType="{x:Type Button}">
@@ -372,10 +373,24 @@
                             <themes:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MinWidth="{Binding ActualWidth, ElementName=PART_MultiSelectComboBox}">
                                 <Border x:Name="dropDownBorder" Margin="0,1,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="0" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
                                     <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
-                                        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0" Visibility="{Binding DetachAutoCompleteFilterBox, RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource BoolToVis},FallbackValue=Collpased}">
+                                            <Border BorderBrush="Black" BorderThickness="1">
+                                                <StackPanel  x:Name="PART_MultiSelectComboBox_Detached_FilterPanel"  Orientation="Horizontal" Height="30">
+                                                    <TextBox x:Name="PART_MultiSelectComboBox_Detached_Filter_TextBox" Margin="1,0,0,0" IsEnabled="{Binding IsEditMode, RelativeSource={RelativeSource TemplatedParent}}" 
+                                         Focusable="True" IsTabStop="False"  ForceCursor="True" BorderThickness="0" BorderBrush="Transparent" Padding="1" TextWrapping="NoWrap"/>
+                                                    <TextBox x:Name="PART_MultiSelectComboBox_Detached_Filter_AutoComplete_TextBox" IsReadOnly="True"
+                                         Focusable="False" IsTabStop="False" Margin="-2,0,0,0" BorderThickness="0" BorderBrush="Transparent" Padding="-3,1,0,1" TextWrapping="NoWrap"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
+                                        <Canvas Grid.Row="1" x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
                                             <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
                                         </Canvas>
-                                        <controls:ExtendedListBox x:Name="PART_MultiSelectComboBox_Dropdown_ListBox" Style="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Style}">
+                                        <controls:ExtendedListBox Grid.Row="1" x:Name="PART_MultiSelectComboBox_Dropdown_ListBox" Style="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Style}">
                                             <controls:ExtendedListBox.GroupStyle>
                                                 <GroupStyle HeaderTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Header.Template}"/>
                                             </controls:ExtendedListBox.GroupStyle>

@@ -10,7 +10,7 @@
         xmlns:converters="clr-namespace:Sdl.MultiSelectComboBox.Example.Converters"
         d:DataContext="{d:DesignInstance {x:Type models:LanguageItems}}"
         mc:Ignorable="d"  
-        Title="Sdl.MultiSelectComboBox Example" Height="600" MinHeight="540" Width="934">
+        Title="Sdl.MultiSelectComboBox Example" Height="600" MinHeight="560" Width="934">
 
 	<Window.Resources>
 		<ResourceDictionary>
@@ -107,6 +107,7 @@
                                                      EnableGrouping="{Binding EnableGrouping}"
                                                      ItemsSource="{Binding Items}" 
                                                      SelectedItems="{Binding SelectedItems}"
+                                                     DetachAutoCompleteFilterBox="{Binding DetachAutoCompleteFilterBox,FallbackValue=True}"
                                                      SuggestionProvider="{Binding CustomSuggestionProvider}"
 													 ClearSelectionOnFilterChanged="{Binding ClearSelectionOnFilterChanged}"
                                                      sdl:FilterTextChangedBehaviour.FilterTextChanged="{Binding FilterTextChangedCommand}"
@@ -128,6 +129,7 @@
                                                      EnableGrouping="{Binding EnableGrouping}"
                                                      ItemsSource="{Binding Items}"        
                                                      SelectedItems="{Binding SelectedItems}"
+                                                     DetachAutoCompleteFilterBox="{Binding DetachAutoCompleteFilterBox,FallbackValue=True}"
                                                      SuggestionProvider="{Binding CustomSuggestionProvider}"
 							                         ClearSelectionOnFilterChanged="{Binding ClearSelectionOnFilterChanged}"
                                                      sdl:FilterTextChangedBehaviour.FilterTextChanged="{Binding FilterTextChangedCommand}"
@@ -142,9 +144,8 @@
 
 						<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,5,0,0">
 							<Border BorderBrush="LightGray" BorderThickness="1">
-								<Grid>
-
-									<TextBlock Text ="Demo Settings" Margin="9,4,0,0" HorizontalAlignment="Left" FontWeight="DemiBold" Width="95" Height="21" VerticalAlignment="Top" />
+                                <Grid>
+                                    <TextBlock Text ="Demo Settings" Margin="9,4,0,0" HorizontalAlignment="Left" FontWeight="DemiBold" Width="95" Height="21" VerticalAlignment="Top" />
 
 									<Label Content="Style:" Margin="27,26,0,0" HorizontalAlignment="Left" Width="48" Height="26" VerticalAlignment="Top" />
 
@@ -190,6 +191,8 @@
 									<CheckBox Content="Clear selection on filter changed (Single selection mode only)" IsChecked="{Binding ClearSelectionOnFilterChanged}" Margin="30,325,10,0" VerticalAlignment="Top" Grid.Column="0"/>
 
                                     <CheckBox Content="Enable on demand service" IsChecked="{Binding EnableSuggestionProvider}" Margin="30,345,10,0" VerticalAlignment="Top" Grid.Column="0"/>
+                                    
+                                    <CheckBox Content="Detach AutoComplete Filter Box" IsChecked="{Binding DetachAutoCompleteFilterBox}" Margin="30,365,10,0" VerticalAlignment="Top" Grid.Column="0"/>
 								</Grid>
 							</Border>
 						</ScrollViewer>
