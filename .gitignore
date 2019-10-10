@@ -328,3 +328,5 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/MultiSelectComboBox/MultiSelectComboBox.Example/Testing.xaml
+/MultiSelectComboBox/MultiSelectComboBox.Example/Testing.xaml.cs

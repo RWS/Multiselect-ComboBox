@@ -494,6 +494,27 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             set => SetValue(SuggestionProviderProperty, value);
         }
 
+        public static readonly DependencyProperty LoadingSuggestionsContentProperty = 
+            DependencyProperty.Register("LoadingSuggestionsContent", typeof(object), typeof(MultiSelectComboBox), 
+            new FrameworkPropertyMetadata(null));
+        public object LoadingSuggestionsContent
+        {
+            get => GetValue(LoadingSuggestionsContentProperty);
+
+            set => SetValue(LoadingSuggestionsContentProperty, value);
+        }
+
+
+        public static readonly DependencyProperty IsLoadingSuggestionsProperty =
+            DependencyProperty.Register("IsLoadingSuggestions", typeof(bool), typeof(MultiSelectComboBox),
+                new FrameworkPropertyMetadata(false));
+        public bool IsLoadingSuggestions
+        {
+            get => (bool)GetValue(IsLoadingSuggestionsProperty);
+
+            set => SetValue(IsLoadingSuggestionsProperty, value);
+        }
+
         private static void FilterServicePropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
             var control = dependencyObject as MultiSelectComboBox;
@@ -608,14 +629,11 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
                     if (control.DropdownMenu != null)
                     {
-                        if (control.DetachAutoCompleteFilterBox == true)
+                        control.DetachedFilterPanel = VisualTreeService.FindVisualChild<StackPanel>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Detached_FilterPanel);
+                        if (control.DetachedFilterPanel != null)
                         {
-                            control.DetachedFilterPanel = VisualTreeService.FindVisualChild<StackPanel>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Detached_FilterPanel);
-                            if (control.DetachedFilterPanel != null)
-                            {
-                                control.DetachedFilterTextBox = VisualTreeService.FindVisualChild<TextBox>(control.DetachedFilterPanel, PART_MultiSelectComboBox_Detached_Filter_TextBox);
-                                control.DetachedFilterAutoCompleteTextBox = VisualTreeService.FindVisualChild<TextBox>(control.DetachedFilterPanel, PART_MultiSelectComboBox_Detached_Filter_AutoComplete_TextBox);
-                            }
+                            control.DetachedFilterTextBox = VisualTreeService.FindVisualChild<TextBox>(control.DetachedFilterPanel, PART_MultiSelectComboBox_Detached_Filter_TextBox);
+                            control.DetachedFilterAutoCompleteTextBox = VisualTreeService.FindVisualChild<TextBox>(control.DetachedFilterPanel, PART_MultiSelectComboBox_Detached_Filter_AutoComplete_TextBox);
                         }
                         control.DropdownListBox = VisualTreeService.FindVisualChild<ListBox>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Dropdown_ListBox);
                     }
@@ -1027,7 +1045,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
         private void MultiSelectComboBoxLostFocus(object sender, RoutedEventArgs e)
         {
             MultiSelectComboBoxHasFocus = false;
-
             AttemptToCloseEditMode();
         }
 
@@ -1124,7 +1141,10 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private void DropdownMenuClosed(object sender, System.EventArgs e)
         {
-            FocusCursorOnFilterTextBox();
+            if (DetachAutoCompleteFilterBox == false)
+                FocusCursorOnFilterTextBox();
+            else
+                Focus();// Move Focus to own. To Select again if needed(Can Press Enter or F2 to select item again if needed)
         }
 
         private void DropdownMenuOpened(object sender, System.EventArgs e)
@@ -1407,6 +1427,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 ApplyItemsFilter(criteria);
                 return;
             }
+            IsLoadingSuggestions = true;
             _suggestionProviderToken?.Cancel(true);
             var suggestionProviderToken = _suggestionProviderToken = new CancellationTokenSource();
             Task.Run(async () =>
@@ -1423,6 +1444,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                         ApplyItemsFilter(criteria);
                 }));
             });
+            IsLoadingSuggestions = false;
         }
 
         private void ApplyItemsFilter(string criteria)
@@ -1671,14 +1693,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             }
         }
 
-        private void FocusMultiSelectComboBox()
-        {
-            if (DetachAutoCompleteFilterBox == false)
-                MultiSelectComboBoxGrid.Focus();
-            else
-                MultiSelectComboBoxHasFocus = true;
-        }
-
         private bool CanCloseEditMode()
         {
             return !MultiSelectComboBoxHasFocus;
@@ -1701,8 +1715,10 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             _suggestionProviderToken = new CancellationTokenSource();
             if (!suggestionProvider.HasMoreSuggestions)
                 return;
+            IsLoadingSuggestions = true;
             Task.Run(async () =>
             {
+
                 var items = await suggestionProvider.GetSuggestions(_suggestionProviderToken.Token);
                 await Dispatcher.BeginInvoke(new Action(() =>
                 {
@@ -1710,7 +1726,9 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                         ItemsSource.Add(item);
                     _suggestionProviderLastRequest = _suggestionProviderLastRequest.AddSeconds(-1);
                 }));
+
             });
+            IsLoadingSuggestions = false;
         }
 
         public void Dispose()

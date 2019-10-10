@@ -30,7 +30,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
         private bool _enableSuggestionProvider;
         private bool _useCustomFilterService;
         private bool _isEditable;
-        private bool _detachAutoCompleteFilterBox=true;
+        private bool _detachAutoCompleteFilterBox;
         private bool _clearFilterOnDropdownClosing;
         private bool _clearSelectionOnFilterChanged;
         private string _selectionMode;
