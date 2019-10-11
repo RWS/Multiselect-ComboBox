@@ -8,6 +8,7 @@
         <ResourceDictionary Source="MultiSelectComboBox.Resources.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     <converters:BoolToVisibilityConverter x:Key="BoolToVis" />
+    <converters:InverseBoolToVisibilityConverter x:Key="InvBoolToVis" />
     <Style x:Key="MultiSelectComboBox.FocusVisual">
         <Setter Property="Control.Template">
             <Setter.Value>
@@ -376,21 +377,32 @@
                                                 </StackPanel>
                                             </Border>
                                         </Grid>
-                                        <Grid x:Name="grid" Grid.Row="1" RenderOptions.ClearTypeHint="Enabled">
-                                            <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
-                                                <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
-                                            </Canvas>
-                                            <sdl:ExtendedListBox x:Name="PART_MultiSelectComboBox_Dropdown_ListBox" Style="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Style}">
-                                                <sdl:ExtendedListBox.GroupStyle>
-                                                    <GroupStyle HeaderTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Header.Template}"/>
-                                                </sdl:ExtendedListBox.GroupStyle>
-                                                <sdl:ExtendedListBox.Resources>
-                                                    <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate">
-                                                        <TextBlock Text="{Binding}" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,2,2,3"/>
-                                                    </DataTemplate>
-                                                </sdl:ExtendedListBox.Resources>
-                                            </sdl:ExtendedListBox>
-                                            <ContentPresenter ContentSource="LoadingSuggestionsContent" Visibility="{Binding Path=IsLoadingSuggestions, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ResourceKey=BoolToVis}}"/>
+                                        <Grid x:Name="grid" Grid.Row="1" RenderOptions.ClearTypeHint="Enabled" 
+                                              Visibility="{Binding Path=IsLoadingSuggestions, 
+                                              RelativeSource={RelativeSource Mode=TemplatedParent}, 
+                                              Converter={StaticResource ResourceKey=InvBoolToVis}}"
+                                              >
+                                            <Grid  Visibility="{Binding Path=IsLoadingSuggestions, 
+                                                   RelativeSource={RelativeSource Mode=TemplatedParent}, 
+                                                   Converter={StaticResource ResourceKey=InvBoolToVis}}">
+                                                <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                                    <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                                </Canvas>
+                                                <sdl:ExtendedListBox x:Name="PART_MultiSelectComboBox_Dropdown_ListBox" Style="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Style}">
+                                                    <sdl:ExtendedListBox.GroupStyle>
+                                                        <GroupStyle HeaderTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Header.Template}"/>
+                                                    </sdl:ExtendedListBox.GroupStyle>
+                                                    <sdl:ExtendedListBox.Resources>
+                                                        <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate">
+                                                            <TextBlock Text="{Binding}" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,2,2,3"/>
+                                                        </DataTemplate>
+                                                    </sdl:ExtendedListBox.Resources>
+                                                </sdl:ExtendedListBox>
+                                            </Grid>
+                                            <ContentPresenter ContentSource="LoadingSuggestionsContent" 
+                                                              Visibility="{Binding Path=IsLoadingSuggestions, 
+                                                              RelativeSource={RelativeSource Mode=TemplatedParent}, 
+                                                              Converter={StaticResource ResourceKey=BoolToVis}}"/>
                                         </Grid>
                                     </Grid>
                                 </Border>

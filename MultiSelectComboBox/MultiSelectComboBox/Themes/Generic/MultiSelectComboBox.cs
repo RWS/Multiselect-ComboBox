@@ -494,8 +494,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             set => SetValue(SuggestionProviderProperty, value);
         }
 
-        public static readonly DependencyProperty LoadingSuggestionsContentProperty = 
-            DependencyProperty.Register("LoadingSuggestionsContent", typeof(object), typeof(MultiSelectComboBox), 
+        public static readonly DependencyProperty LoadingSuggestionsContentProperty =
+            DependencyProperty.Register("LoadingSuggestionsContent", typeof(object), typeof(MultiSelectComboBox),
             new FrameworkPropertyMetadata(null));
         public object LoadingSuggestionsContent
         {
@@ -1427,16 +1427,20 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 ApplyItemsFilter(criteria);
                 return;
             }
-            IsLoadingSuggestions = true;
+
             _suggestionProviderToken?.Cancel(true);
             var suggestionProviderToken = _suggestionProviderToken = new CancellationTokenSource();
+            IsLoadingSuggestions = true;
             Task.Run(async () =>
             {
                 var items = await suggestionProvider.GetSuggestions(criteria, _suggestionProviderToken.Token);
                 await Dispatcher.BeginInvoke(new Action(() =>
                 {
                     if (suggestionProviderToken.IsCancellationRequested)
+                    {
+                        IsLoadingSuggestions = false;
                         return;
+                    }
                     ItemsSource.Clear();
                     foreach (var item in items)
                         ItemsSource.Add(item);
@@ -1718,7 +1722,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             IsLoadingSuggestions = true;
             Task.Run(async () =>
             {
-
                 var items = await suggestionProvider.GetSuggestions(_suggestionProviderToken.Token);
                 await Dispatcher.BeginInvoke(new Action(() =>
                 {
