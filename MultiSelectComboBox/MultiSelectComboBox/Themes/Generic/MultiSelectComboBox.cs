@@ -1287,31 +1287,35 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private void LoadSuggestions(string criteria)
         {
-            var suggestionProvider = SuggestionProvider;
-            if (suggestionProvider == null)
+            if (SuggestionProvider == null)
             {
                 ApplyItemsFilter(criteria);
                 return;
             }
-            _suggestionProviderToken?.Cancel(true);
-            var suggestionProviderToken = _suggestionProviderToken = new CancellationTokenSource();
-            Task.Run(async () =>
-            {
-                var items = await suggestionProvider.GetSuggestions(criteria, _suggestionProviderToken.Token);
-                await Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    if (suggestionProviderToken.IsCancellationRequested)
-                        return;
-                    ItemsSource.Clear();
-                    foreach (var item in items)
-                        ItemsSource.Add(item);
-                    if (!suggestionProviderToken.IsCancellationRequested)
-                        ApplyItemsFilter(criteria);
-                }));
-            });
+            /* IsLoadingSuggestions = true */
+            LoadSuggestionsAsync(criteria).ContinueWith(t => { /* IsLoadingSuggestions = false */ }, TaskContinuationOptions.ExecuteSynchronously);
         }
 
-		private void ApplyItemsFilter(string criteria)
+        private async Task LoadSuggestionsAsync(string criteria)
+        {
+            var suggestionProvider = SuggestionProvider;
+            _suggestionProviderToken?.Cancel(true);
+            var suggestionProviderToken = _suggestionProviderToken = new CancellationTokenSource();
+            var items = await suggestionProvider.GetSuggestionsAsync(criteria, _suggestionProviderToken.Token);
+            await Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (suggestionProviderToken.IsCancellationRequested)
+                    return;
+                ItemsSource.Clear();
+                foreach (var item in items)
+                    ItemsSource.Add(item);
+                if (!suggestionProviderToken.IsCancellationRequested)
+                    ApplyItemsFilter(criteria);
+            }));
+        }
+
+
+        private void ApplyItemsFilter(string criteria)
 		{
 			if (EnableFiltering && ItemsCollectionViewSource?.View != null)
 			{
@@ -1554,7 +1558,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 return;
             Task.Run(async () =>
             {
-                var items = await suggestionProvider.GetSuggestions(_suggestionProviderToken.Token);
+                var items = await suggestionProvider.GetSuggestionsAsync(_suggestionProviderToken.Token);
                 await Dispatcher.BeginInvoke(new Action(() =>
                 {
                     foreach (var item in items)

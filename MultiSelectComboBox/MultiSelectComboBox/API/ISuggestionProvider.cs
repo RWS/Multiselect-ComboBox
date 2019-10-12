@@ -9,8 +9,8 @@ namespace Sdl.MultiSelectComboBox.API
 {
     public interface ISuggestionProvider
     {
-        Task<IList<object>> GetSuggestions(string criteria, CancellationToken cancellationToken);
+        Task<IList<object>> GetSuggestionsAsync(string criteria, CancellationToken cancellationToken);
         bool HasMoreSuggestions { get; }
-        Task<IList<object>> GetSuggestions(CancellationToken cancellationToken);
+        Task<IList<object>> GetSuggestionsAsync(CancellationToken cancellationToken);
     }
 }
