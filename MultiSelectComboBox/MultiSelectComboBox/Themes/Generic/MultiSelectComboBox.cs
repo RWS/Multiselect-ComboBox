@@ -433,11 +433,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private static void SuggestionProviderPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            var control = dependencyObject as MultiSelectComboBox;
-            if (control?.MultiSelectComboBoxGrid != null)
+            if (!(dependencyObject is MultiSelectComboBox control))
+                return;
+            if (control.MultiSelectComboBoxGrid == null)
             {
-                control.LoadSuggestions(string.Empty);
+                control.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, (Action)(() => SuggestionProviderPropertyChangedCallback(dependencyObject, dependencyPropertyChangedEventArgs)));
+                return;
             }
+            control.LoadSuggestions(string.Empty);
         }
 
         public static readonly DependencyProperty IsDropDownOpenProperty =
@@ -505,36 +508,38 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		private static void ItemsPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
 		{
-			var control = dependencyObject as MultiSelectComboBox;
-
-			if (control?.MultiSelectComboBoxGrid != null)
+            if (!(dependencyObject is MultiSelectComboBox control))
+                return;
+            if (control.MultiSelectComboBoxGrid == null)
+            {
+                control.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, (Action)(() => ItemsPropertyChangedCallback(dependencyObject, dependencyPropertyChangedEventArgs)));
+                return;
+            }
+			control.ItemsCollectionViewSource = new CollectionViewSource
 			{
-				control.ItemsCollectionViewSource = new CollectionViewSource
-				{
-					Source = control.ItemsSource
-				};
+				Source = control.ItemsSource
+			};
 
-				if (dependencyPropertyChangedEventArgs.NewValue is IList newItems && newItems.Count > 0)
+			if (dependencyPropertyChangedEventArgs.NewValue is IList newItems && newItems.Count > 0)
+			{
+				control.UpdateSelectedItemsContainer(newItems);
+			}
+
+			if (control.SelectedItemsControl == null)
+			{
+				control.SelectedItemsControl = VisualTreeService.FindVisualChild<ItemsControl>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl);
+			}
+
+			if (control.DropdownListBox == null)
+			{
+				if (control.DropdownMenu == null)
 				{
-					control.UpdateSelectedItemsContainer(newItems);
+					control.DropdownMenu = VisualTreeService.FindVisualChild<Popup>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_Dropdown);
 				}
 
-				if (control.SelectedItemsControl == null)
+				if (control.DropdownMenu != null)
 				{
-					control.SelectedItemsControl = VisualTreeService.FindVisualChild<ItemsControl>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl);
-				}
-
-				if (control.DropdownListBox == null)
-				{
-					if (control.DropdownMenu == null)
-					{
-						control.DropdownMenu = VisualTreeService.FindVisualChild<Popup>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_Dropdown);
-					}
-
-					if (control.DropdownMenu != null)
-					{
-						control.DropdownListBox = VisualTreeService.FindVisualChild<ListBox>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Dropdown_ListBox);
-					}
+					control.DropdownListBox = VisualTreeService.FindVisualChild<ListBox>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Dropdown_ListBox);
 				}
 			}
 		}
