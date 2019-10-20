@@ -347,9 +347,6 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 				if (_enableSuggestionProvider)
 				{
 					CustomSuggestionProvider = new CustomSuggestionProvider(Items, _allItems);
-					//if you want to use IItemGrupAware then add at least one item
-					if (!_items.Any())
-						Items.Add(_allItems.First());
 				}
 				else
 				{
