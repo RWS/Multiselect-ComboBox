@@ -10,90 +10,90 @@
         xmlns:converters="clr-namespace:Sdl.MultiSelectComboBox.Example.Converters"
         d:DataContext="{d:DesignInstance {x:Type models:LanguageItems}}"
         mc:Ignorable="d"  
-        Title="Sdl.MultiSelectComboBox Example" Height="600" MinHeight="540" Width="934">
+        Title="Sdl.MultiSelectComboBox Example" Height="600" MinHeight="560" Width="934">
 
-	<Window.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="Styles/MultiSelectComboBox.Custom.ControlTemplate.xaml"/>
-				<ResourceDictionary Source="Styles/MultiSelectComboBox.Custom.DropdownItemTemplate.xaml"/>
-				<ResourceDictionary Source="Styles/MultiSelectComboBox.Custom.SelectedItemTemplate.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/MultiSelectComboBox.Custom.ControlTemplate.xaml"/>
+                <ResourceDictionary Source="Styles/MultiSelectComboBox.Custom.DropdownItemTemplate.xaml"/>
+                <ResourceDictionary Source="Styles/MultiSelectComboBox.Custom.SelectedItemTemplate.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-			<converters:BoolToVisibilityConverter x:Key="BoolToVis" />
+            <converters:BoolToVisibilityConverter x:Key="BoolToVis" />
 
-			<Style x:Key="Custom.Button.Style" TargetType="{x:Type Button}">
-				<Setter Property="Foreground" Value="RoyalBlue"/>
-				<Setter Property="Background" Value="{x:Null}"/>
-				<Setter Property="BorderBrush" Value="{x:Null}"/>
-				<Setter Property="BorderThickness" Value="0"/>
-				<Setter Property="HorizontalContentAlignment" Value="Right"/>
-				<Setter Property="VerticalContentAlignment" Value="Center"/>
-				<Setter Property="VerticalAlignment" Value="Bottom"/>
-				<Setter Property="HorizontalAlignment" Value="Right"/>
-				<Setter Property="Padding" Value="1"/>
-				<Setter Property="Margin" Value="0"/>
-				<Setter Property="Cursor" Value="Hand"/>
-				<Setter Property="IsTabStop" Value="True" />
-				<Setter Property="Template">
-					<Setter.Value>
-						<ControlTemplate TargetType="Button">
-							<Border x:Name="border" TextBlock.Foreground="{TemplateBinding Foreground}" BorderThickness="1,0,1,1" BorderBrush="Transparent" Background="Transparent">
-								<ContentPresenter Margin="0" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}" RecognizesAccessKey="False" />
-							</Border>
-							<ControlTemplate.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-									<Setter Property="Background" TargetName="border" Value="{x:Null}"/>
-									<Setter Property="BorderBrush" TargetName="border" Value="{x:Null}"/>
-								</Trigger>
-							</ControlTemplate.Triggers>
-						</ControlTemplate>
-					</Setter.Value>
-				</Setter>
-			</Style>
+            <Style x:Key="Custom.Button.Style" TargetType="{x:Type Button}">
+                <Setter Property="Foreground" Value="RoyalBlue"/>
+                <Setter Property="Background" Value="{x:Null}"/>
+                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Right"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Bottom"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Padding" Value="1"/>
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="IsTabStop" Value="True" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border" TextBlock.Foreground="{TemplateBinding Foreground}" BorderThickness="1,0,1,1" BorderBrush="Transparent" Background="Transparent">
+                                <ContentPresenter Margin="0" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}" RecognizesAccessKey="False" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" TargetName="border" Value="{x:Null}"/>
+                                    <Setter Property="BorderBrush" TargetName="border" Value="{x:Null}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
-		</ResourceDictionary>
-	</Window.Resources>
+        </ResourceDictionary>
+    </Window.Resources>
 
-	<Grid Margin="15">
+    <Grid Margin="15">
 
-		<DockPanel LastChildFill="True">
-			<Grid DockPanel.Dock="Top">
+        <DockPanel LastChildFill="True">
+            <Grid DockPanel.Dock="Top">
 
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="5" />
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-				<Grid DockPanel.Dock="Left" Grid.Column="0" Margin="0,0,2,25" MinWidth="150" Width="Auto" >
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto"/>
-							<ColumnDefinition Width="*"/>
-						</Grid.ColumnDefinitions>
+                <Grid DockPanel.Dock="Left" Grid.Column="0" Margin="0,0,2,25" MinWidth="150" Width="Auto" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-						<TextBlock Grid.Column="0" Grid.Row="0" Text ="Items" Margin="0,5,0,0" HorizontalAlignment="Left" FontWeight="DemiBold" Width="120" Height="21" VerticalAlignment="Top"/>
-						<TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" FontWeight="DemiBold" Margin="0,5,0,0" Height="21" VerticalAlignment="Top">
+                        <TextBlock Grid.Column="0" Grid.Row="0" Text ="Items" Margin="0,5,0,0" HorizontalAlignment="Left" FontWeight="DemiBold" Width="120" Height="21" VerticalAlignment="Top"/>
+                        <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" FontWeight="DemiBold" Margin="0,5,0,0" Height="21" VerticalAlignment="Top">
                             <InlineUIContainer>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox Text="{Binding SelectedItemsCount, FallbackValue=0}" HorizontalContentAlignment="Right" BorderThickness="0" Background="Transparent" IsTabStop="False"/>
                                     <TextBox Text="Selected" HorizontalContentAlignment="Right" BorderThickness="0" IsTabStop="False" />
                                 </StackPanel>
                             </InlineUIContainer>
-						</TextBlock>
-					</Grid>
+                        </TextBlock>
+                    </Grid>
 
-					<Grid Margin="0,25,0,0">
-						<Grid.RowDefinitions>
-							<RowDefinition Height="100" MinHeight="49" MaxHeight="300" />
-							<RowDefinition Height="10" />
-							<RowDefinition Height="*" />
-						</Grid.RowDefinitions>
+                    <Grid Margin="0,25,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="100" MinHeight="49" MaxHeight="300" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
 
-						<Grid Grid.Row="0">
+                        <Grid Grid.Row="0">
 
-							<sdl:MultiSelectComboBox Margin="0,0,0,20"                                
+                            <sdl:MultiSelectComboBox Margin="0,0,0,20"                                
                                                      Visibility="{Binding ElementName=RadioButtonDefaultStyle, Converter={StaticResource BoolToVis}, Path=IsChecked}"  
                                                      SelectedItemTemplate="{StaticResource MultiSelectComboBox.SelectedItems.ItemTemplate}"
                                                      DropdownItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"                                 
@@ -107,13 +107,20 @@
                                                      EnableGrouping="{Binding EnableGrouping}"
                                                      ItemsSource="{Binding Items}" 
                                                      SelectedItems="{Binding SelectedItems}"
+                                                     DetachAutoCompleteFilterBox="{Binding DetachAutoCompleteFilterBox,FallbackValue=True}"
                                                      SuggestionProvider="{Binding CustomSuggestionProvider}"
 													 ClearSelectionOnFilterChanged="{Binding ClearSelectionOnFilterChanged}"
                                                      sdl:FilterTextChangedBehaviour.FilterTextChanged="{Binding FilterTextChangedCommand}"
-                                                     sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"/>
+                                                     sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}">
+                                <sdl:MultiSelectComboBox.LoadingSuggestionsContent>
+                                    <Border Padding="4" BorderBrush="Gray" BorderThickness="1">
+                                        <TextBlock Text="Loading please wait..."/>
+                                    </Border>
+                                </sdl:MultiSelectComboBox.LoadingSuggestionsContent>
+                            </sdl:MultiSelectComboBox>
 
 
-							<sdl:MultiSelectComboBox Margin="0,0,0,20"
+                            <sdl:MultiSelectComboBox Margin="0,0,0,20"
                                                      Visibility="{Binding ElementName=RadioButtonCustomStyle, Converter={StaticResource BoolToVis}, Path=IsChecked}"
                                                      Style="{StaticResource MultiSelectComboBox.Custom.Style}"
                                                      SelectedItemTemplate="{StaticResource MultiSelectComboBox.SelectedItems.Custom.ItemTemplate}"
@@ -128,88 +135,96 @@
                                                      EnableGrouping="{Binding EnableGrouping}"
                                                      ItemsSource="{Binding Items}"        
                                                      SelectedItems="{Binding SelectedItems}"
+                                                     DetachAutoCompleteFilterBox="{Binding DetachAutoCompleteFilterBox,FallbackValue=True}"
                                                      SuggestionProvider="{Binding CustomSuggestionProvider}"
 							                         ClearSelectionOnFilterChanged="{Binding ClearSelectionOnFilterChanged}"
                                                      sdl:FilterTextChangedBehaviour.FilterTextChanged="{Binding FilterTextChangedCommand}"
-                                                     sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"/>
+                                                     sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}">
+                                <sdl:MultiSelectComboBox.LoadingSuggestionsContent>
+                                    <Border Padding="4" BorderBrush="Gray" BorderThickness="1">
+                                        <TextBlock Text="Loading please wait..."/>
+                                    </Border>
+                                </sdl:MultiSelectComboBox.LoadingSuggestionsContent>
+                            </sdl:MultiSelectComboBox>
 
-							<Button Command="{Binding ClearItemsCommand}" Style="{StaticResource Custom.Button.Style}"  Width="128" Height="20">
-								<Underline>Clear selected items</Underline>
-							</Button>
-						</Grid>
+                            <Button Command="{Binding ClearItemsCommand}" Style="{StaticResource Custom.Button.Style}"  Width="128" Height="20">
+                                <Underline>Clear selected items</Underline>
+                            </Button>
+                        </Grid>
 
-						<GridSplitter DockPanel.Dock="Top" Height="2" VerticalContentAlignment="Stretch" Grid.Row="1" Margin="5,0,5,0" HorizontalAlignment="Stretch" IsTabStop="False"/>
+                        <GridSplitter DockPanel.Dock="Top" Height="2" VerticalContentAlignment="Stretch" Grid.Row="1" Margin="5,0,5,0" HorizontalAlignment="Stretch" IsTabStop="False"/>
 
-						<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,5,0,0">
-							<Border BorderBrush="LightGray" BorderThickness="1">
-								<Grid>
+                        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,5,0,0">
+                            <Border BorderBrush="LightGray" BorderThickness="1">
+                                <Grid>
+                                    <TextBlock Text ="Demo Settings" Margin="9,4,0,0" HorizontalAlignment="Left" FontWeight="DemiBold" Width="95" Height="21" VerticalAlignment="Top" />
 
-									<TextBlock Text ="Demo Settings" Margin="9,4,0,0" HorizontalAlignment="Left" FontWeight="DemiBold" Width="95" Height="21" VerticalAlignment="Top" />
+                                    <Label Content="Style:" Margin="27,26,0,0" HorizontalAlignment="Left" Width="48" Height="26" VerticalAlignment="Top" />
 
-									<Label Content="Style:" Margin="27,26,0,0" HorizontalAlignment="Left" Width="48" Height="26" VerticalAlignment="Top" />
+                                    <Grid Margin="64,25,0,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="210">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="19*"/>
+                                            <RowDefinition Height="31*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
 
-									<Grid Margin="64,25,0,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="210">
-										<Grid.RowDefinitions>
-											<RowDefinition Height="19*"/>
-											<RowDefinition Height="31*"/>
-										</Grid.RowDefinitions>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="Auto"/>
-											<ColumnDefinition Width="*"/>
-										</Grid.ColumnDefinitions>
-
-										<StackPanel Orientation="Vertical" Grid.Column="0" Margin="10,6,-74,0" Grid.ColumnSpan="2" Grid.RowSpan="2">
-											<RadioButton x:Name="RadioButtonDefaultStyle" GroupName="Style" Content="Default control template style" Margin="1" IsChecked="True" Command="{Binding StyleChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
-											<RadioButton x:Name="RadioButtonCustomStyle" GroupName="Style" Content="Custom control template style" Margin="1" Command="{Binding StyleChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
-										</StackPanel>
-									</Grid>
+                                        <StackPanel Orientation="Vertical" Grid.Column="0" Margin="10,6,-74,0" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                                            <RadioButton x:Name="RadioButtonDefaultStyle" GroupName="Style" Content="Default control template style" Margin="1" IsChecked="True" Command="{Binding StyleChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
+                                            <RadioButton x:Name="RadioButtonCustomStyle" GroupName="Style" Content="Custom control template style" Margin="1" Command="{Binding StyleChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
+                                        </StackPanel>
+                                    </Grid>
 
 
-									<Button Content="Select 20 random items" Command="{Binding SelectRandomItemsCommand}" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Left" Margin="30,76,0,0" VerticalAlignment="Top" Grid.Column="0" Height="23" Width="184"/>
+                                    <Button Content="Select 20 random items" Command="{Binding SelectRandomItemsCommand}" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Left" Margin="30,76,0,0" VerticalAlignment="Top" Grid.Column="0" Height="23" Width="184"/>
 
-									<Label Content="Selection Mode:" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="27,104,0,0" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="97"/>
-									<ComboBox HorizontalAlignment="Left" Margin="126,106,0,0" VerticalAlignment="Top" Width="88" SelectedItem="{Binding SelectionMode}" ItemsSource="{Binding SelectionModes}"/>
+                                    <Label Content="Selection Mode:" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="27,104,0,0" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="97"/>
+                                    <ComboBox HorizontalAlignment="Left" Margin="126,106,0,0" VerticalAlignment="Top" Width="88" SelectedItem="{Binding SelectionMode}" ItemsSource="{Binding SelectionModes}"/>
 
-									<CheckBox Content="Clear Filter Criteria as Dropdown (with Keyboard focus) is closing" IsChecked="{Binding ClearFilterOnDropdownClosing}" HorizontalAlignment="Left" Margin="29,142,0,0" VerticalAlignment="Top" Grid.Column="0" Width="364"/>
+                                    <CheckBox Content="Clear Filter Criteria as Dropdown (with Keyboard focus) is closing" IsChecked="{Binding ClearFilterOnDropdownClosing}" HorizontalAlignment="Left" Margin="29,142,0,0" VerticalAlignment="Top" Grid.Column="0" Width="364"/>
 
-									<CheckBox Content="Items in the 'Selected Items Panel' are editable" IsChecked="{Binding IsEditable}" HorizontalAlignment="Left" Margin="29,159,0,0" VerticalAlignment="Top" Grid.Column="0" Width="313"/>
+                                    <CheckBox Content="Items in the 'Selected Items Panel' are editable" IsChecked="{Binding IsEditable}" HorizontalAlignment="Left" Margin="29,159,0,0" VerticalAlignment="Top" Grid.Column="0" Width="313"/>
 
-									<CheckBox Content="Enable/disable items (alternate)" IsChecked="{Binding EnableAlternateItems}" HorizontalAlignment="Left" Margin="29,176,0,0" VerticalAlignment="Top" Grid.Column="0" Width="313"/>
+                                    <CheckBox Content="Enable/disable items (alternate)" IsChecked="{Binding EnableAlternateItems}" HorizontalAlignment="Left" Margin="29,176,0,0" VerticalAlignment="Top" Grid.Column="0" Width="313"/>
 
-									<CheckBox Content="Listen to 'Filter Text' changed" IsChecked="{Binding ListenToFilterTextChanged}" HorizontalAlignment="Left" Margin="29,193,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
-									<CheckBox Content="Listen to 'Selected Items' changed" IsChecked="{Binding ListenToSelectedItemsChanged}" HorizontalAlignment="Left" Margin="29,211,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
+                                    <CheckBox Content="Listen to 'Filter Text' changed" IsChecked="{Binding ListenToFilterTextChanged}" HorizontalAlignment="Left" Margin="29,193,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
+                                    <CheckBox Content="Listen to 'Selected Items' changed" IsChecked="{Binding ListenToSelectedItemsChanged}" HorizontalAlignment="Left" Margin="29,211,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
 
-									<CheckBox Content="Enable Autocomplete" IsChecked="{Binding EnableAutoComplete}" HorizontalAlignment="Left" Margin="29,229,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
+                                    <CheckBox Content="Enable Autocomplete" IsChecked="{Binding EnableAutoComplete}" HorizontalAlignment="Left" Margin="29,229,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
 
-									<CheckBox Content="Enable grouping" IsChecked="{Binding EnableGrouping}" HorizontalAlignment="Left" Margin="29,247,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
-									<CheckBox Content="Use 'Recently Used' service" IsChecked="{Binding UseRecentlyUsedGroupingService}" IsEnabled="{Binding EnableGrouping}"  HorizontalAlignment="Left" Margin="45,265,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
+                                    <CheckBox Content="Enable grouping" IsChecked="{Binding EnableGrouping}" HorizontalAlignment="Left" Margin="29,247,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
+                                    <CheckBox Content="Use 'Recently Used' service" IsChecked="{Binding UseRecentlyUsedGroupingService}" IsEnabled="{Binding EnableGrouping}"  HorizontalAlignment="Left" Margin="45,265,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
 
-									<CheckBox Content="Enable filtering" IsChecked="{Binding EnableFiltering}" HorizontalAlignment="Left" Margin="30,285,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
-									<CheckBox Content="Use 'Custom Filter' service" IsChecked="{Binding UseCustomFilterService}" IsEnabled="{Binding EnableFiltering}" HorizontalAlignment="Left" Margin="45,305,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
+                                    <CheckBox Content="Enable filtering" IsChecked="{Binding EnableFiltering}" HorizontalAlignment="Left" Margin="30,285,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
+                                    <CheckBox Content="Use 'Custom Filter' service" IsChecked="{Binding UseCustomFilterService}" IsEnabled="{Binding EnableFiltering}" HorizontalAlignment="Left" Margin="45,305,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
 
-									<CheckBox Content="Clear selection on filter changed (Single selection mode only)" IsChecked="{Binding ClearSelectionOnFilterChanged}" Margin="30,325,10,0" VerticalAlignment="Top" Grid.Column="0"/>
+                                    <CheckBox Content="Clear selection on filter changed (Single selection mode only)" IsChecked="{Binding ClearSelectionOnFilterChanged}" Margin="30,325,10,0" VerticalAlignment="Top" Grid.Column="0"/>
 
                                     <CheckBox Content="Enable on demand service" IsChecked="{Binding EnableSuggestionProvider}" Margin="30,345,10,0" VerticalAlignment="Top" Grid.Column="0"/>
-								</Grid>
-							</Border>
-						</ScrollViewer>
 
-					</Grid>
+                                    <CheckBox Content="Detach AutoComplete Filter Box" IsChecked="{Binding DetachAutoCompleteFilterBox}" Margin="30,365,10,0" VerticalAlignment="Top" Grid.Column="0"/>
+                                </Grid>
+                            </Border>
+                        </ScrollViewer>
 
-				</Grid>
+                    </Grid>
 
-				<GridSplitter DockPanel.Dock="Left" VerticalAlignment="Stretch" Width="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,25,0,40"/>
+                </Grid>
 
-				<Grid DockPanel.Dock="Right" Grid.Column="2" Width="Auto" MinWidth="150" Margin="2,0,0,0" >
-					<TextBlock Text="Events Log" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0,5,0,0" FontWeight="Medium" Height="26" />
-					<TextBox Text="{Binding EventLog}" TextWrapping="NoWrap" IsReadOnly="True" Margin="0,25,0,24" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  TextChanged="TextBoxBase_OnTextChanged"/>
-					<Button Command="{Binding ClearLogCommand}" Style="{StaticResource Custom.Button.Style}" Width="75" Height="24">
-						<Underline>Clear log</Underline>
-					</Button>
-				</Grid>
-			</Grid>
-		</DockPanel>
-	</Grid>
+                <GridSplitter DockPanel.Dock="Left" VerticalAlignment="Stretch" Width="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,25,0,40"/>
+
+                <Grid DockPanel.Dock="Right" Grid.Column="2" Width="Auto" MinWidth="150" Margin="2,0,0,0" >
+                    <TextBlock Text="Events Log" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0,5,0,0" FontWeight="Medium" Height="26" />
+                    <TextBox Text="{Binding EventLog}" TextWrapping="NoWrap" IsReadOnly="True" Margin="0,25,0,24" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  TextChanged="TextBoxBase_OnTextChanged"/>
+                    <Button Command="{Binding ClearLogCommand}" Style="{StaticResource Custom.Button.Style}" Width="75" Height="24">
+                        <Underline>Clear log</Underline>
+                    </Button>
+                </Grid>
+            </Grid>
+        </DockPanel>
+    </Grid>
 </Window>
 
 
