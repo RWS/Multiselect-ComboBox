@@ -1,8 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sdl="http://schemas.sdl.com/xaml"
-                    xmlns:converters="clr-namespace:Sdl.MultiSelectComboBox.Converters;assembly=Sdl.MultiSelectComboBox"
-                    xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+                    xmlns:converters="clr-namespace:Sdl.MultiSelectComboBox.Converters;assembly=Sdl.MultiSelectComboBox">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="MultiSelectComboBox.Resources.xaml"/>
@@ -355,58 +354,56 @@
                         </ToggleButton>
 
                         <Popup x:Name="PART_MultiSelectComboBox_Dropdown" Margin="2" Grid.ColumnSpan="2" MaxHeight="{Binding Path=MaxDropDownHeight, RelativeSource={RelativeSource TemplatedParent} }" PlacementTarget="{Binding ElementName=PART_MultiSelectComboBox}" IsOpen="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" MaxWidth="{TemplateBinding ActualWidth}" Placement="Bottom" AllowsTransparency="True" PopupAnimation="Slide">
-                            <themes:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MinWidth="{Binding ActualWidth, ElementName=PART_MultiSelectComboBox}">
-                                <Border x:Name="dropDownBorder" Margin="0,1,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="0" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="*"/>
-                                        </Grid.RowDefinitions>
-                                        <Grid Grid.Row="0" Visibility="{Binding DetachAutoCompleteFilterBox, RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource BoolToVis},FallbackValue=Collpased}">
-                                            <Border BorderBrush="LightBlue" BorderThickness="1">
-                                                <Border.Effect>
-                                                    <DropShadowEffect ShadowDepth="0" Color="LightBlue" Opacity="1" BlurRadius="10"/>
-                                                </Border.Effect>
-                                            </Border>
-                                            <Border Padding="2">
-                                                <StackPanel x:Name="PART_MultiSelectComboBox_Detached_FilterPanel"  Orientation="Horizontal" Height="30">
-                                                    <TextBox x:Name="PART_MultiSelectComboBox_Detached_Filter_TextBox" Margin="1,0,0,0" IsEnabled="{Binding IsEditMode, RelativeSource={RelativeSource TemplatedParent}}" 
-                                         Focusable="True" IsTabStop="False"  ForceCursor="True" BorderThickness="0" BorderBrush="Transparent" Padding="1" TextWrapping="NoWrap"/>
-                                                    <TextBox x:Name="PART_MultiSelectComboBox_Detached_Filter_AutoComplete_TextBox" IsReadOnly="True"
-                                         Focusable="False" IsTabStop="False" Margin="-2,0,0,0" BorderThickness="0" BorderBrush="Transparent" Padding="-3,1,0,1" TextWrapping="NoWrap"/>
-                                                </StackPanel>
-                                            </Border>
-                                        </Grid>
-                                        <Grid x:Name="grid" Grid.Row="1" RenderOptions.ClearTypeHint="Enabled" 
-                                              Visibility="{Binding Path=IsLoadingSuggestions, 
-                                              RelativeSource={RelativeSource Mode=TemplatedParent}, 
-                                              Converter={StaticResource ResourceKey=InvBoolToVis}}"
-                                              >
-                                            <Grid  Visibility="{Binding Path=IsLoadingSuggestions, 
-                                                   RelativeSource={RelativeSource Mode=TemplatedParent}, 
-                                                   Converter={StaticResource ResourceKey=InvBoolToVis}}">
-                                                <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
-                                                    <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
-                                                </Canvas>
-                                                <sdl:ExtendedListBox x:Name="PART_MultiSelectComboBox_Dropdown_ListBox" Style="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Style}">
-                                                    <sdl:ExtendedListBox.GroupStyle>
-                                                        <GroupStyle HeaderTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Header.Template}"/>
-                                                    </sdl:ExtendedListBox.GroupStyle>
-                                                    <sdl:ExtendedListBox.Resources>
-                                                        <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate">
-                                                            <TextBlock Text="{Binding}" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,2,2,3"/>
-                                                        </DataTemplate>
-                                                    </sdl:ExtendedListBox.Resources>
-                                                </sdl:ExtendedListBox>
-                                            </Grid>
-                                            <ContentPresenter ContentSource="LoadingSuggestionsContent" 
-                                                              Visibility="{Binding Path=IsLoadingSuggestions, 
-                                                              RelativeSource={RelativeSource Mode=TemplatedParent}, 
-                                                              Converter={StaticResource ResourceKey=BoolToVis}}"/>
-                                        </Grid>
+                            <Border x:Name="dropDownBorder" Margin="0,1,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="0" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Visibility="{Binding DetachAutoCompleteFilterBox, RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource BoolToVis},FallbackValue=Collpased}">
+                                        <Border BorderBrush="LightBlue" BorderThickness="1">
+                                            <Border.Effect>
+                                                <DropShadowEffect ShadowDepth="0" Color="LightBlue" Opacity="1" BlurRadius="10"/>
+                                            </Border.Effect>
+                                        </Border>
+                                        <Border Padding="2">
+                                            <StackPanel x:Name="PART_MultiSelectComboBox_Detached_FilterPanel"  Orientation="Horizontal" Height="30">
+                                                <TextBox x:Name="PART_MultiSelectComboBox_Detached_Filter_TextBox" Margin="1,0,0,0" IsEnabled="{Binding IsEditMode, RelativeSource={RelativeSource TemplatedParent}}" 
+                                        Focusable="True" IsTabStop="False"  ForceCursor="True" BorderThickness="0" BorderBrush="Transparent" Padding="1" TextWrapping="NoWrap"/>
+                                                <TextBox x:Name="PART_MultiSelectComboBox_Detached_Filter_AutoComplete_TextBox" IsReadOnly="True"
+                                        Focusable="False" IsTabStop="False" Margin="-2,0,0,0" BorderThickness="0" BorderBrush="Transparent" Padding="-3,1,0,1" TextWrapping="NoWrap"/>
+                                            </StackPanel>
+                                        </Border>
                                     </Grid>
-                                </Border>
-                            </themes:SystemDropShadowChrome>
+                                    <Grid x:Name="grid" Grid.Row="1" RenderOptions.ClearTypeHint="Enabled" 
+                                            Visibility="{Binding Path=IsLoadingSuggestions, 
+                                            RelativeSource={RelativeSource Mode=TemplatedParent}, 
+                                            Converter={StaticResource ResourceKey=InvBoolToVis}}"
+                                            >
+                                        <Grid  Visibility="{Binding Path=IsLoadingSuggestions, 
+                                                RelativeSource={RelativeSource Mode=TemplatedParent}, 
+                                                Converter={StaticResource ResourceKey=InvBoolToVis}}">
+                                            <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                                <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                            </Canvas>
+                                            <sdl:ExtendedListBox x:Name="PART_MultiSelectComboBox_Dropdown_ListBox" Style="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Style}">
+                                                <sdl:ExtendedListBox.GroupStyle>
+                                                    <GroupStyle HeaderTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Header.Template}"/>
+                                                </sdl:ExtendedListBox.GroupStyle>
+                                                <sdl:ExtendedListBox.Resources>
+                                                    <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate">
+                                                        <TextBlock Text="{Binding}" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,2,2,3"/>
+                                                    </DataTemplate>
+                                                </sdl:ExtendedListBox.Resources>
+                                            </sdl:ExtendedListBox>
+                                        </Grid>
+                                        <ContentPresenter ContentSource="LoadingSuggestionsContent" 
+                                                            Visibility="{Binding Path=IsLoadingSuggestions, 
+                                                            RelativeSource={RelativeSource Mode=TemplatedParent}, 
+                                                            Converter={StaticResource ResourceKey=BoolToVis}}"/>
+                                    </Grid>
+                                </Grid>
+                            </Border>
                         </Popup>
                     </Grid>
 
