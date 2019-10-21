@@ -176,7 +176,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                     if (EnableGrouping)
                     {
                         // check that the items are groupable before adding a default group definition
-                        if (ItemsCollectionViewSource.GroupDescriptions.Count == 0 && ItemsSource.Count > 0 && ItemsSource[0] is IItemGroupAware)
+                        if (ItemsCollectionViewSource.GroupDescriptions.Count == 0 && (ItemsSource.GetType().IsGenericType && typeof(IItemGroupAware).IsAssignableFrom(ItemsSource.GetType().GetGenericArguments()[0]) || ItemsSource.Count > 0 && ItemsSource[0] is IItemGroupAware))
                         {
                             ItemsCollectionViewSource.GroupDescriptions.Add(new PropertyGroupDescription("Group"));
                         }
@@ -527,11 +527,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private static void SuggestionProviderPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            var control = dependencyObject as MultiSelectComboBox;
-            if (control?.MultiSelectComboBoxGrid != null)
+            if (!(dependencyObject is MultiSelectComboBox control))
+                return;
+            if (control.MultiSelectComboBoxGrid == null)
             {
-                control.LoadSuggestions(string.Empty);
+                control.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, (Action)(() => SuggestionProviderPropertyChangedCallback(dependencyObject, dependencyPropertyChangedEventArgs)));
+                return;
             }
+            control.LoadSuggestions(string.Empty);
         }
 
         public static readonly DependencyProperty IsDropDownOpenProperty =
@@ -599,44 +602,44 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private static void ItemsPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            var control = dependencyObject as MultiSelectComboBox;
-
-            if (control?.MultiSelectComboBoxGrid != null)
+            if (!(dependencyObject is MultiSelectComboBox control))
+                return;
+            if (control.MultiSelectComboBoxGrid == null)
             {
-                control.ItemsCollectionViewSource = new CollectionViewSource
-                {
-                    Source = control.ItemsSource
-                };
+                control.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, (Action)(() => ItemsPropertyChangedCallback(dependencyObject, dependencyPropertyChangedEventArgs)));
+                return;
+            }
+            control.ItemsCollectionViewSource = new CollectionViewSource
+            {
+                Source = control.ItemsSource
+            };
 
-                if (dependencyPropertyChangedEventArgs.NewValue is IList newItems && newItems.Count > 0)
+            if (dependencyPropertyChangedEventArgs.NewValue is IList newItems && newItems.Count > 0)
+            {
+                control.UpdateSelectedItemsContainer(newItems);
+            }
+
+            if (control.SelectedItemsControl == null)
+            {
+                control.SelectedItemsControl = VisualTreeService.FindVisualChild<ItemsControl>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl);
+            }
+
+            if (control.DropdownListBox == null)
+            {
+                if (control.DropdownMenu == null)
                 {
-                    control.UpdateSelectedItemsContainer(newItems);
+                    control.DropdownMenu = VisualTreeService.FindVisualChild<Popup>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_Dropdown);
                 }
 
-                if (control.SelectedItemsControl == null)
+                if (control.DropdownMenu != null)
                 {
-                    control.SelectedItemsControl = VisualTreeService.FindVisualChild<ItemsControl>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl);
-                }
-
-
-
-                if (control.DropdownListBox == null)
-                {
-                    if (control.DropdownMenu == null)
+                    control.DetachedFilterPanel = VisualTreeService.FindVisualChild<StackPanel>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Detached_FilterPanel);
+                    if (control.DetachedFilterPanel != null)
                     {
-                        control.DropdownMenu = VisualTreeService.FindVisualChild<Popup>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_Dropdown);
+                        control.DetachedFilterTextBox = VisualTreeService.FindVisualChild<TextBox>(control.DetachedFilterPanel, PART_MultiSelectComboBox_Detached_Filter_TextBox);
+                        control.DetachedFilterAutoCompleteTextBox = VisualTreeService.FindVisualChild<TextBox>(control.DetachedFilterPanel, PART_MultiSelectComboBox_Detached_Filter_AutoComplete_TextBox);
                     }
-
-                    if (control.DropdownMenu != null)
-                    {
-                        control.DetachedFilterPanel = VisualTreeService.FindVisualChild<StackPanel>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Detached_FilterPanel);
-                        if (control.DetachedFilterPanel != null)
-                        {
-                            control.DetachedFilterTextBox = VisualTreeService.FindVisualChild<TextBox>(control.DetachedFilterPanel, PART_MultiSelectComboBox_Detached_Filter_TextBox);
-                            control.DetachedFilterAutoCompleteTextBox = VisualTreeService.FindVisualChild<TextBox>(control.DetachedFilterPanel, PART_MultiSelectComboBox_Detached_Filter_AutoComplete_TextBox);
-                        }
-                        control.DropdownListBox = VisualTreeService.FindVisualChild<ListBox>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Dropdown_ListBox);
-                    }
+                    control.DropdownListBox = VisualTreeService.FindVisualChild<ListBox>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Dropdown_ListBox);
                 }
             }
         }
@@ -1310,6 +1313,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                     listBoxItem.IsChecked = true;
                 }
             }
+            control.LoadSuggestions(string.Empty);
         }
 
         private void SetKeyBoardFocusOnItem(object comboBoxItem)
@@ -1318,7 +1322,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             {
                 ItemsCollectionViewSource.View.MoveCurrentTo(comboBoxItem);
                 DropdownListBox.Items.MoveCurrentTo(comboBoxItem);
-
                 var listBoxItemTo = (IInputElement)DropdownListBox.ItemContainerGenerator.ContainerFromItem(comboBoxItem);
                 if (listBoxItemTo != null)
                 {
@@ -1421,8 +1424,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private void LoadSuggestions(string criteria)
         {
-            var suggestionProvider = SuggestionProvider;
-            if (suggestionProvider == null)
+            if (SuggestionProvider == null)
             {
                 ApplyItemsFilter(criteria);
                 return;
@@ -1722,7 +1724,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             IsLoadingSuggestions = true;
             Task.Run(async () =>
             {
-                var items = await suggestionProvider.GetSuggestions(_suggestionProviderToken.Token);
+                var items = await suggestionProvider.GetSuggestionsAsync(_suggestionProviderToken.Token);
                 await Dispatcher.BeginInvoke(new Action(() =>
                 {
                     foreach (var item in items)

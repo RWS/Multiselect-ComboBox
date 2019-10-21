@@ -27,7 +27,7 @@ namespace Sdl.MultiSelectComboBox.Example.Services
 
         public bool HasMoreSuggestions { get; private set; } = true;
 
-        public Task<IList<object>> GetSuggestions(string criteria, CancellationToken cancellationToken)
+        public Task<IList<object>> GetSuggestionsAsync(string criteria, CancellationToken cancellationToken)
         {
             _criteria = criteria;
 			var newItems = _source.Where(x => x.Name.IndexOf(_criteria, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
@@ -38,7 +38,7 @@ namespace Sdl.MultiSelectComboBox.Example.Services
             return Task.Run(() => (IList<object>)newItems.Take(batchSize).Cast<object>().ToList());
         }
 
-        public Task<IList<object>> GetSuggestions(CancellationToken cancellationToken)
+        public Task<IList<object>> GetSuggestionsAsync(CancellationToken cancellationToken)
         {
             var newItems = _source.Where(x => x.Name.StartsWith(_criteria)).Skip(_skipCount).ToList();
             if (cancellationToken.IsCancellationRequested)
