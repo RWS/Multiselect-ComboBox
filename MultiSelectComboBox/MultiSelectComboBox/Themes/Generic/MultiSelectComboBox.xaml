@@ -395,9 +395,9 @@
                                             <Border BorderBrush="Black" BorderThickness="1">
                                                 <StackPanel  x:Name="PART_MultiSelectComboBox_Detached_FilterPanel"  Orientation="Horizontal" Height="30">
                                                     <TextBox x:Name="PART_MultiSelectComboBox_Detached_Filter_TextBox" Margin="1,0,0,0" IsEnabled="{Binding IsEditMode, RelativeSource={RelativeSource TemplatedParent}}" 
-                                         Focusable="True" IsTabStop="False"  ForceCursor="True" BorderThickness="0" BorderBrush="Transparent" Padding="1" TextWrapping="NoWrap"/>
+                                         Focusable="True" IsTabStop="False"  ForceCursor="True" BorderThickness="0" BorderBrush="Transparent" Padding="1" TextWrapping="NoWrap" VerticalAlignment="Center"/>
                                                     <TextBox x:Name="PART_MultiSelectComboBox_Detached_Filter_AutoComplete_TextBox" IsReadOnly="True"
-                                         Focusable="False" IsTabStop="False" Margin="-2,0,0,0" BorderThickness="0" BorderBrush="Transparent" Padding="-3,1,0,1" TextWrapping="NoWrap"/>
+                                         Focusable="False" IsTabStop="False" Margin="-2,0,0,0" BorderThickness="0" BorderBrush="Transparent" Padding="-3,1,0,1" TextWrapping="NoWrap" VerticalAlignment="Center"/>
                                                 </StackPanel>
                                             </Border>
                                         </Grid>

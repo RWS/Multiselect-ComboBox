@@ -1313,7 +1313,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                     listBoxItem.IsChecked = true;
                 }
             }
-            control.LoadSuggestions(string.Empty);
         }
 
         private void SetKeyBoardFocusOnItem(object comboBoxItem)
@@ -1429,13 +1428,13 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 ApplyItemsFilter(criteria);
                 return;
             }
-
+            var suggestionProvider = SuggestionProvider;
             _suggestionProviderToken?.Cancel(true);
             var suggestionProviderToken = _suggestionProviderToken = new CancellationTokenSource();
             IsLoadingSuggestions = true;
             Task.Run(async () =>
             {
-                var items = await suggestionProvider.GetSuggestions(criteria, _suggestionProviderToken.Token);
+                var items = await suggestionProvider.GetSuggestionsAsync(criteria, _suggestionProviderToken.Token);
                 await Dispatcher.BeginInvoke(new Action(() =>
                 {
                     if (suggestionProviderToken.IsCancellationRequested)

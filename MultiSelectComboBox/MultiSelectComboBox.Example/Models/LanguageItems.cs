@@ -531,7 +531,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
             var imageSize24 = new Size(24, 24);
             var items = new List<LanguageItem>();
 
-            foreach (var ci in CultureInfo.GetCultures(CultureTypes.AllCultures).Take(30))
+            foreach (var ci in CultureInfo.GetCultures(CultureTypes.AllCultures))
             {
                 if (items.Count(a => string.Compare(a.Id, ci.Name, StringComparison.InvariantCultureIgnoreCase) == 0) > 0)
                 {
