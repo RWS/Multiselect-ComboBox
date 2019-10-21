@@ -1,12 +1,9 @@
-﻿using Sdl.MultiSelectComboBox.API;
-using Sdl.MultiSelectComboBox.Controls;
-using Sdl.MultiSelectComboBox.EventArgs;
-using Sdl.MultiSelectComboBox.Services;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,6 +12,10 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Sdl.MultiSelectComboBox.API;
+using Sdl.MultiSelectComboBox.Controls;
+using Sdl.MultiSelectComboBox.EventArgs;
+using Sdl.MultiSelectComboBox.Services;
 
 namespace Sdl.MultiSelectComboBox.Themes.Generic
 {
@@ -23,8 +24,11 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
     [TemplatePart(Name = PART_MultiSelectComboBox_Dropdown_ListBox, Type = typeof(ListBox))]
     [TemplatePart(Name = PART_MultiSelectComboBox_Dropdown_Button, Type = typeof(Button))]
     [TemplatePart(Name = PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl, Type = typeof(ItemsControl))]
+    [TemplatePart(Name = PART_MultiSelectComboBox_Detached_FilterPanel, Type = typeof(StackPanel))]
     [TemplatePart(Name = PART_MultiSelectComboBox_SelectedItemsPanel_Filter_TextBox, Type = typeof(TextBox))]
     [TemplatePart(Name = PART_MultiSelectComboBox_SelectedItemsPanel_Filter_AutoComplete_TextBox, Type = typeof(TextBox))]
+    [TemplatePart(Name = PART_MultiSelectComboBox_Detached_Filter_TextBox, Type = typeof(TextBox))]
+    [TemplatePart(Name = PART_MultiSelectComboBox_Detached_Filter_AutoComplete_TextBox, Type = typeof(TextBox))]
     [TemplatePart(Name = PART_MultiSelectComboBox_SelectedItemsPanel_RemoveItem_Button, Type = typeof(Button))]
     public class MultiSelectComboBox : Control, IDisposable
     {
@@ -33,8 +37,11 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
         private const string PART_MultiSelectComboBox_Dropdown_ListBox = "PART_MultiSelectComboBox_Dropdown_ListBox";
         private const string PART_MultiSelectComboBox_Dropdown_Button = "PART_MultiSelectComboBox_Dropdown_Button";
         private const string PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl = "PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl";
+        private const string PART_MultiSelectComboBox_Detached_FilterPanel = "PART_MultiSelectComboBox_Detached_FilterPanel";
         private const string PART_MultiSelectComboBox_SelectedItemsPanel_Filter_TextBox = "PART_MultiSelectComboBox_SelectedItemsPanel_Filter_TextBox";
         private const string PART_MultiSelectComboBox_SelectedItemsPanel_Filter_AutoComplete_TextBox = "PART_MultiSelectComboBox_SelectedItemsPanel_Filter_AutoComplete_TextBox";
+        private const string PART_MultiSelectComboBox_Detached_Filter_TextBox = "PART_MultiSelectComboBox_Detached_Filter_TextBox";
+        private const string PART_MultiSelectComboBox_Detached_Filter_AutoComplete_TextBox = "PART_MultiSelectComboBox_Detached_Filter_AutoComplete_TextBox";
         private const string PART_MultiSelectComboBox_SelectedItemsPanel_RemoveItem_Button = "PART_MultiSelectComboBox_SelectedItemsPanel_RemoveItem_Button";
 
         private const string MultiSelectComboBox_SelectedItems_ItemTemplate = "MultiSelectComboBox.SelectedItems.ItemTemplate";
@@ -129,6 +136,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                     _dropdownListBox.PreviewMouseUp -= DropdownListBoxPreviewMouseUp;
                     _dropdownListBox.PreviewKeyDown -= DropdownListBoxPreviewKeyDown;
                     _dropdownListBox.ItemContainerGenerator.StatusChanged -= DropDownListBoxItemContainerGenerator_StatusChanged;
+                    _dropdownListBox.RemoveHandler(ScrollViewer.ScrollChangedEvent, new RoutedEventHandler(DropDownListBoxScrolled));
                 }
 
                 _dropdownListBox = value;
@@ -150,6 +158,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                     _dropdownListBox.PreviewMouseUp += DropdownListBoxPreviewMouseUp;
                     _dropdownListBox.PreviewKeyDown += DropdownListBoxPreviewKeyDown;
                     _dropdownListBox.ItemContainerGenerator.StatusChanged += DropDownListBoxItemContainerGenerator_StatusChanged;
+                    _dropdownListBox.AddHandler(ScrollViewer.ScrollChangedEvent, new RoutedEventHandler(DropDownListBoxScrolled));
                 }
             }
         }
@@ -167,7 +176,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                     if (EnableGrouping)
                     {
                         // check that the items are groupable before adding a default group definition
-                        if (ItemsCollectionViewSource.GroupDescriptions.Count == 0 && ItemsSource.Count > 0 && ItemsSource[0] is IItemGroupAware)
+                        if (ItemsCollectionViewSource.GroupDescriptions.Count == 0 && (ItemsSource.GetType().IsGenericType && typeof(IItemGroupAware).IsAssignableFrom(ItemsSource.GetType().GetGenericArguments()[0]) || ItemsSource.Count > 0 && ItemsSource[0] is IItemGroupAware))
                         {
                             ItemsCollectionViewSource.GroupDescriptions.Add(new PropertyGroupDescription("Group"));
                         }
@@ -198,7 +207,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 {
                     _selectedItemsControl.Items.CurrentChanged -= SelectedItemsControl_CurrentChanged;
                     _selectedItemsControl.PreviewMouseDown -= SelectedItemsControl_OnPreviewMouseDown;
-                    _selectedItemsControl.KeyUp -= SelectedItemsControl_OnKeyUp;
+                    _selectedItemsControl.KeyUp -= FilterControl_OnKeyUp;
                 }
 
                 _selectedItemsControl = value;
@@ -215,10 +224,32 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 {
                     _selectedItemsControl.Items.CurrentChanged += SelectedItemsControl_CurrentChanged;
                     _selectedItemsControl.PreviewMouseDown += SelectedItemsControl_OnPreviewMouseDown;
-                    _selectedItemsControl.KeyUp += SelectedItemsControl_OnKeyUp;
+                    _selectedItemsControl.KeyUp += FilterControl_OnKeyUp;
                 }
             }
         }
+
+        private StackPanel _detachedFilterPanel;
+        private StackPanel DetachedFilterPanel
+        {
+            get => _detachedFilterPanel;
+            set
+            {
+                if (_detachedFilterPanel != null)
+                {
+                    _detachedFilterPanel.KeyUp -= FilterControl_OnKeyUp;
+                }
+
+                _detachedFilterPanel = value;
+
+                if (_detachedFilterPanel != null)
+                {
+                    _detachedFilterPanel.KeyUp += FilterControl_OnKeyUp;
+                }
+            }
+        }
+
+
 
         private TextBox _selectedItemsFilterTextBox;
         private TextBox SelectedItemsFilterTextBox
@@ -227,18 +258,21 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                        VisualTreeService.FindVisualChild<TextBox>(SelectedItemsControl, PART_MultiSelectComboBox_SelectedItemsPanel_Filter_TextBox));
             set
             {
-                if (_selectedItemsFilterTextBox != null)
+                if (DetachAutoCompleteFilterBox == false)
                 {
-                    _selectedItemsFilterTextBox.PreviewTextInput -= SelectedItemsFilterTextBoxPreviewTextInput;
-                    _selectedItemsFilterTextBox.TextChanged -= SelectedItemsFilterTextBoxTextChanged;
-                }
+                    if (_selectedItemsFilterTextBox != null)
+                    {
+                        _selectedItemsFilterTextBox.PreviewTextInput -= FilterTextBoxPreviewTextInput;
+                        _selectedItemsFilterTextBox.TextChanged -= FilterTextBoxTextChanged;
+                    }
 
-                _selectedItemsFilterTextBox = value;
+                    _selectedItemsFilterTextBox = value;
 
-                if (_selectedItemsFilterTextBox != null)
-                {
-                    _selectedItemsFilterTextBox.PreviewTextInput += SelectedItemsFilterTextBoxPreviewTextInput;
-                    _selectedItemsFilterTextBox.TextChanged += SelectedItemsFilterTextBoxTextChanged;
+                    if (_selectedItemsFilterTextBox != null)
+                    {
+                        _selectedItemsFilterTextBox.PreviewTextInput += FilterTextBoxPreviewTextInput;
+                        _selectedItemsFilterTextBox.TextChanged += FilterTextBoxTextChanged;
+                    }
                 }
             }
         }
@@ -258,6 +292,48 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 }
             }
         }
+
+
+        private TextBox _detachedFilterTextBox;
+        private TextBox DetachedFilterTextBox
+        {
+            get => _detachedFilterTextBox;
+            set
+            {
+                if (DetachAutoCompleteFilterBox == true)
+                {
+                    if (_detachedFilterTextBox != null)
+                    {
+                        _detachedFilterTextBox.PreviewTextInput -= FilterTextBoxPreviewTextInput;
+                        _detachedFilterTextBox.TextChanged -= FilterTextBoxTextChanged;
+                    }
+
+                    _detachedFilterTextBox = value;
+
+                    if (_detachedFilterTextBox != null)
+                    {
+                        _detachedFilterTextBox.PreviewTextInput += FilterTextBoxPreviewTextInput;
+                        _detachedFilterTextBox.TextChanged += FilterTextBoxTextChanged;
+                    }
+                }
+            }
+        }
+
+        private TextBox _detachedFilterAutoCompleteTextBox;
+        private TextBox DetachedFilterAutoCompleteTextBox
+        {
+            get => _detachedFilterAutoCompleteTextBox;
+            set
+            {
+                _detachedFilterAutoCompleteTextBox = value;
+
+                if (AutoCompleteForeground != null && _detachedFilterAutoCompleteTextBox != null)
+                {
+                    _detachedFilterAutoCompleteTextBox.Foreground = AutoCompleteForeground;
+                }
+            }
+        }
+
 
         private IComparer _groupComparerService;
         private IComparer GroupComparerService => _groupComparerService ?? (_groupComparerService = new GroupComparerService());
@@ -443,6 +519,37 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             set => SetValue(FilterServiceProperty, value);
         }
 
+        public static readonly DependencyProperty SuggestionProviderProperty =
+            DependencyProperty.Register("SuggestionProvider", typeof(ISuggestionProvider), typeof(MultiSelectComboBox),
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, SuggestionProviderPropertyChangedCallback));
+
+        public ISuggestionProvider SuggestionProvider
+        {
+            get => (ISuggestionProvider)GetValue(SuggestionProviderProperty);
+            set => SetValue(SuggestionProviderProperty, value);
+        }
+
+        public static readonly DependencyProperty LoadingSuggestionsContentProperty =
+            DependencyProperty.Register("LoadingSuggestionsContent", typeof(object), typeof(MultiSelectComboBox),
+            new FrameworkPropertyMetadata(null));
+        public object LoadingSuggestionsContent
+        {
+            get => GetValue(LoadingSuggestionsContentProperty);
+
+            set => SetValue(LoadingSuggestionsContentProperty, value);
+        }
+
+
+        public static readonly DependencyProperty IsLoadingSuggestionsProperty =
+            DependencyProperty.Register("IsLoadingSuggestions", typeof(bool), typeof(MultiSelectComboBox),
+                new FrameworkPropertyMetadata(false));
+        public bool IsLoadingSuggestions
+        {
+            get => (bool)GetValue(IsLoadingSuggestionsProperty);
+
+            set => SetValue(IsLoadingSuggestionsProperty, value);
+        }
+
         private static void FilterServicePropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
             var control = dependencyObject as MultiSelectComboBox;
@@ -453,7 +560,17 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             }
         }
 
-
+        private static void SuggestionProviderPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            if (!(dependencyObject is MultiSelectComboBox control))
+                return;
+            if (control.MultiSelectComboBoxGrid == null)
+            {
+                control.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, (Action)(() => SuggestionProviderPropertyChangedCallback(dependencyObject, dependencyPropertyChangedEventArgs)));
+                return;
+            }
+            control.LoadSuggestions(string.Empty);
+        }
 
         public static readonly DependencyProperty IsDropDownOpenProperty =
             DependencyProperty.Register("IsDropDownOpen", typeof(bool), typeof(MultiSelectComboBox),
@@ -520,36 +637,44 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private static void ItemsPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            var control = dependencyObject as MultiSelectComboBox;
-
-            if (control?.MultiSelectComboBoxGrid != null)
+            if (!(dependencyObject is MultiSelectComboBox control))
+                return;
+            if (control.MultiSelectComboBoxGrid == null)
             {
-                control.ItemsCollectionViewSource = new CollectionViewSource
-                {
-                    Source = control.ItemsSource
-                };
+                control.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, (Action)(() => ItemsPropertyChangedCallback(dependencyObject, dependencyPropertyChangedEventArgs)));
+                return;
+            }
+            control.ItemsCollectionViewSource = new CollectionViewSource
+            {
+                Source = control.ItemsSource
+            };
 
-                if (dependencyPropertyChangedEventArgs.NewValue is IList newItems && newItems.Count > 0)
+            if (dependencyPropertyChangedEventArgs.NewValue is IList newItems && newItems.Count > 0)
+            {
+                control.UpdateSelectedItemsContainer(newItems);
+            }
+
+            if (control.SelectedItemsControl == null)
+            {
+                control.SelectedItemsControl = VisualTreeService.FindVisualChild<ItemsControl>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl);
+            }
+
+            if (control.DropdownListBox == null)
+            {
+                if (control.DropdownMenu == null)
                 {
-                    control.UpdateSelectedItemsContainer(newItems);
+                    control.DropdownMenu = VisualTreeService.FindVisualChild<Popup>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_Dropdown);
                 }
 
-                if (control.SelectedItemsControl == null)
+                if (control.DropdownMenu != null)
                 {
-                    control.SelectedItemsControl = VisualTreeService.FindVisualChild<ItemsControl>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl);
-                }
-
-                if (control.DropdownListBox == null)
-                {
-                    if (control.DropdownMenu == null)
+                    control.DetachedFilterPanel = VisualTreeService.FindVisualChild<StackPanel>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Detached_FilterPanel);
+                    if (control.DetachedFilterPanel != null)
                     {
-                        control.DropdownMenu = VisualTreeService.FindVisualChild<Popup>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_Dropdown);
+                        control.DetachedFilterTextBox = VisualTreeService.FindVisualChild<TextBox>(control.DetachedFilterPanel, PART_MultiSelectComboBox_Detached_Filter_TextBox);
+                        control.DetachedFilterAutoCompleteTextBox = VisualTreeService.FindVisualChild<TextBox>(control.DetachedFilterPanel, PART_MultiSelectComboBox_Detached_Filter_AutoComplete_TextBox);
                     }
-
-                    if (control.DropdownMenu != null)
-                    {
-                        control.DropdownListBox = VisualTreeService.FindVisualChild<ListBox>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Dropdown_ListBox);
-                    }
+                    control.DropdownListBox = VisualTreeService.FindVisualChild<ListBox>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Dropdown_ListBox);
                 }
             }
         }
@@ -693,6 +818,15 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             get => (bool)GetValue(IsEditableProperty);
             set => SetValue(IsEditableProperty, value);
         }
+        public static readonly DependencyProperty DetachAutoCompleteFilterBoxProperty =
+            DependencyProperty.Register("DetachAutoCompleteFilterBox", typeof(bool), typeof(MultiSelectComboBox),
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public bool DetachAutoCompleteFilterBox
+        {
+            get => (bool)GetValue(DetachAutoCompleteFilterBoxProperty);
+            set => SetValue(DetachAutoCompleteFilterBoxProperty, value);
+        }
 
         private static readonly DependencyPropertyKey IsEditModePropertyKey =
             DependencyProperty.RegisterReadOnly("IsEditMode", typeof(bool),
@@ -725,6 +859,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
         public static readonly DependencyProperty SetFocusOnFirstSelectedItemOnDropDownProperty =
             DependencyProperty.Register("SetFocusOnFirstSelectedItemOnDropDown", typeof(bool), typeof(MultiSelectComboBox),
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        
         private string FilterTextApplied { get; set; }
 
         private bool MultiSelectComboBoxHasFocus { get; set; }
@@ -879,7 +1014,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             Dispatcher.BeginInvoke(new Action(
                 delegate
                 {
-                    var args = new FilterTextChangedEventArgs(FilterTextChangedEvent, SelectedItemsFilterTextBox?.Text, DropdownListBox?.Items.Cast<object>().ToList().Select(a => a) as ICollection);
+                    var args = new FilterTextChangedEventArgs(FilterTextChangedEvent, CurrentActiveFilterTextBox?.Text, DropdownListBox?.Items.Cast<object>().ToList().Select(a => a) as ICollection);
                     RaiseEvent(args);
                 }));
         }
@@ -896,16 +1031,22 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private void MultiSelectComboBox_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            // allows the user to switch to edit mode when control as focus and typing F2 (similar to excel cell behaviour)
-            if (e.Key == Key.F2 && !IsEditMode)
+            // allows the user to switch to edit mode when control as focus and typing Enter (similar to Web behaviour)
+            IInputElement focusedControl = FocusManager.GetFocusedElement(this);
+            IInputElement focusedControl1 = Keyboard.FocusedElement;
+            if ((e.Key == Key.F2 || e.Key == Key.Enter) && !IsEditMode)
             {
                 AssignIsEditMode();
+                if (DetachAutoCompleteFilterBox)
+                {
+                    IsDropDownOpen = true;
+                }
             }
         }
 
         private void MultiSelectComboBoxKeyUp(object sender, KeyEventArgs e)
         {
-            if ((e.Key != Key.Down && e.Key != Key.Up) || !IsEditMode || DropdownListBox == null || DropdownListBox.IsKeyboardFocusWithin)
+            if ((e.Key != Key.Down && e.Key != Key.Up) || (!IsEditMode && !DetachAutoCompleteFilterBox) || DropdownListBox == null || DropdownListBox.IsKeyboardFocusWithin)
             {
                 return;
             }
@@ -936,8 +1077,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private void MultiSelectComboBoxOnPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-
-
             if (IsScrollBar(e) || IsRemoveItemButton(e) || IsComboBoxItemDataContext(e))
             {
                 if (IsComboBoxItemDataContext(e))
@@ -947,11 +1086,11 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 return;
             }
 
-            if (!IsEditMode && OpenDropDownListAlsoWhenNotInEditMode == false)
+            if (!IsEditMode && !OpenDropDownListAlsoWhenNotInEditMode && !DetachAutoCompleteFilterBox)
             {
                 e.Handled = true;
             }
-            else if (IsDropdownButton(e) || IsItemsControl(e))
+            else if (IsDropdownButton(e) || IsItemsControl(e) || DetachAutoCompleteFilterBox)
             {
                 if (ClearFilterOnDropdownClosing && DropdownListBox != null && DropdownListBox.IsKeyboardFocusWithin)
                 {
@@ -1017,10 +1156,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             AssignIsEditMode();
         }
 
-        private void SelectedItemsControl_OnKeyUp(object sender, KeyEventArgs e)
+        private void FilterControl_OnKeyUp(object sender, KeyEventArgs e)
         {
             if (e.OriginalSource is TextBox textBox && IsEditMode)
             {
+                if (DetachAutoCompleteFilterBox)
+                {
+                    textBox = DetachedFilterTextBox;
+                }
                 var perviousFilterText = FilterTextApplied;
                 FilterTextApplied = textBox.Text.Trim();
                 textBox.Focus();
@@ -1034,7 +1177,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                             textBox.Text = string.Empty;
                             FilterTextApplied = string.Empty;
 
-                            ApplyItemsFilter(string.Empty);
+                            LoadSuggestions(string.Empty);
                         }
                         else if (IsEditable)
                         {
@@ -1045,20 +1188,23 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                         if (IsDropDownOpen)
                         {
                             SelectComboBoxItem();
-                            IsDropDownOpen = false;
+                            if (DetachAutoCompleteFilterBox == false || SelectionMode == SelectionModes.Single)// Dont Close Dropdown on Multiselect
+                                IsDropDownOpen = false;
+                            else
+                                FocusCursorOnFilterTextBox();
                         }
 
-                        SelectedItemsFilterTextBox.Text = string.Empty;
+                        CurrentActiveFilterTextBox.Text = string.Empty;
                         FilterTextApplied = string.Empty;
-
-                        ApplyItemsFilter(string.Empty);
+                        LoadSuggestions(string.Empty);
                         break;
                     case Key.Escape:
                         IsDropDownOpen = false;
                         UpdateAutoCompleteFilterText(string.Empty, null);
+
                         break;
                     default:
-                        ApplyItemsFilter(textBox.Text);
+                        LoadSuggestions(textBox.Text);
 
                         if (!IsDropDownOpen && EnableFiltering)
                         {
@@ -1071,11 +1217,11 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private void DropdownMenuClosed(object sender, System.EventArgs e)
         {
-            FocusCursorOnFilterTextBox();
+            if (DetachAutoCompleteFilterBox == false)
+                FocusCursorOnFilterTextBox();
+            else
+                Focus();// Move Focus to own. To Select again if needed(Can Press Enter or F2 to select item again if needed)
         }
-
-
-
 
         private void DropdownMenuOpened(object sender, System.EventArgs e)
         {
@@ -1121,7 +1267,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                     UpdateAutoCompleteFilterText(FilterTextApplied, comboBoxItemRemoved);
                 }
             }
-
+            
         }
 
         private void DropdownListBoxPreviewKeyDown(object sender, KeyEventArgs e)
@@ -1139,12 +1285,15 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                         break;
                     case Key.Return:
                         SelectComboBoxItem();
-                        IsDropDownOpen = false;
+                        if (DetachAutoCompleteFilterBox == false || SelectionMode == SelectionModes.Single)
+                            IsDropDownOpen = false;
+                        else
+                            FocusCursorOnFilterTextBox();
 
-                        SelectedItemsFilterTextBox.Text = string.Empty;
+                        CurrentActiveFilterTextBox.Text = string.Empty;
                         FilterTextApplied = string.Empty;
 
-                        ApplyItemsFilter(string.Empty);
+                        LoadSuggestions(string.Empty);
 
                         break;
                     case Key.Escape:
@@ -1229,12 +1378,16 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                     listBoxItem.IsChecked = !listBoxItem.IsChecked;
 
                     SetKeyBoardFocusOnItem(comboBoxItem);
-                    UpdateSelectedItemsContainer(ItemsSource);
+                    UpdateSelectedItemsContainer(ItemsSource); 
                     if (SelectionMode == SelectionModes.Single)
                     {
                         CloseDropdownMenu(true, false);
                     }
                 }
+            }
+            if (DetachAutoCompleteFilterBox)
+            {
+                FocusCursorOnFilterTextBox();
             }
         }
 
@@ -1321,7 +1474,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             }
         }
 
-        private void SelectedItemsFilterTextBoxPreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void FilterTextBoxPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             if (!EnableFiltering && !string.IsNullOrEmpty(e.Text))
             {
@@ -1329,7 +1482,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             }
         }
 
-        private void SelectedItemsFilterTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        private void FilterTextBoxTextChanged(object sender, TextChangedEventArgs e)
         {
             var criteria = ((TextBox)e.OriginalSource).Text;
 
@@ -1354,7 +1507,42 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             DropdownMenu.HorizontalOffset = offset;
         }
 
-        private void ApplyItemsFilter(string criteria)
+        private CancellationTokenSource _suggestionProviderToken;
+
+        private void LoadSuggestions(string criteria)
+        {
+            if (SuggestionProvider == null)
+            {
+                ApplyItemsFilter(criteria);
+                return;
+            }
+            var suggestionProvider = SuggestionProvider;
+            _suggestionProviderToken?.Cancel(true);
+            var suggestionProviderToken = _suggestionProviderToken = new CancellationTokenSource();
+
+            IsLoadingSuggestions = true;
+            LoadSuggestionsAsync(criteria).ContinueWith(t => IsLoadingSuggestions = false, TaskContinuationOptions.ExecuteSynchronously);
+        }
+
+        private async Task LoadSuggestionsAsync(string criteria)
+        {
+            var suggestionProvider = SuggestionProvider;
+            _suggestionProviderToken?.Cancel(true);
+            var suggestionProviderToken = _suggestionProviderToken = new CancellationTokenSource();
+            var items = await suggestionProvider.GetSuggestionsAsync(criteria, _suggestionProviderToken.Token);
+            await Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (suggestionProviderToken.IsCancellationRequested)
+                    return;
+                ItemsSource.Clear();
+                foreach (var item in items)
+                    ItemsSource.Add(item);
+                if (!suggestionProviderToken.IsCancellationRequested)
+                    ApplyItemsFilter(criteria);
+            }));
+        }
+
+    private void ApplyItemsFilter(string criteria)
         {
             if (EnableFiltering && ItemsCollectionViewSource?.View != null)
             {
@@ -1385,7 +1573,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private void UpdateAutoCompleteFilterText(string criteria, object item)
         {
-            if (EnableAutoComplete && IsDropDownOpen && item != null && !IsSelectedItem(item) && SelectedItemsFilterAutoCompleteTextBox != null)
+
+            if (EnableAutoComplete && IsDropDownOpen && item != null && !IsSelectedItem(item) && CurrentActiveAutoCompleteBox != null)
             {
                 var index = criteria?.Length > 0 ? item.ToString().IndexOf(criteria, StringComparison.InvariantCultureIgnoreCase) : 0;
                 var autoCompleteText = index > -1 ? item.ToString().Substring(index + (criteria?.Length ?? 0)) : string.Empty;
@@ -1395,14 +1584,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                     autoCompleteText = autoCompleteText.Substring(0, AutoCompleteMaxLength) + "...";
                 }
 
-                SelectedItemsFilterAutoCompleteTextBox.Text = autoCompleteText;
+                CurrentActiveAutoCompleteBox.Text = autoCompleteText;
 
-                SelectedItemsFilterAutoCompleteTextBox.Background = AutoCompleteBackground;
+                CurrentActiveAutoCompleteBox.Background = AutoCompleteBackground;
             }
-            else if (SelectedItemsFilterAutoCompleteTextBox != null)
+            else if (CurrentActiveAutoCompleteBox != null)
             {
-                SelectedItemsFilterAutoCompleteTextBox.Text = string.Empty;
-                SelectedItemsFilterAutoCompleteTextBox.Background = Brushes.Transparent;
+                CurrentActiveAutoCompleteBox.Text = string.Empty;
+                CurrentActiveAutoCompleteBox.Background = Brushes.Transparent;
             }
         }
 
@@ -1451,15 +1640,41 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(
                     delegate
                     {
-                        if (SelectedItemsControl != null && SelectedItemsFilterTextBox != null)
+                        if (SelectedItemsControl != null && CurrentActiveFilterTextBox != null)
                         {
-                            SelectedItemsFilterTextBox.Visibility = Visibility.Visible;
-                            SelectedItemsFilterTextBox.Focus();
-                            SelectedItemsFilterTextBox.ForceCursor = true;
-                            SelectedItemsFilterTextBox.ScrollToEnd();
-                            SelectedItemsFilterTextBox.CaretIndex = SelectedItemsFilterTextBox.Text.Trim().Length;
+                            CurrentActiveFilterTextBox.Visibility = Visibility.Visible;
+                            CurrentActiveFilterTextBox.Focus();
+                            CurrentActiveFilterTextBox.ForceCursor = true;
+                            CurrentActiveFilterTextBox.ScrollToEnd();
+                            CurrentActiveFilterTextBox.CaretIndex = CurrentActiveFilterTextBox.Text.Trim().Length;
                         }
                     }));
+            }
+        }
+
+        private TextBox CurrentActiveFilterTextBox
+        {
+            get
+            {
+                var FilterTextBox = SelectedItemsFilterTextBox;
+                if (DetachAutoCompleteFilterBox == true)
+                {
+                    FilterTextBox = DetachedFilterTextBox;
+                }
+                return FilterTextBox;
+            }
+        }
+        private TextBox CurrentActiveAutoCompleteBox
+        {
+
+            get
+            {
+                TextBox AutoCompleteTextBox = SelectedItemsFilterAutoCompleteTextBox;
+                if (DetachAutoCompleteFilterBox == true)
+                {
+                    AutoCompleteTextBox = DetachedFilterAutoCompleteTextBox;
+                }
+                return AutoCompleteTextBox;
             }
         }
 
@@ -1520,16 +1735,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
             return false;
         }
-        private void RestorePreviousSelection()
-        {
-            SelectedItems.Clear();
-            SelectedItems.Add(_previousSelectedValue);
-            SetValue(SelectedItemsProperty, SelectedItems);
-            SelectedItemsFilterTextBox.Text = string.Empty;
-            SelectedItemsFilterAutoCompleteTextBox.Text = string.Empty;
-            FilterTextApplied = string.Empty;
-            ApplyItemsFilter(string.Empty);
-        }
+
         private void AttemptToCloseEditMode()
         {
             if (SelectedItemsControl != null)
@@ -1556,43 +1762,68 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             }
         }
 
-        public void CloseDropdownMenu(bool clearFilter, bool moveFocus)
+        private void CloseDropdownMenu(bool clearFilter, bool moveFocus)
         {
             IsDropDownOpen = false;
 
             if (clearFilter)
             {
-                if (SelectedItemsFilterTextBox != null)
+                if (CurrentActiveFilterTextBox != null)
                 {
-                    SelectedItemsFilterTextBox.Text = string.Empty;
+                    CurrentActiveFilterTextBox.Text = string.Empty;
                 }
 
                 FilterTextApplied = string.Empty;
-                ApplyItemsFilter(string.Empty);
+                LoadSuggestions(string.Empty);
             }
 
             if (moveFocus)
             {
-                if (SelectedItemsFilterTextBox != null)
+                if (CurrentActiveFilterTextBox != null)
                 {
-                    SelectedItemsFilterTextBox.Visibility = Visibility.Hidden;
+                    CurrentActiveFilterTextBox.Visibility = Visibility.Hidden;
                 }
 
                 SetValue(IsEditModePropertyKey, false);
             }
-
-            if (_previousSelectedValue != null && SelectedItems != null && SelectedItems.Count == 0)
-
-            {
-                RestorePreviousSelection();
-            }
         }
-
-
 
         private bool CanCloseEditMode()
         {
             return !MultiSelectComboBoxHasFocus;
+        }
+
+        private DateTime _suggestionProviderLastRequest;
+
+        private void DropDownListBoxScrolled(object sender, RoutedEventArgs e)
+        {
+            var suggestionProvider = SuggestionProvider;
+            if (_dropdownListBox == null || suggestionProvider == null)
+                return;
+            if (DateTime.Now.Subtract(_suggestionProviderLastRequest).TotalSeconds < 0.2)
+                return;
+            var scrollViewer = VisualTreeService.FindVisualChild<ScrollViewer>(_dropdownListBox, null);
+            if (scrollViewer == null || scrollViewer.ContentVerticalOffset / scrollViewer.ScrollableHeight < 0.85)
+                return;
+            _suggestionProviderLastRequest = DateTime.Now;
+            _suggestionProviderToken?.Cancel(true);
+            _suggestionProviderToken = new CancellationTokenSource();
+            if (!suggestionProvider.HasMoreSuggestions)
+                return;
+            IsLoadingSuggestions = true;
+            DropDownListBoxScrolledAsync().ContinueWith(t => IsLoadingSuggestions = false, TaskContinuationOptions.ExecuteSynchronously);
+        }
+
+        private async Task DropDownListBoxScrolledAsync()
+        {
+            var suggestionProvider = SuggestionProvider;
+            var items = await suggestionProvider.GetSuggestionsAsync(_suggestionProviderToken.Token);
+            await Dispatcher.BeginInvoke(new Action(() =>
+            {
+                foreach (var item in items)
+                    ItemsSource.Add(item);
+                _suggestionProviderLastRequest = _suggestionProviderLastRequest.AddSeconds(-1);
+            }));
         }
 
         public void Dispose()
@@ -1632,13 +1863,22 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             {
                 SelectedItemsControl.Items.CurrentChanged -= SelectedItemsControl_CurrentChanged;
                 SelectedItemsControl.PreviewMouseDown -= SelectedItemsControl_OnPreviewMouseDown;
-                SelectedItemsControl.KeyUp -= SelectedItemsControl_OnKeyUp;
+                SelectedItemsControl.KeyUp -= FilterControl_OnKeyUp;
             }
 
             if (SelectedItemsFilterTextBox != null)
             {
-                SelectedItemsFilterTextBox.PreviewTextInput -= SelectedItemsFilterTextBoxPreviewTextInput;
-                SelectedItemsFilterTextBox.TextChanged -= SelectedItemsFilterTextBoxTextChanged;
+                SelectedItemsFilterTextBox.PreviewTextInput -= FilterTextBoxPreviewTextInput;
+                SelectedItemsFilterTextBox.TextChanged -= FilterTextBoxTextChanged;
+            }
+            if (DetachedFilterPanel != null)
+            {
+                DetachedFilterPanel.KeyUp -= FilterControl_OnKeyUp;
+            }
+            if (DetachedFilterTextBox != null)
+            {
+                DetachedFilterTextBox.PreviewTextInput -= FilterTextBoxPreviewTextInput;
+                DetachedFilterTextBox.TextChanged -= FilterTextBoxTextChanged;
             }
         }
     }
