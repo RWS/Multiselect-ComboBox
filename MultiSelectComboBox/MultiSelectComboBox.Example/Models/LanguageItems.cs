@@ -350,6 +350,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
                 else
                 {
                     CustomSuggestionProvider = null;
+                    Items.Clear();
                     _allItems.ForEach(x => Items.Add(x));
                 }
 

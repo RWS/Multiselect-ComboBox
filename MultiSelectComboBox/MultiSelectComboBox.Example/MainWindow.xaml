@@ -189,7 +189,7 @@
 
 									<CheckBox Content="Clear selection on filter changed (Single selection mode only)" IsChecked="{Binding ClearSelectionOnFilterChanged}" Margin="30,325,10,0" VerticalAlignment="Top" Grid.Column="0"/>
 
-                                    <CheckBox Content="Enable on demand service" IsChecked="{Binding EnableOnDemand}" Margin="30,345,10,0" VerticalAlignment="Top" Grid.Column="0"/>
+                                    <CheckBox Content="Enable on demand service" IsChecked="{Binding EnableSuggestionProvider}" Margin="30,345,10,0" VerticalAlignment="Top" Grid.Column="0"/>
                                 </Grid>
 							</Border>
 						</ScrollViewer>
