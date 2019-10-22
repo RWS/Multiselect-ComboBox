@@ -320,8 +320,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             if (scrollViewer == null || scrollViewer.ContentVerticalOffset / scrollViewer.ScrollableHeight < 0.85)
                 return;
             _suggestionProviderLastRequest = DateTime.Now;
-            _suggestionProviderToken?.Cancel(true);
-            _suggestionProviderToken = new CancellationTokenSource();
             if (!suggestionProvider.HasMoreSuggestions)
                 return;
             IsLoadingSuggestions = true;
@@ -543,14 +541,15 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private static object ItemsCoerceValueCallback(DependencyObject dependencyObject, object baseValue)
         {
-            var control = dependencyObject as MultiSelectComboBox;
-
-            if (control?.MultiSelectComboBoxGrid != null)
+            if (!(dependencyObject is MultiSelectComboBox control))
+                return baseValue;
+            if(control.MultiSelectComboBoxGrid == null)
             {
-                control.UpdateSelectedItemsContainer(baseValue as IList);
-                control.ItemsCollectionViewSource?.View?.Refresh();
+                control.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, (Action)(() => ItemsCoerceValueCallback(dependencyObject, baseValue)));
+                return baseValue;
             }
-
+            control.UpdateSelectedItemsContainer(baseValue as IList);
+            control.ItemsCollectionViewSource?.View?.Refresh();
             return baseValue;
         }
 
@@ -1431,9 +1430,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 ApplyItemsFilter(criteria);
                 return;
             }
-            var suggestionProvider = SuggestionProvider;
-            _suggestionProviderToken?.Cancel(true);
-            var suggestionProviderToken = _suggestionProviderToken = new CancellationTokenSource();
             IsLoadingSuggestions = true;
             LoadSuggestionsAsync(criteria).ContinueWith(t => IsLoadingSuggestions = false, TaskContinuationOptions.ExecuteSynchronously);
         }
