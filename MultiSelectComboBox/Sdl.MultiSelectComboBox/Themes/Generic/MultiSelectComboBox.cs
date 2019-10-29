@@ -170,9 +170,12 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                     if (EnableGrouping)
                     {
                         // check that the items are groupable before adding a default group definition
-                        if (ItemsCollectionViewSource.GroupDescriptions.Count == 0 && (ItemsSource.GetType().IsGenericType && typeof(IItemGroupAware).IsAssignableFrom(ItemsSource.GetType().GetGenericArguments()[0]) || ItemsSource.Count > 0 && ItemsSource[0] is IItemGroupAware))
+                        if (ItemsCollectionViewSource.GroupDescriptions.Count == 0)
                         {
-                            ItemsCollectionViewSource.GroupDescriptions.Add(new PropertyGroupDescription("Group"));
+                            var isGenericTypeGroupable = ItemsSource.GetType().IsGenericType
+                                && typeof(IItemGroupAware).IsAssignableFrom(ItemsSource.GetType().GetGenericArguments()[0]);
+                            if(isGenericTypeGroupable || ItemsSource.Count > 0 && ItemsSource[0] is IItemGroupAware)
+                                ItemsCollectionViewSource.GroupDescriptions.Add(new PropertyGroupDescription("Group"));
                         }
 
                         foreach (var groupDescription in ItemsCollectionViewSource.GroupDescriptions)
