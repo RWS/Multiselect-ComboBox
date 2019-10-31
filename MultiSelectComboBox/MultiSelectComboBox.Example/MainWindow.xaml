@@ -10,7 +10,7 @@
         xmlns:converters="clr-namespace:Sdl.MultiSelectComboBox.Example.Converters"
         d:DataContext="{d:DesignInstance {x:Type models:LanguageItems}}"
         mc:Ignorable="d"  
-        Title="Sdl.MultiSelectComboBox Example" Height="592" MinHeight="540" Width="934">
+        Title="Sdl.MultiSelectComboBox Example" Height="600" MinHeight="540" Width="934">
 
 	<Window.Resources>
 		<ResourceDictionary>
@@ -107,6 +107,7 @@
                                                      EnableGrouping="{Binding EnableGrouping}"
                                                      ItemsSource="{Binding Items}" 
                                                      SelectedItems="{Binding SelectedItems}"
+                                                     SuggestionProvider="{Binding CustomSuggestionProvider}"
 													 ClearSelectionOnFilterChanged="{Binding ClearSelectionOnFilterChanged}"
                                                      sdl:FilterTextChangedBehaviour.FilterTextChanged="{Binding FilterTextChangedCommand}"
                                                      sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"/>
@@ -127,6 +128,7 @@
                                                      EnableGrouping="{Binding EnableGrouping}"
                                                      ItemsSource="{Binding Items}"        
                                                      SelectedItems="{Binding SelectedItems}"
+                                                     SuggestionProvider="{Binding CustomSuggestionProvider}"
 							                         ClearSelectionOnFilterChanged="{Binding ClearSelectionOnFilterChanged}"
                                                      sdl:FilterTextChangedBehaviour.FilterTextChanged="{Binding FilterTextChangedCommand}"
                                                      sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"/>
@@ -186,7 +188,9 @@
 									<CheckBox Content="Use 'Custom Filter' service" IsChecked="{Binding UseCustomFilterService}" IsEnabled="{Binding EnableFiltering}" HorizontalAlignment="Left" Margin="45,305,0,0" VerticalAlignment="Top" Grid.Column="0" Width="314"/>
 
 									<CheckBox Content="Clear selection on filter changed (Single selection mode only)" IsChecked="{Binding ClearSelectionOnFilterChanged}" Margin="30,325,10,0" VerticalAlignment="Top" Grid.Column="0"/>
-								</Grid>
+
+                                    <CheckBox Content="Enable on demand service" IsChecked="{Binding EnableSuggestionProvider}" Margin="30,345,10,0" VerticalAlignment="Top" Grid.Column="0"/>
+                                </Grid>
 							</Border>
 						</ScrollViewer>
 

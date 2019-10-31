@@ -215,7 +215,19 @@
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
-
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Items.Count}" Value="0">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border Padding="4" BorderThickness="1" BorderBrush="Gray">
+                                <TextBlock>No results found.</TextBlock>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="MultiSelectComboBox.SelectedItemsPanel.RemoveItem.Button.Style" TargetType="{x:Type Button}">
@@ -359,7 +371,7 @@
                 <ControlTemplate TargetType="{x:Type generic:MultiSelectComboBox}">
 
                     <Grid x:Name="PART_MultiSelectComboBox" MaxHeight="{TemplateBinding ActualHeight}" MaxWidth="{TemplateBinding ActualWidth}" Style="{StaticResource MultiSelectComboBox.Style}">
-                        <ToggleButton IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" IsTabStop="False">
+                        <ToggleButton KeyboardNavigation.TabNavigation="None" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" IsTabStop="False">
                             <ToggleButton.Template>
                                 <ControlTemplate TargetType="ToggleButton">
                                     <ContentControl ContentTemplate="{StaticResource MultiSelectComboBox.SelectedItemsPanel.Template}"/>
