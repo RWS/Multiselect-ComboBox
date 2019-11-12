@@ -618,6 +618,9 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 RemoveSelectedItems(control.SelectedItemsInternal, newCollection, ref itemsRemoved);
                 AddSelectedItems(control.SelectedItemsInternal, newCollection, ref itemsAdded, control);
 
+                control.ToggleDropdownListItemsCheckState(itemsAdded, true);
+                control.ToggleDropdownListItemsCheckState(itemsRemoved, false);
+
                 if (itemsAdded.Count > 0 || itemsRemoved.Count > 0)
                 {
                     control.RaiseSelectedItemsChangedEvent(itemsAdded, itemsRemoved, control.SelectedItemsInternal.Where(a => a != null).ToList());
@@ -1740,6 +1743,19 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             {
                 SelectedItemsFilterTextBox.PreviewTextInput -= SelectedItemsFilterTextBoxPreviewTextInput;
                 SelectedItemsFilterTextBox.TextChanged -= SelectedItemsFilterTextBoxTextChanged;
+            }
+        }
+
+        private void ToggleDropdownListItemsCheckState(IList items, bool isChecked)
+        {
+            var listItems = items
+                .Cast<object>()
+                .Select(GetListViewItem)
+                .Where(e => e != null && (e as IItemEnabledAware)?.IsEnabled != false);
+
+            foreach (var item in listItems)
+            {
+                item.IsChecked = isChecked;
             }
         }
     }
