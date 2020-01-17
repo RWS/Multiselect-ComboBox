@@ -846,7 +846,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private void ConfigureSingleSelectionMode(ref Collection<object> itemsRemoved)
         {
-            if (SelectionMode != SelectionModes.Single || SelectedItemsInternal.Count(a => a != null) <= 0)
+            if (SelectionMode != SelectionModes.Single || SelectedItemsInternal.Count(a => a != null) <= 1)
             {
                 return;
             }
