@@ -1663,8 +1663,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         public void CloseDropdownMenu(bool clearFilter, bool moveFocus)
         {
-            IsDropDownOpen = false;
-
             if (clearFilter)
             {
                 if (SelectedItemsFilterTextBox != null)
@@ -1686,11 +1684,13 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 SetValue(IsEditModePropertyKey, false);
             }
 
-            if (_previousSelectedValue != null && SelectedItems != null && SelectedItems.Count == 0)
+            if (IsDropDownOpen && _previousSelectedValue != null && SelectedItems != null && SelectedItems.Count == 0)
 
             {
                 RestorePreviousSelection();
             }
+
+            IsDropDownOpen = false;
         }
 
 
