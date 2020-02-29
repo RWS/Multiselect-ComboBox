@@ -211,16 +211,15 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 
                 if (_selectedItemsControl != null)
                 {
-					_selectedItemsControl.ItemsSource = SelectedItemsInternal;
+                    _selectedItemsControl.ItemsSource = SelectedItemsInternal;
 
-					if (SelectedItemTemplate == null)
-					{
-						SelectedItemTemplate = _selectedItemsControl.FindResource(MultiSelectComboBox_SelectedItems_ItemTemplate) as DataTemplate;
-					}
+                    if (SelectedItemTemplate == null)
+                    {
+                        SelectedItemTemplate = _selectedItemsControl.FindResource(MultiSelectComboBox_SelectedItems_ItemTemplate) as DataTemplate;
+                    }
 
-					SelectedItemTemplateSelector = new SelectedItemTemplateService(SelectedItemTemplate, _selectedItemsControl.FindResource(MultiSelectComboBox_SelectedItems_Searchable_ItemTemplate) as DataTemplate);
-
-					_selectedItemsControl.Items.CurrentChanged += SelectedItemsControl_CurrentChanged;
+                    SelectedItemTemplateSelector = new SelectedItemTemplateService(SelectedItemTemplate, _selectedItemsControl.FindResource(MultiSelectComboBox_SelectedItems_Searchable_ItemTemplate) as DataTemplate);
+                    _selectedItemsControl.Items.CurrentChanged += SelectedItemsControl_CurrentChanged;
                     _selectedItemsControl.PreviewMouseDown += SelectedItemsControl_OnPreviewMouseDown;
                     _selectedItemsControl.KeyUp += SelectedItemsControl_OnKeyUp;
                 }
@@ -366,10 +365,10 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             }
             
             Dispatcher.BeginInvoke(DispatcherPriority.Loaded, (Action)(() => 
-			{
-				ItemsPropertyChangedCallback(this, new DependencyPropertyChangedEventArgs());
-				ApplyItemsFilter(string.Empty);
-			}));
+            {
+                ItemsPropertyChangedCallback(this, new DependencyPropertyChangedEventArgs());
+                ApplyItemsFilter(string.Empty);
+            }));
         }
         public enum SelectionModes
         {
