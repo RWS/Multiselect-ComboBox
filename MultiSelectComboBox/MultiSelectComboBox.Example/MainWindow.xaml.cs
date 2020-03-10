@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using Sdl.MultiSelectComboBox.Example.Models;
@@ -16,7 +17,8 @@ namespace Sdl.MultiSelectComboBox.Example
 
 			if (Application.Current.MainWindow != null)
 			{
-				Application.Current.MainWindow.Title = Application.Current.MainWindow.Title + " (" + Assembly.GetExecutingAssembly().GetName().Version + ")";
+				Application.Current.MainWindow.Title = Application.Current.MainWindow.Title + " (" + Assembly.GetExecutingAssembly().GetName().Version 
+														+ " - " + GetTargetFramework() + ")";
 			}
 
 			Loaded += MainWindow_Loaded;
@@ -34,6 +36,16 @@ namespace Sdl.MultiSelectComboBox.Example
 			{
 				textBox.ScrollToLine(textBox.LineCount - 1);
 			}
+		}
+
+		private string GetTargetFramework()
+		{
+			var targetFrameworkAttribute = Assembly.GetExecutingAssembly()
+				.GetCustomAttributes(typeof(System.Runtime.Versioning.TargetFrameworkAttribute), false)
+				.OfType<System.Runtime.Versioning.TargetFrameworkAttribute>()
+				.FirstOrDefault();
+
+			return targetFrameworkAttribute.FrameworkName;
 		}
 	}
 }
