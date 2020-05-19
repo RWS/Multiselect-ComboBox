@@ -846,12 +846,12 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private void ConfigureSingleSelectionMode(ref Collection<object> itemsRemoved)
         {
-            if (SelectionMode != SelectionModes.Single || SelectedItemsInternal.Count(a => a != null) <= 0)
+            if (SelectionMode != SelectionModes.Single || SelectedItemsInternal.Count(a => a != null) <= 1)
             {
                 return;
             }
 
-            for (var i = SelectedItemsInternal.Count - 1; i >= 0; i--)
+            for (var i = SelectedItemsInternal.Count - 1; i >= 1; i--)
             {
                 var selectedComboBoxItem = SelectedItemsInternal[i];
                 if (selectedComboBoxItem != null)
