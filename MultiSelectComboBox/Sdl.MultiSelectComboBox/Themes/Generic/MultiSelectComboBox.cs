@@ -544,11 +544,13 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private static object ItemsCoerceValueCallback(DependencyObject dependencyObject, object baseValue)
         {
-            if (!(dependencyObject is MultiSelectComboBox control))
-                return baseValue;
+	        if (!(dependencyObject is MultiSelectComboBox control))
+	        {
+		        return baseValue;
+	        }
+
             if(control.MultiSelectComboBoxGrid == null)
-            {
-                control.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, (Action)(() => ItemsCoerceValueCallback(dependencyObject, baseValue)));
+            {                
                 return baseValue;
             }
             control.UpdateSelectedItemsContainer(baseValue as IList);
@@ -558,13 +560,16 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private static void ItemsPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            if (!(dependencyObject is MultiSelectComboBox control))
-                return;
+	        if (!(dependencyObject is MultiSelectComboBox control))
+	        {
+		        return;
+	        }
+
             if (control.MultiSelectComboBoxGrid == null)
-            {
-                control.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, (Action)(() => ItemsPropertyChangedCallback(dependencyObject, dependencyPropertyChangedEventArgs)));
+            {                
                 return;
             }
+
             control.ItemsCollectionViewSource = new CollectionViewSource
             {
                 Source = control.ItemsSource
