@@ -575,8 +575,9 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 Source = control.ItemsSource
             };
 
-            if (dependencyPropertyChangedEventArgs.NewValue is IList newItems && newItems.Count > 0)
+            if (dependencyPropertyChangedEventArgs.NewValue is IList newItems)
             {
+                control.DropdownListBox.ItemsSource = newItems;
                 control.UpdateSelectedItemsContainer(newItems);
             }
 
