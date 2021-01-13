@@ -550,18 +550,24 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private static object ItemsCoerceValueCallback(DependencyObject dependencyObject, object baseValue)
         {
-            if (!(dependencyObject is MultiSelectComboBox control))
-                return baseValue;
-                
-            control.UpdateSelectedItemsContainer(baseValue as IList);
-            control.ItemsCollectionViewSource?.View?.Refresh();
-            return baseValue;
+
+          if (!(dependencyObject is MultiSelectComboBox control))
+	        {
+		        return baseValue;
+	        }
+
+          control.UpdateSelectedItemsContainer(baseValue as IList);
+          control.ItemsCollectionViewSource?.View?.Refresh();
+          return baseValue;
         }
 
         private static void ItemsPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            if (!(dependencyObject is MultiSelectComboBox control))
-                return;
+
+	        if (!(dependencyObject is MultiSelectComboBox control))
+	        {
+		        return;
+	        }           
 
             control.ItemsCollectionViewSource = new CollectionViewSource
             {
@@ -796,8 +802,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             var itemsAdded = new Collection<object>();
             var itemsRemoved = new Collection<object>();
 
-            ConfigureSingleSelectionMode(ref itemsRemoved);
-
             foreach (var comboBoxItem in comboBoxItems)
             {
                 var listBoxItem = GetListViewItem(comboBoxItem);
@@ -826,6 +830,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 }
             }
 
+            ConfigureSingleSelectionMode(ref itemsRemoved);
+
             var selectedItems = SelectedItemsInternal.Where(a => a != null).ToList();
 
             UpdateSelectedItems(selectedItems);
@@ -844,25 +850,26 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private void ConfigureSingleSelectionMode(ref Collection<object> itemsRemoved)
         {
-            if (SelectionMode != SelectionModes.Single || SelectedItemsInternal.Count(a => a != null) <= 0)
+            if (SelectionMode != SelectionModes.Single || SelectedItemsInternal.Count(a => a != null) <= 1)
             {
                 return;
             }
 
+            var lastSelectedItem = SelectedItemsInternal.LastOrDefault(a => a != null);
+
             for (var i = SelectedItemsInternal.Count - 1; i >= 0; i--)
             {
                 var selectedComboBoxItem = SelectedItemsInternal[i];
-                if (selectedComboBoxItem != null)
+                if (selectedComboBoxItem == null || selectedComboBoxItem == lastSelectedItem)
+                    continue;
+                var selectedListBoxItem = GetListViewItem(selectedComboBoxItem);
+                if (selectedListBoxItem != null)
                 {
-                    var selectedListBoxItem = GetListViewItem(selectedComboBoxItem);
-                    if (selectedListBoxItem != null)
-                    {
-                        selectedListBoxItem.IsChecked = false;
-                    }
-
-                    SelectedItemsInternal.RemoveAt(i);
-                    itemsRemoved.Add(selectedComboBoxItem);
+                    selectedListBoxItem.IsChecked = false;
                 }
+
+                SelectedItemsInternal.RemoveAt(i);
+                itemsRemoved.Add(selectedComboBoxItem);
             }
         }
 
@@ -1656,8 +1663,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         public void CloseDropdownMenu(bool clearFilter, bool moveFocus)
         {
-            IsDropDownOpen = false;
-
             if (clearFilter)
             {
                 if (SelectedItemsFilterTextBox != null)
@@ -1679,11 +1684,13 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 SetValue(IsEditModePropertyKey, false);
             }
 
-            if (_previousSelectedValue != null && SelectedItems != null && SelectedItems.Count == 0)
+            if (IsDropDownOpen && _previousSelectedValue != null && SelectedItems != null && SelectedItems.Count == 0)
 
             {
                 RestorePreviousSelection();
             }
+
+            IsDropDownOpen = false;
         }
 
 
