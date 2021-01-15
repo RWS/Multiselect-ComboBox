@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using System.Resources;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -12,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Sdl.MultiSelectComboBox.Example")]
-[assembly: AssemblyCopyright("Copyright © SDL 2018")]
+[assembly: AssemblyCopyright("Copyright © SDL 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,12 +30,12 @@ using System.Windows;
 
 
 [assembly: ThemeInfo(
-	ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
-									 //(used if a resource is not found in the page,
-									 // or application resource dictionaries)
-	ResourceDictionaryLocation.SourceAssembly //where the generic resource dictionary is located
-											  //(used if a resource is not found in the page,
-											  // app, or any theme specific resource dictionaries)
+    ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
+                                     //(used if a resource is not found in the page,
+                                     // or application resource dictionaries)
+    ResourceDictionaryLocation.SourceAssembly //where the generic resource dictionary is located
+                                              //(used if a resource is not found in the page,
+                                              // app, or any theme specific resource dictionaries)
 )]
 
 
@@ -51,5 +49,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.18")]
-[assembly: AssemblyFileVersion("1.0.0.18")]
+[assembly: AssemblyVersion("1.0.0.19")]
+[assembly: AssemblyFileVersion("1.0.0.19")]

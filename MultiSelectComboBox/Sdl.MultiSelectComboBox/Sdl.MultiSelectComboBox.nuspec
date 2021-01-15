@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/sdl/Multiselect-ComboBox</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <copyright>Copyright © Sdl Community 2019</copyright>
+    <copyright>Copyright © Sdl Community 2021</copyright>
     <tags>WPF MultiSelectCombo</tags>
 	<repository type="git" url="https://github.com/sdl/Multiselect-ComboBox" />
   </metadata>

@@ -11,7 +11,7 @@ using System.Windows.Markup;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Sdl.MultiSelectComboBox")]
-[assembly: AssemblyCopyright("Copyright © SDL 2019")]
+[assembly: AssemblyCopyright("Copyright © SDL 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -50,8 +50,8 @@ using System.Windows.Markup;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.18")]
-[assembly: AssemblyFileVersion("1.0.18.0")]
+[assembly: AssemblyVersion("1.0.19")]
+[assembly: AssemblyFileVersion("1.0.19.0")]
 
 [assembly: XmlnsPrefix("http://schemas.sdl.com/xaml", "sdl")]
 [assembly: XmlnsDefinition("http://schemas.sdl.com/xaml", "Sdl.MultiSelectComboBox.Themes.Generic")]
