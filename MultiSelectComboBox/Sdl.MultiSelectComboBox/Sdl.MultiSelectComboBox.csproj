@@ -7,6 +7,10 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>SdlCommunity.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
+    <PackageId>Sdl.MultiSelectComboBox</PackageId>
+    <Version>1.0.20</Version>
+    <Authors>SDL Developers</Authors>
+    <Company>SDL</Company>
   </PropertyGroup>
 
 </Project>
