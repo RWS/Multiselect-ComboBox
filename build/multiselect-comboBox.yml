@@ -9,10 +9,10 @@ variables:
   value: 1.0.0
 - name: Version.Revision
   value: $[counter(variables['Version.Revision'], 1)]
+- name: BuildConfiguration
+  value: release
 - name: BuildPlatform
-  value: 'Any CPU'
-- name: Configuration
-  value: 'Release'
+  value: any cpu
 
 name: $(Build.DefinitionName).$(SourceBranchName)_$(Version.MajorMinorPatch).$(Version.Revision)
 
