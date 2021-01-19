@@ -5,6 +5,12 @@ resources:
     type: git
     ref: master
 
+variables:
+- name: BuildConfiguration
+  value: release
+- name: BuildPlatform
+  value: any cpu
+
 jobs:
 - job: Phase_1
   displayName: Agent job 1
@@ -30,7 +36,6 @@ jobs:
     inputs:
       platform: $(BuildPlatform)
       configuration: $(BuildConfiguration)
-      restoreNugetPackages: true
 
   - task: DotNetCoreCLI@2
     displayName: dotnet pack
