@@ -1,4 +1,3 @@
-name: $(date:yyyyMMdd)$(rev:.r)
 resources:
   repositories:
   - repository: self
@@ -6,10 +5,16 @@ resources:
     ref: master
 
 variables:
-- name: BuildConfiguration
-  value: release
+- name: Version.MajorMinorPatch
+  value: 1.0.0
+- name: Version.Revision
+  value: $[counter(variables['Version.Revision'], 1)]
 - name: BuildPlatform
-  value: any cpu
+  value: 'Any CPU'
+- name: Configuration
+  value: 'Release'
+
+name: $(Build.DefinitionName).$(SourceBranchName)_$(Version.MajorMinorPatch).$(Version.Revision)
 
 jobs:
 - job: Phase_1
@@ -22,9 +27,6 @@ jobs:
     clean: true
 
   - task: NuGetToolInstaller@1
-    displayName: Use NuGet 5.8.1
-    inputs:
-      versionSpec: 5.8.1
 
   - task: NuGetCommand@2
     displayName: NuGet restore
@@ -32,13 +34,13 @@ jobs:
       feedRestore: af66e256-9c46-4fba-ad75-09bf110ec1cc
 
   - task: VSBuild@1
-    displayName: Build solution **\*.sln
+    displayName: 'Build solution **\*.sln'
     inputs:
       platform: $(BuildPlatform)
       configuration: $(BuildConfiguration)
 
   - task: DotNetCoreCLI@2
-    displayName: dotnet pack
+    displayName: 'dotnet pack'
     inputs:
       command: pack
       searchPatternPack: MultiSelectComboBox/Sdl.MultiSelectComboBox/Sdl.MultiSelectComboBox.csproj
@@ -47,8 +49,7 @@ jobs:
     displayName: 'Publish Artifact: drop'
 
   - task: NuGetCommand@2
-    displayName: NuGet push
+    displayName: 'NuGet push'
     inputs:
       command: push
-      nuGetFeedType: external
-      externalEndpoint: 015dcc9e-9622-43c5-b0dd-926a1a803fd4
+      publishVstsFeed: '015dcc9e-9622-43c5-b0dd-926a1a803fd4'
