@@ -1,0 +1,49 @@
+name: $(date:yyyyMMdd)$(rev:.r)
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: master
+
+jobs:
+- job: Phase_1
+  displayName: Agent job 1
+  pool:
+    vmImage: windows-2019
+
+  steps:
+  - checkout: self
+    clean: true
+
+  - task: NuGetToolInstaller@1
+    displayName: Use NuGet 5.8.1
+    inputs:
+      versionSpec: 5.8.1
+
+  - task: NuGetCommand@2
+    displayName: NuGet restore
+    inputs:
+      feedRestore: af66e256-9c46-4fba-ad75-09bf110ec1cc
+
+  - task: VSBuild@1
+    displayName: Build solution **\*.sln
+    inputs:
+      platform: $(BuildPlatform)
+      configuration: $(BuildConfiguration)
+      restoreNugetPackages: true
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet pack
+    inputs:
+      command: pack
+      searchPatternPack: MultiSelectComboBox/Sdl.MultiSelectComboBox/Sdl.MultiSelectComboBox.csproj
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: drop'
+
+  - task: NuGetCommand@2
+    displayName: NuGet push
+    inputs:
+      command: push
+      nuGetFeedType: external
+      externalEndpoint: 015dcc9e-9622-43c5-b0dd-926a1a803fd4
