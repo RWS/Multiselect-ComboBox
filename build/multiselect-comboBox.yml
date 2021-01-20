@@ -31,7 +31,10 @@ jobs:
   - task: NuGetCommand@2
     displayName: NuGet restore
     inputs:
-      feedRestore: af66e256-9c46-4fba-ad75-09bf110ec1cc
+      command: 'restore'
+      restoreSolution: '**/*.sln'
+      feedsToUse: 'select'
+      vstsFeed: 'af66e256-9c46-4fba-ad75-09bf110ec1cc'
 
   - task: VSBuild@1
     displayName: 'Build solution **\*.sln'
@@ -39,11 +42,11 @@ jobs:
       platform: $(BuildPlatform)
       configuration: $(BuildConfiguration)
 
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet pack'
+  - task: NuGetCommand@2
     inputs:
-      command: pack
-      searchPatternPack: MultiSelectComboBox/Sdl.MultiSelectComboBox/Sdl.MultiSelectComboBox.csproj
+      command: 'pack'
+      packagesToPack: 'MultiSelectComboBox/Sdl.MultiSelectComboBox/Sdl.MultiSelectComboBox.csproj'
+      versioningScheme: 'off'
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: drop'
@@ -52,4 +55,5 @@ jobs:
     displayName: 'NuGet push'
     inputs:
       command: push
-      publishVstsFeed: '015dcc9e-9622-43c5-b0dd-926a1a803fd4'
+      nuGetFeedType: external
+      externalEndpoint: 015dcc9e-9622-43c5-b0dd-926a1a803fd4 
