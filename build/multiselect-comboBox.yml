@@ -5,18 +5,18 @@ resources:
     ref: master
 
 variables:
-- name: Version.MajorMinorPatch
-  value: 1.0.0
+- name: Version.MajorMinor
+  value: 1.0
 - name: Version.Revision
-  value: $[counter(variables['Version.Revision'], 1)]
+  value: $[counter(variables['Version.Revision'], 19)]
 - name: BuildConfiguration
   value: 'release'
 - name: BuildPlatform
   value: 'any cpu'
 - name: sdlMultiselectComboBox
-  value: 'Sdl.MultiSelectComboBox.csproj'
+  value: 'Sdl.MultiSelectComboBox'
 
-name: $(Build.DefinitionName).$(SourceBranchName)_$(Version.MajorMinorPatch).$(Version.Revision)
+name: $(Build.DefinitionName).$(SourceBranchName)_$(Version.MajorMinor).$(Version.Revision)
 
 jobs:
 - job: Phase_1
@@ -57,6 +57,7 @@ jobs:
     displayName: 'NuGet push'
     condition: ne(variables['Build.Reason'], 'PullRequest')
     inputs:
-      command: push
-      nuGetFeedType: external
-      externalEndpoint: 015dcc9e-9622-43c5-b0dd-926a1a803fd4 
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+      nuGetFeedType: 'external'
+      publishFeedCredentials: 'Nuget Official'
