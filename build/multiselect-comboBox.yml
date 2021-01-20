@@ -51,15 +51,17 @@ jobs:
       packagesToPack: 'MultiSelectComboBox/Sdl.MultiSelectComboBox/Sdl.MultiSelectComboBox.csproj'
       buildProperties: 'id=$(sdlMultiselectComboBox);PackageVersion=$(Version.MajorMinor).$(Version.Revision)'
 
-  #- task: NuGetCommand@2
-  #  displayName: 'NuGet push'
-  #  condition: ne(variables['Build.Reason'], 'PullRequest')
-  #  inputs:
-  #    command: 'push'
-  #    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
-  #    nuGetFeedType: 'external'
-  #    publishFeedCredentials: 'Nuget Official'
+  - task: NuGetCommand@2
+    displayName: 'NuGet push'
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+      nuGetFeedType: 'external'
+      publishFeedCredentials: 'Nuget Official'
 
   - task: PublishPipelineArtifact@1
     inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)'
       artifact: 'drop'
+      publishLocation: 'pipeline'
