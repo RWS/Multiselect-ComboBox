@@ -1,0 +1,67 @@
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: master
+
+variables:
+- name: Version.MajorMinor
+  value: 1.0
+- name: Version.Revision
+  value: $[counter(variables['Version.Revision'], 19)]
+- name: BuildConfiguration
+  value: 'release'
+- name: BuildPlatform
+  value: 'any cpu'
+- name: sdlMultiselectComboBox
+  value: 'Sdl.MultiSelectComboBox'
+
+name: $(Build.DefinitionName).$(SourceBranchName)_$(Version.MajorMinor).$(Version.Revision)
+
+jobs:
+- job: Phase_1
+  displayName: Agent job 1
+  pool:
+    vmImage: windows-2019
+
+  steps:
+  - checkout: self
+    clean: true
+
+  - task: NuGetToolInstaller@1
+
+  - task: NuGetCommand@2
+    displayName: NuGet restore
+    inputs:
+      command: 'restore'
+      restoreSolution: '**/*.sln'
+      feedsToUse: 'select'
+      vstsFeed: 'af66e256-9c46-4fba-ad75-09bf110ec1cc'
+
+  - task: VSBuild@1
+    displayName: 'Build solution **\*.sln'
+    inputs:
+      platform: $(BuildPlatform)
+      configuration: $(BuildConfiguration)
+
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet pack'
+    inputs:
+      command: pack
+      packagesToPack: 'MultiSelectComboBox/Sdl.MultiSelectComboBox/Sdl.MultiSelectComboBox.csproj'
+      buildProperties: 'id=$(sdlMultiselectComboBox);PackageVersion=$(Version.MajorMinor).$(Version.Revision)'
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet push'
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+      nuGetFeedType: 'external'
+      publishFeedCredentials: 'Nuget Official'
+
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+      artifact: 'drop'
+      publishLocation: 'pipeline'
