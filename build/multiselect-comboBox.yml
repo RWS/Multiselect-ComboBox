@@ -43,9 +43,10 @@ jobs:
       configuration: $(BuildConfiguration)
 
   - task: NuGetCommand@2
+    displayName: NuGet pack
     inputs:
       command: 'pack'
-      packagesToPack: 'MultiSelectComboBox\Sdl.MultiSelectComboBox\Sdl.MultiSelectComboBox.csproj'
+      packagesToPack: '**\Sdl.MultiSelectComboBox.csproj'
       versioningScheme: 'off'
 
   - task: PublishBuildArtifacts@1
