@@ -51,7 +51,7 @@ jobs:
       command: 'pack'
       packagesToPack: '**/*.nuspec'
       configuration: $(BuildConfiguration)
-      buildProperties: 'id=$(sdlMultiselectComboBox);version=$(Version.MajorMinorPatch).$(Version.Revision);'
+      buildProperties: 'id=$(sdlMultiselectComboBox);version=$(Version.MajorMinor).$(Version.Revision);'
 
   - task: NuGetCommand@2
     displayName: 'NuGet push'
