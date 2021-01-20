@@ -59,3 +59,7 @@ jobs:
   #    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
   #    nuGetFeedType: 'external'
   #    publishFeedCredentials: 'Nuget Official'
+
+  - task: PublishPipelineArtifact@1
+    inputs:
+      artifact: 'drop'
