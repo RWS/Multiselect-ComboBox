@@ -10,9 +10,11 @@ variables:
 - name: Version.Revision
   value: $[counter(variables['Version.Revision'], 1)]
 - name: BuildConfiguration
-  value: release
+  value: 'release'
 - name: BuildPlatform
-  value: any cpu
+  value: 'any cpu'
+- name: sdlMultiselectComboBox
+  value: 'Sdl.MultiSelectComboBox.csproj'
 
 name: $(Build.DefinitionName).$(SourceBranchName)_$(Version.MajorMinorPatch).$(Version.Revision)
 
@@ -43,17 +45,17 @@ jobs:
       configuration: $(BuildConfiguration)
 
   - task: NuGetCommand@2
-    displayName: NuGet pack
+    displayName: 'NuGet pack'
+    condition: ne(variables['Build.Reason'], 'PullRequest')
     inputs:
       command: 'pack'
-      packagesToPack: '**\Sdl.MultiSelectComboBox.csproj'
-      versioningScheme: 'off'
-
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: drop'
+      packagesToPack: '**/*.nuspec'
+      configuration: $(BuildConfiguration)
+      buildProperties: 'id=$(sdlMultiselectComboBox);version=$(Version.MajorMinorPatch).$(Version.Revision);'
 
   - task: NuGetCommand@2
     displayName: 'NuGet push'
+    condition: ne(variables['Build.Reason'], 'PullRequest')
     inputs:
       command: push
       nuGetFeedType: external
