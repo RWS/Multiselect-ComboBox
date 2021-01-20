@@ -48,8 +48,8 @@ jobs:
     displayName: 'dotnet pack'
     inputs:
       command: pack
-      packagesToPack: MultiSelectComboBox/Sdl.MultiSelectComboBox/Sdl.MultiSelectComboBox.csproj
-      buildProperties: 'id=$(sdlMultiselectComboBox);version=$(Version.MajorMinor).$(Version.Revision);'
+      packagesToPack: 'MultiSelectComboBox/Sdl.MultiSelectComboBox/Sdl.MultiSelectComboBox.csproj'
+      buildProperties: 'id=$(sdlMultiselectComboBox);PackageVersion=$(Version.MajorMinor).$(Version.Revision)'
 
   #- task: NuGetCommand@2
   #  displayName: 'NuGet push'
