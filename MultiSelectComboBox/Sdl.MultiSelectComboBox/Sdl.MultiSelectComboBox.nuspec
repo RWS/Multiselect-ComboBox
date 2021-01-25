@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$id$</id>
+    <id>Sdl.MultiSelectComboBox</id>
     <version>$version$</version>
-    <title>$title$</title>
+    <title>Sdl.MultiSelectComboBox</title>
     <authors>SDL Community</authors>
     <owners>SDL</owners>
     <licenseUrl>https://github.com/sdl/Multiselect-ComboBox/blob/master/LICENSE</licenseUrl>
