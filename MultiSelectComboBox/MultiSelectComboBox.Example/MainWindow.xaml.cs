@@ -17,8 +17,10 @@ namespace Sdl.MultiSelectComboBox.Example
 
 			if (Application.Current.MainWindow != null)
 			{
-				Application.Current.MainWindow.Title = Application.Current.MainWindow.Title + " (" + Assembly.GetExecutingAssembly().GetName().Version 
-														+ " - " + GetTargetFramework() + ")";
+				var fileVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+				
+				Application.Current.MainWindow.Title = Application.Current.MainWindow.Title + " (" + fileVersionInfo.FileVersion
+				                                       + " - " + GetTargetFramework() + ")";
 			}
 
 			Loaded += MainWindow_Loaded;
