@@ -492,7 +492,15 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 		}
 
+		public static readonly DependencyProperty EnterEditModeOnKeyboardFocusProperty =
+			DependencyProperty.Register("EnterEditModeOnKeyboardFocus", typeof(bool), typeof(MultiSelectComboBox),
+				new FrameworkPropertyMetadata(false));
 
+		public bool EnterEditModeOnKeyboardFocus
+		{
+			get => (bool)GetValue(EnterEditModeOnKeyboardFocusProperty);
+			set => SetValue(EnterEditModeOnKeyboardFocusProperty, value);
+		}
 
 		public static readonly DependencyProperty IsDropDownOpenProperty =
 			DependencyProperty.Register("IsDropDownOpen", typeof(bool), typeof(MultiSelectComboBox),
@@ -944,7 +952,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		private void MultiSelectComboBox_PreviewKeyUp(object sender, KeyEventArgs e)
 		{
 			// allows the user to switch to edit mode when control as focus and typing F2 (similar to excel cell behaviour)
-			if (e.Key == Key.F2 && !IsEditMode)
+			if ((e.Key == Key.F2 && !IsEditMode) || (EnterEditModeOnKeyboardFocus && e.Key == Key.Tab))
 			{
 				AssignIsEditMode();
 			}
