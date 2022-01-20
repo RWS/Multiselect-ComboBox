@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -621,7 +622,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         public static readonly DependencyProperty SelectedItemsProperty =
             DependencyProperty.Register("SelectedItems", typeof(IList), typeof(MultiSelectComboBox),
-                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, SelectedItemsPropertyChangedCallback, SelectedItemsCoerceValueCallback));
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, SelectedItemsPropertyChangedCallback));
 
         public bool ClearSelectionOnFilterChanged
         {
@@ -632,28 +633,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
         public static readonly DependencyProperty ClearSelectionOnFilterChangedProperty =
             DependencyProperty.Register("ClearSelectionOnFilterChanged", typeof(bool), typeof(MultiSelectComboBox),
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-        private static object SelectedItemsCoerceValueCallback(DependencyObject dependencyObject, object baseValue)
-        {
-            if (dependencyObject is MultiSelectComboBox control && baseValue is IList newCollection)
-            {
-                var itemsAdded = new Collection<object>();
-                var itemsRemoved = new Collection<object>();
-
-                RemoveSelectedItems(control.SelectedItemsInternal, newCollection, ref itemsRemoved);
-                AddSelectedItems(control.SelectedItemsInternal, newCollection, ref itemsAdded, control);
-
-                control.ToggleDropdownListItemsCheckState(itemsAdded, true);
-                control.ToggleDropdownListItemsCheckState(itemsRemoved, false);
-
-                if (itemsAdded.Count > 0 || itemsRemoved.Count > 0)
-                {
-                    control.RaiseSelectedItemsChangedEvent(itemsAdded, itemsRemoved, control.SelectedItemsInternal.Where(a => a != null).ToList());
-                }
-            }
-
-            return baseValue;
-        }
 
         private static void RemoveSelectedItems(IList from, IList basedOn, ref Collection<object> itemsRemoved)
         {
@@ -714,7 +693,77 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
             return true;
         }
 
-        private static void SelectedItemsPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs) { }
+        private static void SelectedItemsPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            if (dependencyObject is MultiSelectComboBox control)
+            {
+                control.SelectedItemsPropertyChangedCallback();
+            }
+        }
+
+        private void SelectedItemsPropertyChangedCallback()
+        {
+            CleanSelectedItemsNotifyingCollection();
+            HandleSelectedItemsChanged();
+            InitializeSelectedItemsNotifyingCollection();
+        }
+
+        private void CleanSelectedItemsNotifyingCollection()
+        {
+            if (_selectedItemsNotifyingCollection != null)
+            {
+                _selectedItemsNotifyingCollection.CollectionChanged -= SelectedItemsNotifyingCollection_CollectionChanged;
+            }
+            _selectedItemsNotifyingCollection = null;
+        }
+        private void InitializeSelectedItemsNotifyingCollection()
+        {
+            _selectedItemsNotifyingCollection = SelectedItems as INotifyCollectionChanged;
+            if (_selectedItemsNotifyingCollection != null)
+            {
+                _selectedItemsNotifyingCollection.CollectionChanged += SelectedItemsNotifyingCollection_CollectionChanged;
+            }
+        }
+
+        private INotifyCollectionChanged _selectedItemsNotifyingCollection;
+
+        private void SelectedItemsNotifyingCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // Allow client code to perform multiple changes and handle them only once at the end of the message execution cycle.
+            if (!_isWaitingToHandleSelectedItemsChanged)
+            {
+                _isWaitingToHandleSelectedItemsChanged = true;
+                Dispatcher.BeginInvoke((Action)delegate
+                {
+                    HandleSelectedItemsChanged();
+                    _isWaitingToHandleSelectedItemsChanged = false;
+                }, DispatcherPriority.ContextIdle);
+            }
+        }
+
+        private bool _isWaitingToHandleSelectedItemsChanged;
+
+        private void HandleSelectedItemsChanged()
+        {
+            if (SelectedItems == null)
+            {
+                return;
+            }
+
+            var itemsAdded = new Collection<object>();
+            var itemsRemoved = new Collection<object>();
+
+            RemoveSelectedItems(SelectedItemsInternal, SelectedItems, ref itemsRemoved);
+            AddSelectedItems(SelectedItemsInternal, SelectedItems, ref itemsAdded, this);
+
+            ToggleDropdownListItemsCheckState(itemsAdded, true);
+            ToggleDropdownListItemsCheckState(itemsRemoved, false);
+
+            if (itemsAdded.Count > 0 || itemsRemoved.Count > 0)
+            {
+                RaiseSelectedItemsChangedEvent(itemsAdded, itemsRemoved, SelectedItemsInternal.Where(a => a != null).ToList());
+            }
+        }
 
         public IList SelectedItems
         {
