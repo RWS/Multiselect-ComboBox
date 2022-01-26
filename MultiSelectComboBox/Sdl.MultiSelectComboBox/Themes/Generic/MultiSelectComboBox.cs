@@ -43,6 +43,22 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
         private const string MultiSelectComboBox_SelectedItems_Searchable_ItemTemplate = "MultiSelectComboBox.SelectedItems.Searchable.ItemTemplate";
         private const string MultiSelectComboBox_Dropdown_ListBox_ItemTemplate = "MultiSelectComboBox.Dropdown.ListBox.ItemTemplate";
 
+        public MultiSelectComboBox()
+        {
+            Loaded += MultiSelectComboBox_Loaded;
+            Unloaded += MultiSelectComboBox_Unloaded;
+        }
+
+        private void MultiSelectComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            InitializeSelectedItemsNotifyingCollection();
+        }
+
+        private void MultiSelectComboBox_Unloaded(object sender, RoutedEventArgs e)
+        {
+            CleanUpSelectedItemsNotifyingCollection();
+        }
+
         private Window _controlWindow;
         private Window ControlWindow
         {
@@ -703,12 +719,12 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private void SelectedItemsPropertyChangedCallback()
         {
-            CleanSelectedItemsNotifyingCollection();
+            CleanUpSelectedItemsNotifyingCollection();
             HandleSelectedItemsChanged();
             InitializeSelectedItemsNotifyingCollection();
         }
 
-        private void CleanSelectedItemsNotifyingCollection()
+        private void CleanUpSelectedItemsNotifyingCollection()
         {
             if (_selectedItemsNotifyingCollection != null)
             {
