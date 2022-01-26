@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,6 +42,22 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		private const string MultiSelectComboBox_SelectedItems_ItemTemplate = "MultiSelectComboBox.SelectedItems.ItemTemplate";
 		private const string MultiSelectComboBox_SelectedItems_Searchable_ItemTemplate = "MultiSelectComboBox.SelectedItems.Searchable.ItemTemplate";
 		private const string MultiSelectComboBox_Dropdown_ListBox_ItemTemplate = "MultiSelectComboBox.Dropdown.ListBox.ItemTemplate";
+
+		public MultiSelectComboBox()
+		{
+			Loaded += MultiSelectComboBox_Loaded;
+			Unloaded += MultiSelectComboBox_Unloaded;
+		}
+
+		private void MultiSelectComboBox_Loaded(object sender, RoutedEventArgs e)
+		{
+			InitializeSelectedItemsNotifyingCollection();
+		}
+
+		private void MultiSelectComboBox_Unloaded(object sender, RoutedEventArgs e)
+		{
+			CleanUpSelectedItemsNotifyingCollection();
+		}
 
 		private Window _controlWindow;
 		private Window ControlWindow
@@ -146,7 +163,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 					// this should always be set to Single; multiple selection feature is managed separatly.
 					_dropdownListBox.SelectionMode = System.Windows.Controls.SelectionMode.Single;
-					_dropdownListBox.ItemsSource = ItemsCollectionViewSource.View;
+					_dropdownListBox.ItemsSource = ItemsCollectionViewSource?.View;
 
 					_dropdownListBox.SelectionChanged += DropdownListBoxSelectionChanged;
 					_dropdownListBox.PreviewMouseUp += DropdownListBoxPreviewMouseUp;
@@ -193,6 +210,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 					CurrentFilterService = FilterService ?? new DefaultFilterService();
 					CurrentFilterService.SetFilter(EnableFiltering ? SelectedItemsFilterTextBox?.Text : string.Empty);
 				}
+
+				InitializeInternalElements();
 			}
 		}
 
@@ -364,8 +383,71 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			if (MultiSelectComboBoxGrid != null)
 			{
 				ControlWindow = Window.GetWindow(MultiSelectComboBoxGrid);
+
+				// We expect internal SelectedItemsControl to have its template applied upon InitializeInternalElements.
+				ApplyInternalTemplates(MultiSelectComboBoxGrid);
+			}
+
+			InitializeInternalElements();
+		}
+
+		private void ApplyInternalTemplates(FrameworkElement parent)
+		{
+			if (parent == null)
+				return;
+
+			parent.ApplyTemplate();
+
+			int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
+			for (int i = 0; i < childrenCount; i++)
+			{
+				var child = VisualTreeHelper.GetChild(parent, i) as FrameworkElement;
+				ApplyInternalTemplates(child);
 			}
 		}
+
+		private void InitializeInternalElements()
+		{
+			if (SelectedItemsControl == null && MultiSelectComboBoxGrid != null)
+			{
+				SelectedItemsControl = VisualTreeService.FindVisualChild<ItemsControl>(MultiSelectComboBoxGrid, PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl);
+			}
+
+			if (DropdownListBox == null && MultiSelectComboBoxGrid != null)
+			{
+				if (DropdownMenu == null)
+				{
+					DropdownMenu = VisualTreeService.FindVisualChild<Popup>(MultiSelectComboBoxGrid, PART_MultiSelectComboBox_Dropdown);
+				}
+
+				if (DropdownMenu != null)
+				{
+					DropdownListBox = VisualTreeService.FindVisualChild<ListBox>(DropdownMenu.Child, PART_MultiSelectComboBox_Dropdown_ListBox);
+				}
+			}
+
+			if (ItemsSource != null)
+			{
+				if (ItemsCollectionViewSource?.Source != ItemsSource)
+				{
+					ItemsCollectionViewSource = new CollectionViewSource
+					{
+						Source = ItemsSource
+					};
+				}
+
+				if (DropdownListBox != null)
+				{
+					DropdownListBox.ItemsSource = ItemsCollectionViewSource?.View;
+				}
+
+				if (ItemsSource.Count > 0)
+				{
+					UpdateSelectedItemsContainer(ItemsSource);
+				}
+			}
+		}
+
 		public enum SelectionModes
 		{
 			Multiple = 0,
@@ -536,29 +618,12 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		public static readonly DependencyProperty ItemsSourceProperty =
 			DependencyProperty.Register("ItemsSource", typeof(IList), typeof(MultiSelectComboBox),
-				new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, ItemsPropertyChangedCallback, ItemsCoerceValueCallback));
+				new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, ItemsPropertyChangedCallback));
 
 		public IList ItemsSource
 		{
 			get => (IList)GetValue(ItemsSourceProperty);
 			set => SetValue(ItemsSourceProperty, value);
-		}
-
-		private static object ItemsCoerceValueCallback(DependencyObject dependencyObject, object baseValue)
-		{
-			if (!(dependencyObject is MultiSelectComboBox control))
-			{
-				return baseValue;
-			}
-
-			if (control.MultiSelectComboBoxGrid == null)
-			{
-				return baseValue;
-			}
-
-			control.UpdateSelectedItemsContainer(baseValue as IList);
-			control.ItemsCollectionViewSource?.View?.Refresh();
-			return baseValue;
 		}
 
 		private static void ItemsPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
@@ -568,38 +633,12 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				return;
 			}
 
-			control.ItemsCollectionViewSource = new CollectionViewSource
-			{
-				Source = control.ItemsSource
-			};
-
-			if (dependencyPropertyChangedEventArgs.NewValue is IList newItems && newItems.Count > 0)
-			{
-				control.UpdateSelectedItemsContainer(newItems);
-			}
-
-			if (control.SelectedItemsControl == null && control.MultiSelectComboBoxGrid != null)
-			{
-				control.SelectedItemsControl = VisualTreeService.FindVisualChild<ItemsControl>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl);
-			}
-
-			if (control.DropdownListBox == null && control.MultiSelectComboBoxGrid != null)
-			{
-				if (control.DropdownMenu == null)
-				{
-					control.DropdownMenu = VisualTreeService.FindVisualChild<Popup>(control.MultiSelectComboBoxGrid, PART_MultiSelectComboBox_Dropdown);
-				}
-
-				if (control.DropdownMenu != null)
-				{
-					control.DropdownListBox = VisualTreeService.FindVisualChild<ListBox>(control.DropdownMenu.Child, PART_MultiSelectComboBox_Dropdown_ListBox);
-				}
-			}
+			control.InitializeInternalElements();
 		}
 
 		public static readonly DependencyProperty SelectedItemsProperty =
 			DependencyProperty.Register("SelectedItems", typeof(IList), typeof(MultiSelectComboBox),
-				new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, SelectedItemsPropertyChangedCallback, SelectedItemsCoerceValueCallback));
+				new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, SelectedItemsPropertyChangedCallback));
 
 		public bool ClearSelectionOnFilterChanged
 		{
@@ -610,28 +649,6 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		public static readonly DependencyProperty ClearSelectionOnFilterChangedProperty =
 			DependencyProperty.Register("ClearSelectionOnFilterChanged", typeof(bool), typeof(MultiSelectComboBox),
 				new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-		private static object SelectedItemsCoerceValueCallback(DependencyObject dependencyObject, object baseValue)
-		{
-			if (dependencyObject is MultiSelectComboBox control && baseValue is IList newCollection)
-			{
-				var itemsAdded = new Collection<object>();
-				var itemsRemoved = new Collection<object>();
-
-				RemoveSelectedItems(control.SelectedItemsInternal, newCollection, ref itemsRemoved);
-				AddSelectedItems(control.SelectedItemsInternal, newCollection, ref itemsAdded, control);
-
-				control.ToggleDropdownListItemsCheckState(itemsAdded, true);
-				control.ToggleDropdownListItemsCheckState(itemsRemoved, false);
-
-				if (itemsAdded.Count > 0 || itemsRemoved.Count > 0)
-				{
-					control.RaiseSelectedItemsChangedEvent(itemsAdded, itemsRemoved, control.SelectedItemsInternal.Where(a => a != null).ToList());
-				}
-			}
-
-			return baseValue;
-		}
 
 		private static void RemoveSelectedItems(IList from, IList basedOn, ref Collection<object> itemsRemoved)
 		{
@@ -692,7 +709,77 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			return true;
 		}
 
-		private static void SelectedItemsPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs) { }
+		private static void SelectedItemsPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+		{
+			if (dependencyObject is MultiSelectComboBox control)
+			{
+				control.SelectedItemsPropertyChangedCallback();
+			}
+		}
+
+		private void SelectedItemsPropertyChangedCallback()
+		{
+			CleanUpSelectedItemsNotifyingCollection();
+			HandleSelectedItemsChanged();
+			InitializeSelectedItemsNotifyingCollection();
+		}
+
+		private void CleanUpSelectedItemsNotifyingCollection()
+		{
+			if (_selectedItemsNotifyingCollection != null)
+			{
+				_selectedItemsNotifyingCollection.CollectionChanged -= SelectedItemsNotifyingCollection_CollectionChanged;
+			}
+			_selectedItemsNotifyingCollection = null;
+		}
+		private void InitializeSelectedItemsNotifyingCollection()
+		{
+			_selectedItemsNotifyingCollection = SelectedItems as INotifyCollectionChanged;
+			if (_selectedItemsNotifyingCollection != null)
+			{
+				_selectedItemsNotifyingCollection.CollectionChanged += SelectedItemsNotifyingCollection_CollectionChanged;
+			}
+		}
+
+		private INotifyCollectionChanged _selectedItemsNotifyingCollection;
+
+		private void SelectedItemsNotifyingCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			// Allow client code to perform multiple changes and handle them only once at the end of the message execution cycle.
+			if (!_isWaitingToHandleSelectedItemsChanged)
+			{
+				_isWaitingToHandleSelectedItemsChanged = true;
+				Dispatcher.BeginInvoke((Action)delegate
+				{
+					HandleSelectedItemsChanged();
+					_isWaitingToHandleSelectedItemsChanged = false;
+				}, DispatcherPriority.ContextIdle);
+			}
+		}
+
+		private bool _isWaitingToHandleSelectedItemsChanged;
+
+		private void HandleSelectedItemsChanged()
+		{
+			if (SelectedItems == null)
+			{
+				return;
+			}
+
+			var itemsAdded = new Collection<object>();
+			var itemsRemoved = new Collection<object>();
+
+			RemoveSelectedItems(SelectedItemsInternal, SelectedItems, ref itemsRemoved);
+			AddSelectedItems(SelectedItemsInternal, SelectedItems, ref itemsAdded, this);
+
+			ToggleDropdownListItemsCheckState(itemsAdded, true);
+			ToggleDropdownListItemsCheckState(itemsRemoved, false);
+
+			if (itemsAdded.Count > 0 || itemsRemoved.Count > 0)
+			{
+				RaiseSelectedItemsChangedEvent(itemsAdded, itemsRemoved, SelectedItemsInternal.Where(a => a != null).ToList());
+			}
+		}
 
 		public IList SelectedItems
 		{
@@ -1183,7 +1270,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		private void DropdownListBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if ((SelectionMode == SelectionModes.Single && SelectedItems.Count == 0 && DisableFilterUpdateOnDropDownItemSelectionChange) || !DisableFilterUpdateOnDropDownItemSelectionChange)
+			if ((SelectionMode == SelectionModes.Single && SelectedItems != null && SelectedItems.Count == 0 && DisableFilterUpdateOnDropDownItemSelectionChange) || !DisableFilterUpdateOnDropDownItemSelectionChange)
 			{
 				if (e.AddedItems.Count > 0 && e.AddedItems[0] is object comboBoxItemAdded)
 				{
@@ -1444,7 +1531,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		{
 			var suggestionProvider = SuggestionProvider;
 			_suggestionProviderToken?.Cancel(true);
-			
+
 			var suggestionProviderToken = _suggestionProviderToken = new CancellationTokenSource();
 			var items = await suggestionProvider.GetSuggestionsAsync(criteria, _suggestionProviderToken.Token);
 			await Dispatcher.BeginInvoke(new Action(() =>
@@ -1453,7 +1540,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				{
 					return;
 				}
-				
+
 				ItemsSource.Clear();
 				foreach (var item in items)
 				{
