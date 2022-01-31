@@ -8,7 +8,7 @@ variables:
 - name: Version.MajorMinor
   value: 1.0
 - name: Version.Revision
-  value: $[counter(variables['Version.Revision'], 38)]
+  value: $[counter(variables['Version.Revision'], 40)]
 - name: BuildConfiguration
   value: 'release'
 - name: BuildPlatform
