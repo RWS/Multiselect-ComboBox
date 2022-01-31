@@ -1386,10 +1386,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				var listBoxItem = GetListViewItem(comboBoxItem);
 				if (listBoxItem != null)
 				{
-					listBoxItem.IsChecked = !listBoxItem.IsChecked;
+					if (SelectionMode != SelectionModes.Single || !listBoxItem.IsChecked)
+					{
+						listBoxItem.IsChecked = !listBoxItem.IsChecked;
 
-					SetKeyBoardFocusOnItem(comboBoxItem);
-					UpdateSelectedItemsContainer(ItemsSource);
+						SetKeyBoardFocusOnItem(comboBoxItem);
+						UpdateSelectedItemsContainer(ItemsSource);
+					}
+
 					if (SelectionMode == SelectionModes.Single)
 					{
 						CloseDropdownMenu(true, false);
