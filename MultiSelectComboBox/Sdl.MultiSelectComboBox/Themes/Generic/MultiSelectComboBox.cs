@@ -674,15 +674,11 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			return false;
 		}
 
-		private static void AddSelectedItems(IList to, IList basedOn, ref Collection<object> itemsAdded, MultiSelectComboBox control)
-		{
-			foreach (var item in basedOn)
-			{
-				if (AddSelectedItem(to, item))
-				{
+		private static void AddSelectedItems(IList to, IList basedOn, ref Collection<object> itemsAdded, MultiSelectComboBox control) {
+			foreach (var item in basedOn) {
+				if (AddSelectedItem(to, item, basedOn)) {
 					itemsAdded.Add(item);
-					if (control.SelectionMode == SelectionModes.Single)
-					{
+					if (control.SelectionMode == SelectionModes.Single) {
 						control._previousSelectedValue = item;
 					}
 
@@ -690,21 +686,24 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 		}
 
-		private static bool AddSelectedItem(IList to, object item)
-		{
-			if (to.Contains(item))
-			{
+		private static bool AddSelectedItem(IList to, object item, IList sourceList = null) {
+			if (to.Contains(item)) {
 				return false;
 			}
+			var insert_at = sourceList?.IndexOf(item) ?? -1;
+			if (insert_at == -1)
+				insert_at = to.Count;
+			var debug_orig_at = insert_at;
+			if (to.Count < insert_at)
+				insert_at = to.Count;
 
-			if (to.Count > 0 && to[to.Count - 1] == null)
-			{
-				to.Insert(to.Count - 1, item);
+			if (to.Count > 0 && insert_at > 0 && to[insert_at - 1] == null) {
+				insert_at--;
 			}
-			else
-			{
+			if (insert_at == to.Count) {
 				to.Add(item);
-			}
+			} else
+				to.Insert(insert_at, item);
 
 			return true;
 		}
@@ -751,7 +750,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				_isWaitingToHandleSelectedItemsChanged = true;
 				Dispatcher.BeginInvoke((Action)delegate
 				{
-					HandleSelectedItemsChanged();
+					HandleSelectedItemsChanged(e.Action == NotifyCollectionChangedAction.Move ?  e.OldItems : null);
 					_isWaitingToHandleSelectedItemsChanged = false;
 				}, DispatcherPriority.ContextIdle);
 			}
@@ -759,7 +758,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		private bool _isWaitingToHandleSelectedItemsChanged;
 
-		private void HandleSelectedItemsChanged()
+		private void HandleSelectedItemsChanged(IList items_if_only_move=null)
 		{
 			if (SelectedItems == null)
 			{
@@ -770,10 +769,17 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			var itemsRemoved = new Collection<object>();
 
 			RemoveSelectedItems(SelectedItemsInternal, SelectedItems, ref itemsRemoved);
+			if (items_if_only_move != null) {//remove and then just re-add 
+				foreach (var itm in items_if_only_move) {
+					if (SelectedItemsInternal.Remove(itm))
+						itemsRemoved.Add(itm);
+				}
+			}
 			AddSelectedItems(SelectedItemsInternal, SelectedItems, ref itemsAdded, this);
 
-			ToggleDropdownListItemsCheckState(itemsAdded, true);
 			ToggleDropdownListItemsCheckState(itemsRemoved, false);
+			ToggleDropdownListItemsCheckState(itemsAdded, true);
+			
 
 			if (itemsAdded.Count > 0 || itemsRemoved.Count > 0)
 			{
