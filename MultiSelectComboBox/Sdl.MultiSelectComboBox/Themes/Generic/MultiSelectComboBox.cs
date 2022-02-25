@@ -1612,6 +1612,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		private void AssignIsEditMode()
 		{
+			if (SelectedItemsInternal?.Count == 0)//no placeholder exists by default
+				SelectedItemsInternal.Add(null);
 			SetValue(IsEditModePropertyKey, true);
 
 			FocusCursorOnFilterTextBox();
