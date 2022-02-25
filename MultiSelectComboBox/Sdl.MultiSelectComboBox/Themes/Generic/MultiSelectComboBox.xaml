@@ -3,6 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:generic="clr-namespace:Sdl.MultiSelectComboBox.Themes.Generic"
     xmlns:api="clr-namespace:Sdl.MultiSelectComboBox.API"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+
     xmlns:controls="clr-namespace:Sdl.MultiSelectComboBox.Controls">
 
     <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Background" Color="Transparent"/>
@@ -32,6 +34,13 @@
 
     <FontFamily x:Key="MultiSelectComboBox.Text.FontFamily">Segoe UI</FontFamily>
     <SolidColorBrush x:Key="MultiSelectComboBox.Text.Disabled.Foreground" Color="#FFB8B3B3"/>
+	<SolidColorBrush	x:Key="MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenEmpty.Foreground" Color="#FFB8B3B3"/>
+	<system:Double		x:Key="MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenEmpty.FontSize">14</system:Double>
+	<system:Double		x:Key="MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.FontSize">12</system:Double>
+	<SolidColorBrush	x:Key="MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.Foreground" Color="#000"/>
+	<Thickness			x:Key="MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.Margin" Top="-20" />
+	<FontWeight			x:Key="MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.FontWeight">Bold</FontWeight>
+	<controls:NumberComparisonToBoolConverter x:Key="numberAbove0ToBoolConverter" CompareToAmount="0" />
     <SolidColorBrush x:Key="MultiSelectComboBox.Text.Foreground" Color="#FF000000"/>
 
     <Style x:Key="MultiSelectComboBox.FocusVisual">
@@ -322,24 +331,60 @@
                 </Grid.ColumnDefinitions>
 
                 <Border Grid.Column="0" Margin="1" Background="White" BorderThickness="0">
-                    <controls:ContentItemsControl x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl"                            
+					<Grid>
+						<controls:ContentItemsControl x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl"
                             ItemContainerStyle="{StaticResource MultiSelectComboBox.SelectedItems.ItemContainer.Style}"                           
                             Style="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WrapableItemsSource.Style}">
-                        <controls:ContentItemsControl.Resources>
-                            <DataTemplate x:Key="MultiSelectComboBox.SelectedItems.ItemTemplate">
-                                <TextBlock Text="{Binding}" Style="{DynamicResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,0" />
-                            </DataTemplate>
-                            <DataTemplate x:Key="MultiSelectComboBox.SelectedItems.Searchable.ItemTemplate">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_TextBox" IsEnabled="{Binding IsEditMode, RelativeSource={RelativeSource TemplatedParent}}" 
+							<controls:ContentItemsControl.Resources>
+								<DataTemplate x:Key="MultiSelectComboBox.SelectedItems.ItemTemplate">
+									<TextBlock Text="{Binding}" Style="{DynamicResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,0" />
+								</DataTemplate>
+								<DataTemplate x:Key="MultiSelectComboBox.SelectedItems.Searchable.ItemTemplate">
+									<StackPanel Orientation="Horizontal">
+										<TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_TextBox" IsEnabled="{Binding IsEditMode, RelativeSource={RelativeSource TemplatedParent}}" 
                                          Focusable="True" IsTabStop="False" Margin="0" ForceCursor="True" BorderThickness="0" BorderBrush="Transparent" Padding="1" TextWrapping="NoWrap"/>
-                                    <TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_AutoComplete_TextBox" IsReadOnly="True"
+										<TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_AutoComplete_TextBox" IsReadOnly="True"
                                          Focusable="False" IsTabStop="False" Margin="-2,0,0,0" BorderThickness="0" BorderBrush="Transparent" Padding="-3,1,0,1" TextWrapping="NoWrap"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </controls:ContentItemsControl.Resources>
-                    </controls:ContentItemsControl>
-                </Border>
+									</StackPanel>
+								</DataTemplate>
+							</controls:ContentItemsControl.Resources>
+						</controls:ContentItemsControl>
+
+						<TextBlock HorizontalAlignment="Center" IsHitTestVisible="False" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=WatermarkEmptyHintText}">
+							<TextBlock.Style>
+								<Style TargetType="TextBlock">
+									<Setter Property="Visibility" Value="Collapsed"/>
+									<Setter Property="VerticalAlignment" Value="Center"/>
+									<Setter Property="FontSize" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.FontSize}" />
+									<Setter Property="Margin" Value="0" />
+									<Setter Property="FontWeight" Value="Normal" />
+									<Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.Foreground}" />
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=SelectedItems.Count, Converter={StaticResource numberAbove0ToBoolConverter}}" Value="false">
+											<Setter Property="Visibility" Value="Visible"/>
+											<Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenEmpty.Foreground}" />
+											<Setter Property="FontSize" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenEmpty.FontSize}" />
+										</DataTrigger>
+
+										<MultiDataTrigger>
+											<MultiDataTrigger.Conditions>
+												<Condition Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=SelectedItems.Count, Converter={StaticResource numberAbove0ToBoolConverter}}" Value="True"/>
+												<Condition Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=WatermarkFloatOnNonEmpty}" Value="True"/>
+											</MultiDataTrigger.Conditions>
+											<Setter Property="Visibility" Value="Visible"/>
+											<Setter Property="Margin" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.Margin}"/>
+											<Setter Property="VerticalAlignment" Value="Top" />
+											<Setter Property="FontSize" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.FontSize}" />
+											<Setter Property="FontWeight" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.FontWeight}" />
+										</MultiDataTrigger>
+									</Style.Triggers>
+								</Style>
+							</TextBlock.Style>
+						</TextBlock>
+
+					</Grid>
+			
+				</Border>
 
                 <Button x:Name="PART_MultiSelectComboBox_Dropdown_Button" Grid.Column="1" Style="{StaticResource MultiSelectComboBox.DropDown.Button.Style}" >
                     <ContentControl>

@@ -835,6 +835,29 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		public bool IsEditMode => (bool)GetValue(IsEditModeProperty);
 
+		//WatermarkEmptyHintText
+
+		public string WatermarkEmptyHintText {
+			get => (string)GetValue(WatermarkEmptyHintTextProperty);
+			set => SetValue(WatermarkEmptyHintTextProperty, value);
+		}
+
+		public static readonly DependencyProperty WatermarkEmptyHintTextProperty =
+			DependencyProperty.Register(nameof(WatermarkEmptyHintText), typeof(string), typeof(MultiSelectComboBox),
+				new FrameworkPropertyMetadata(""));
+
+
+		public bool WatermarkFloatOnNonEmpty {
+			get => (bool)GetValue(WatermarkFloatOnNonEmptyProperty);
+			set => SetValue(WatermarkFloatOnNonEmptyProperty, value);
+		}
+
+		public static readonly DependencyProperty WatermarkFloatOnNonEmptyProperty =
+			DependencyProperty.Register(nameof(WatermarkFloatOnNonEmpty), typeof(bool), typeof(MultiSelectComboBox),
+				new FrameworkPropertyMetadata(false));
+
+
+
 		public SelectedItemTemplateService SelectedItemTemplateSelector { get; private set; }
 
 		public DropdownItemTemplateService DropdownItemTemplateSelector { get; private set; }
