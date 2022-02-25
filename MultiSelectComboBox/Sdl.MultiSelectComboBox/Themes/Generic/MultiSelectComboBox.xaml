@@ -3,6 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:generic="clr-namespace:Sdl.MultiSelectComboBox.Themes.Generic"
     xmlns:api="clr-namespace:Sdl.MultiSelectComboBox.API"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+
     xmlns:controls="clr-namespace:Sdl.MultiSelectComboBox.Controls">
 
 	<controls:PropertyExistsToBoolConverter x:Key="isEnabledPropertyExistsConverter" PropertyToCheck="IsEnabled" />
@@ -33,9 +35,12 @@
 
     <FontFamily x:Key="MultiSelectComboBox.Text.FontFamily">Segoe UI</FontFamily>
     <SolidColorBrush x:Key="MultiSelectComboBox.Text.Disabled.Foreground" Color="#FFB8B3B3"/>
-	<SolidColorBrush x:Key="MultiSelectComboBox.Text.WatermarkWhenEmpty.Foreground" Color="#FFB8B3B3"/>
-	<SolidColorBrush x:Key="MultiSelectComboBox.Text.WatermarkWhenNotEmpty.Foreground" Color="#000"/>
-	<Thickness x:Key="MultiSelectComboBox.Text.WatermarkNonEmptyFloat.Margin" Top="-20" />
+	<SolidColorBrush	x:Key="MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenEmpty.Foreground" Color="#FFB8B3B3"/>
+	<system:Double		x:Key="MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenEmpty.FontSize">14</system:Double>
+	<system:Double		x:Key="MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.FontSize">12</system:Double>
+	<SolidColorBrush	x:Key="MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.Foreground" Color="#000"/>
+	<Thickness			x:Key="MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.Margin" Top="-20" />
+	<FontWeight			x:Key="MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.FontWeight">Bold</FontWeight>
 	<controls:NumberComparisonToBoolConverter x:Key="numberAbove0ToBoolConverter" CompareToAmount="0" />
     <SolidColorBrush x:Key="MultiSelectComboBox.Text.Foreground" Color="#FF000000"/>
 
@@ -368,24 +373,27 @@
 								<Style TargetType="TextBlock">
 									<Setter Property="Visibility" Value="Collapsed"/>
 									<Setter Property="VerticalAlignment" Value="Center"/>
-									<Setter Property="FontSize" Value="16" />
+									<Setter Property="FontSize" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.FontSize}" />
 									<Setter Property="Margin" Value="0" />
-									<Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.Text.WatermarkWhenNotEmpty.Foreground}" />
+									<Setter Property="FontWeight" Value="Normal" />
+									<Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.Foreground}" />
 									<Style.Triggers>
 										<DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=SelectedItems.Count, Converter={StaticResource numberAbove0ToBoolConverter}}" Value="false">
 											<Setter Property="Visibility" Value="Visible"/>
-											<Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.Text.WatermarkWhenEmpty.Foreground}" />
+											<Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenEmpty.Foreground}" />
+											<Setter Property="FontSize" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenEmpty.FontSize}" />
 										</DataTrigger>
 
 										<MultiDataTrigger>
 											<MultiDataTrigger.Conditions>
-												<Condition Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=SelectedItems.Count, Converter={StaticResource numberAbove0ToBoolConverter}}" Value="true"/>
-												<Condition Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=WatermarkFloatOnNonEmpty}" Value="true"/>
+												<Condition Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=SelectedItems.Count, Converter={StaticResource numberAbove0ToBoolConverter}}" Value="True"/>
+												<Condition Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=WatermarkFloatOnNonEmpty}" Value="True"/>
 											</MultiDataTrigger.Conditions>
 											<Setter Property="Visibility" Value="Visible"/>
-											<Setter Property="Margin" Value="{StaticResource MultiSelectComboBox.Text.WatermarkNonEmptyFloat.Margin}"/>
+											<Setter Property="Margin" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.Margin}"/>
 											<Setter Property="VerticalAlignment" Value="Top" />
-											<Setter Property="FontSize" Value="12" />
+											<Setter Property="FontSize" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.FontSize}" />
+											<Setter Property="FontWeight" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WatermarkWhenNotEmpty.FontWeight}" />
 										</MultiDataTrigger>
 									</Style.Triggers>
 								</Style>
