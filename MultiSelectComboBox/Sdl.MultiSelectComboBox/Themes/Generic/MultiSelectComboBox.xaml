@@ -370,7 +370,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type generic:MultiSelectComboBox}">
 
-                    <Grid x:Name="PART_MultiSelectComboBox" MaxHeight="{TemplateBinding ActualHeight}" MaxWidth="{TemplateBinding ActualWidth}" Style="{StaticResource MultiSelectComboBox.Style}">
+                    <Grid x:Name="PART_MultiSelectComboBox" Style="{StaticResource MultiSelectComboBox.Style}">
                         <ToggleButton KeyboardNavigation.TabNavigation="None" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" IsTabStop="False">
                             <ToggleButton.Template>
                                 <ControlTemplate TargetType="ToggleButton">
