@@ -5,6 +5,7 @@
     xmlns:api="clr-namespace:Sdl.MultiSelectComboBox.API"
     xmlns:controls="clr-namespace:Sdl.MultiSelectComboBox.Controls">
 
+	<controls:PropertyExistsToBoolConverter x:Key="isEnabledPropertyExistsConverter" PropertyToCheck="IsEnabled" />
     <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Background" Color="Transparent"/>
     <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Border" Color="#FF707070"/>
     <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Disabled.Background" Color="#FFF4F4F4"/>
@@ -33,6 +34,7 @@
     <FontFamily x:Key="MultiSelectComboBox.Text.FontFamily">Segoe UI</FontFamily>
     <SolidColorBrush x:Key="MultiSelectComboBox.Text.Disabled.Foreground" Color="#FFB8B3B3"/>
     <SolidColorBrush x:Key="MultiSelectComboBox.Text.Foreground" Color="#FF000000"/>
+
 
     <Style x:Key="MultiSelectComboBox.FocusVisual">
         <Setter Property="Control.Template">
@@ -141,7 +143,12 @@
     </Style>
 
     <Style x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemContainerStyle" TargetType="{x:Type controls:ExtendedListBoxItem}">
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding Converter={StaticResource isEnabledPropertyExistsConverter}}" Value="true">
+				<Setter Property="IsEnabled" Value="{Binding Path=IsEnabled}"/>
+			</DataTrigger>
+		</Style.Triggers>
+		<Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="Padding" Value="1"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
@@ -149,7 +156,9 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="IsEnabled" Value="{Binding Path=IsEnabled}"/>
+		<Setter Property="IsEnabled" Value="true"/>
+
+        
         <Setter Property="FocusVisualStyle" Value="{StaticResource MultiSelectComboBox.FocusVisual}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -331,7 +340,7 @@
                             </DataTemplate>
                             <DataTemplate x:Key="MultiSelectComboBox.SelectedItems.Searchable.ItemTemplate">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_TextBox" IsEnabled="{Binding IsEditMode, RelativeSource={RelativeSource TemplatedParent}}" 
+										<TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_TextBox" IsEnabled="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=IsEditMode}"
                                          Focusable="True" IsTabStop="False" Margin="0" ForceCursor="True" BorderThickness="0" BorderBrush="Transparent" Padding="1" TextWrapping="NoWrap"/>
                                     <TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_AutoComplete_TextBox" IsReadOnly="True"
                                          Focusable="False" IsTabStop="False" Margin="-2,0,0,0" BorderThickness="0" BorderBrush="Transparent" Padding="-3,1,0,1" TextWrapping="NoWrap"/>
