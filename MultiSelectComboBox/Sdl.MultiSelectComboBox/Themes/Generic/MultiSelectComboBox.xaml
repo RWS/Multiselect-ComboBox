@@ -5,6 +5,7 @@
     xmlns:api="clr-namespace:Sdl.MultiSelectComboBox.API"
     xmlns:controls="clr-namespace:Sdl.MultiSelectComboBox.Controls">
 
+	<controls:PropertyExistsToBoolConverter x:Key="isEnabledPropertyExistsConverter" PropertyToCheck="IsEnabled" />
     <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Background" Color="Transparent"/>
     <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Border" Color="#FF707070"/>
     <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Disabled.Background" Color="#FFF4F4F4"/>
@@ -37,6 +38,7 @@
 	<Thickness x:Key="MultiSelectComboBox.Text.WatermarkNonEmptyFloat.Margin" Top="-20" />
 	<controls:NumberComparisonToBoolConverter x:Key="numberAbove0ToBoolConverter" CompareToAmount="0" />
     <SolidColorBrush x:Key="MultiSelectComboBox.Text.Foreground" Color="#FF000000"/>
+
 
     <Style x:Key="MultiSelectComboBox.FocusVisual">
         <Setter Property="Control.Template">
@@ -145,7 +147,12 @@
     </Style>
 
     <Style x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemContainerStyle" TargetType="{x:Type controls:ExtendedListBoxItem}">
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding Converter={StaticResource isEnabledPropertyExistsConverter}}" Value="true">
+				<Setter Property="IsEnabled" Value="{Binding Path=IsEnabled}"/>
+			</DataTrigger>
+		</Style.Triggers>
+		<Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="Padding" Value="1"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
@@ -153,7 +160,9 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="IsEnabled" Value="{Binding Path=IsEnabled}"/>
+		<Setter Property="IsEnabled" Value="true"/>
+
+        
         <Setter Property="FocusVisualStyle" Value="{StaticResource MultiSelectComboBox.FocusVisual}"/>
         <Setter Property="Template">
             <Setter.Value>
