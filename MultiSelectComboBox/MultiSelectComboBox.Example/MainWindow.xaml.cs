@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -48,6 +48,15 @@ namespace Sdl.MultiSelectComboBox.Example
 				.FirstOrDefault();
 
 			return targetFrameworkAttribute.FrameworkName;
+		}
+
+		private void MultiSelectComboBox_NewItemAddRequest(object sender, EventArgs.NewItemAddRequestEventArgs e) {
+			var itm = new LanguageItem { Name = e.TypedText };
+			var li = (DataContext as LanguageItems);
+			li.Items.Add(itm);
+			li._allItems.Add(itm);
+			li.EnableSuggestionProvider = false;
+			li.EnableSuggestionProvider = true;
 		}
 	}
 }
