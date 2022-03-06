@@ -507,10 +507,15 @@
                                         </controls:ExtendedListBox.Resources>
                                     </controls:ExtendedListBox>
 										<Grid Name="PART_MultiSelectComboBox_Dropdown_EditBoxGrid" Visibility="Collapsed" Grid.Row="1" Margin="5" >
+											<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Name="PART_MultiSelectComboBox_Dropdown_LeftButtonsStackPanel">
+												<Button Name="PART_MultiSelectComboBox_Dropdown_ClearAllButton"   Visibility="Collapsed"
+													Style="{StaticResource MultiSelectComboBox.DropDown.NewItem.Button.Style}" Content="Clear All" Margin="3,0" />
+												<Button Name="PART_MultiSelectComboBox_Dropdown_SelectAllButton"   Visibility="Collapsed"
+													Style="{StaticResource MultiSelectComboBox.DropDown.NewItem.Button.Style}" Content="Select All" Margin="3,0" />
+											</StackPanel>
 											<Button Name="PART_MultiSelectComboBox_Dropdown_ShowEditBoxButton" HorizontalAlignment="Right" 
-                                         Style="{StaticResource MultiSelectComboBox.DropDown.NewItem.Button.Style}"
-                                        Content="Create New Item"
-                                        />
+                                         Style="{StaticResource MultiSelectComboBox.DropDown.NewItem.Button.Style}" Visibility="Collapsed"
+                                        Content="Create New Item"/>
 											<Border Margin="3,0,3,3" Name="PART_MultiSelectComboBox_Dropdown_NewItem_EditGroup" Visibility="Collapsed">
 												<Grid>
 													<Grid.ColumnDefinitions>
@@ -535,6 +540,15 @@
 					<ControlTemplate.Triggers>
 						<Trigger Property="EnableNewItemAddUI" Value="True">
 							<Setter TargetName="PART_MultiSelectComboBox_Dropdown_EditBoxGrid" Property="Visibility" Value="Visible" />
+							<Setter TargetName="PART_MultiSelectComboBox_Dropdown_ShowEditBoxButton" Property="Visibility" Value="Visible" />
+						</Trigger>
+						<Trigger Property="EnableSelectAllUI" Value="True">
+							<Setter TargetName="PART_MultiSelectComboBox_Dropdown_EditBoxGrid" Property="Visibility" Value="Visible" />
+							<Setter TargetName="PART_MultiSelectComboBox_Dropdown_SelectAllButton" Property="Visibility" Value="Visible" />
+						</Trigger>
+						<Trigger Property="EnableClearAllUI" Value="True">
+							<Setter TargetName="PART_MultiSelectComboBox_Dropdown_EditBoxGrid" Property="Visibility" Value="Visible" />
+							<Setter TargetName="PART_MultiSelectComboBox_Dropdown_ClearAllButton" Property="Visibility" Value="Visible" />
 						</Trigger>
 						<EventTrigger SourceName="PART_MultiSelectComboBox_Dropdown_ShowEditBoxButton" RoutedEvent="Button.Click">
 							<BeginStoryboard>
@@ -546,7 +560,16 @@
 									<DoubleAnimation Storyboard.TargetName="PART_MultiSelectComboBox_Dropdown_ShowEditBoxButton" 
                                          Storyboard.TargetProperty="Opacity" 
                                          To="0" Duration="0:0:0"/>
+									<DoubleAnimation Storyboard.TargetName="PART_MultiSelectComboBox_Dropdown_LeftButtonsStackPanel" 
+                                         Storyboard.TargetProperty="Opacity" 
+                                         To="0" Duration="0:0:0"/>
 									<BooleanAnimationUsingKeyFrames Storyboard.TargetName="PART_MultiSelectComboBox_Dropdown_ShowEditBoxButton" Storyboard.TargetProperty="IsTabStop">
+										<DiscreteBooleanKeyFrame Value="False" KeyTime="0:0:0" />
+									</BooleanAnimationUsingKeyFrames>
+									<BooleanAnimationUsingKeyFrames Storyboard.TargetName="PART_MultiSelectComboBox_Dropdown_ClearAllButton" Storyboard.TargetProperty="IsTabStop">
+										<DiscreteBooleanKeyFrame Value="False" KeyTime="0:0:0" />
+									</BooleanAnimationUsingKeyFrames>
+									<BooleanAnimationUsingKeyFrames Storyboard.TargetName="PART_MultiSelectComboBox_Dropdown_SelectAllButton" Storyboard.TargetProperty="IsTabStop">
 										<DiscreteBooleanKeyFrame Value="False" KeyTime="0:0:0" />
 									</BooleanAnimationUsingKeyFrames>
 								</Storyboard>
@@ -563,7 +586,14 @@
 									<BooleanAnimationUsingKeyFrames Storyboard.TargetName="PART_MultiSelectComboBox_Dropdown_ShowEditBoxButton" Storyboard.TargetProperty="IsTabStop">
 										<DiscreteBooleanKeyFrame Value="True" KeyTime="0:0:0" />
 									</BooleanAnimationUsingKeyFrames>
-
+									<DoubleAnimation Storyboard.TargetName="PART_MultiSelectComboBox_Dropdown_LeftButtonsStackPanel" Storyboard.TargetProperty="Opacity" 
+                                             To="1" Duration="0:0:0"/>
+									<BooleanAnimationUsingKeyFrames Storyboard.TargetName="PART_MultiSelectComboBox_Dropdown_SelectAllButton" Storyboard.TargetProperty="IsTabStop">
+										<DiscreteBooleanKeyFrame Value="True" KeyTime="0:0:0" />
+									</BooleanAnimationUsingKeyFrames>
+									<BooleanAnimationUsingKeyFrames Storyboard.TargetName="PART_MultiSelectComboBox_Dropdown_ClearAllButton" Storyboard.TargetProperty="IsTabStop">
+										<DiscreteBooleanKeyFrame Value="True" KeyTime="0:0:0" />
+									</BooleanAnimationUsingKeyFrames>
 								</Storyboard>
 							</BeginStoryboard>
 						</EventTrigger>
