@@ -232,6 +232,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 				if (_selectedItemsControl != null)
 				{
+					AddFilterPlaceholderIfNeeded();
+
 					_selectedItemsControl.ItemsSource = SelectedItemsInternal;
 
 					if (SelectedItemTemplate == null)
@@ -927,11 +929,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				RaiseSelectedItemsChangedEvent(itemsAdded, itemsRemoved, selectedItems);
 			}
 
-			// Add a placeholder for the filter
-			if (!SelectedItemsInternal.Contains(null))
-			{
-				SelectedItemsInternal.Add(null);
-			}
+			AddFilterPlaceholderIfNeeded();
 		}
 
 		private void ConfigureSingleSelectionMode(ref Collection<object> itemsRemoved)
@@ -1856,6 +1854,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			foreach (var item in listItems)
 			{
 				item.IsChecked = isChecked;
+			}
+		}
+
+		private void AddFilterPlaceholderIfNeeded()
+		{
+			if (!SelectedItemsInternal.Contains(null))
+			{
+				SelectedItemsInternal.Add(null);
 			}
 		}
 	}
