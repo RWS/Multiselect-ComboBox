@@ -93,7 +93,7 @@
 
 						<Grid Grid.Row="0">
 
-							<sdl:MultiSelectComboBox Margin="0,0,0,20"      
+							<sdl:MultiSelectComboBox Margin="0,0,0,20"
                                                      Visibility="{Binding ElementName=RadioButtonDefaultStyle, Converter={StaticResource BoolToVis}, Path=IsChecked}"  
                                                      SelectedItemTemplate="{StaticResource MultiSelectComboBox.SelectedItems.ItemTemplate}"
                                                      DropdownItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"                                 
@@ -110,10 +110,12 @@
                                                      SuggestionProvider="{Binding CustomSuggestionProvider}"
 													 ClearSelectionOnFilterChanged="{Binding ClearSelectionOnFilterChanged}"
                                                      sdl:FilterTextChangedBehaviour.FilterTextChanged="{Binding FilterTextChangedCommand}"
-                                                     sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"/>
+                                                     sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"
+                                                     Background="Azure"
+                                                     SelectedItemsPanelBackground="Yellow"/>
 
 
-							<sdl:MultiSelectComboBox Margin="0,0,0,20"
+                            <sdl:MultiSelectComboBox Margin="0,0,0,20"
                                                      Visibility="{Binding ElementName=RadioButtonCustomStyle, Converter={StaticResource BoolToVis}, Path=IsChecked}"
                                                      Style="{StaticResource MultiSelectComboBox.Custom.Style}"
                                                      SelectedItemTemplate="{StaticResource MultiSelectComboBox.SelectedItems.Custom.ItemTemplate}"
@@ -131,9 +133,11 @@
                                                      SuggestionProvider="{Binding CustomSuggestionProvider}"
 							                         ClearSelectionOnFilterChanged="{Binding ClearSelectionOnFilterChanged}"
                                                      sdl:FilterTextChangedBehaviour.FilterTextChanged="{Binding FilterTextChangedCommand}"
-                                                     sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"/>
+                                                     sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"
+                                                     Background="Azure"
+                                                     SelectedItemsPanelBackground="Yellow"/>
 
-							<Button Command="{Binding ClearItemsCommand}" Style="{StaticResource Custom.Button.Style}"  Width="128" Height="20">
+                            <Button Command="{Binding ClearItemsCommand}" Style="{StaticResource Custom.Button.Style}"  Width="128" Height="20">
 								<Underline>Clear selected items</Underline>
 							</Button>
 						</Grid>

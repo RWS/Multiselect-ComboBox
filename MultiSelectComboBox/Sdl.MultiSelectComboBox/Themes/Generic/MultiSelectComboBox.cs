@@ -1097,6 +1097,24 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			set => SetValue(IsLoadingSuggestionsProperty, value);
 		}
 
+		public static readonly DependencyProperty SelectedItemsPanelBackgroundProperty =
+			DependencyProperty.Register("SelectedItemsPanelBackground", typeof(Brush), typeof(MultiSelectComboBox));
+
+		public Brush SelectedItemsPanelBackground
+		{
+			get => (Brush)GetValue(SelectedItemsPanelBackgroundProperty);
+			set => SetValue(SelectedItemsPanelBackgroundProperty, value);
+		}
+
+		public static readonly DependencyProperty DropDownPopupBackgroundProperty =
+			DependencyProperty.Register("DropDownPopupBackground", typeof(Brush), typeof(MultiSelectComboBox));
+
+		public Brush DropDownPopupBackground
+		{
+			get => (Brush)GetValue(DropDownPopupBackgroundProperty);
+			set => SetValue(DropDownPopupBackgroundProperty, value);
+		}
+
 		private void MultiSelectComboBoxOnPreviewMouseDown(object sender, MouseButtonEventArgs e)
 		{
 
