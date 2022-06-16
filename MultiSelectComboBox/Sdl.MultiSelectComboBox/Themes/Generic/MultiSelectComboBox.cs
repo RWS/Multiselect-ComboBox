@@ -1,4 +1,4 @@
-﻿using Sdl.MultiSelectComboBox.API;
+using Sdl.MultiSelectComboBox.API;
 using Sdl.MultiSelectComboBox.Controls;
 using Sdl.MultiSelectComboBox.EventArgs;
 using Sdl.MultiSelectComboBox.Services;
@@ -96,6 +96,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 					_multiSelectComboBoxGrid.SizeChanged -= MultiSelectComboBoxGridSizeChanged;
 
 					PreviewKeyUp -= MultiSelectComboBox_PreviewKeyUp;
+					PreviewKeyDown -= MultiSelectComboBox_PreviewKeyDown;
 				}
 
 				_multiSelectComboBoxGrid = value;
@@ -109,8 +110,26 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 					_multiSelectComboBoxGrid.SizeChanged += MultiSelectComboBoxGridSizeChanged;
 
 					PreviewKeyUp += MultiSelectComboBox_PreviewKeyUp;
+					PreviewKeyDown += MultiSelectComboBox_PreviewKeyDown;
 				}
 			}
+		}
+
+		private void MultiSelectComboBox_PreviewKeyDown(object sender, KeyEventArgs e) {
+			if (e.Key != Key.Tab || !IsDropDownOpen)
+				return;
+
+			if (Keyboard.Modifiers == ModifierKeys.None)
+				DropdownListBoxPreviewKeyDown(this, new KeyEventArgs(e.KeyboardDevice, e.InputSource, e.Timestamp, Key.Return));
+			else if (Keyboard.Modifiers == ModifierKeys.Shift) {//replicate hitting escape when on the selectedItems control, seems most natural
+				IsDropDownOpen = false;
+				UpdateAutoCompleteFilterText(string.Empty, null);
+			}
+				
+			else
+				return;
+			e.Handled = true;
+
 		}
 
 		private Popup _dropdownMenu;
@@ -1033,11 +1052,13 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			{
 				AssignIsEditMode();
 			}
+
+			
 		}
 
 		private void MultiSelectComboBoxKeyUp(object sender, KeyEventArgs e)
 		{
-			if ((e.Key != Key.Down && e.Key != Key.Up) || !IsEditMode || DropdownListBox == null || DropdownListBox.IsKeyboardFocusWithin)
+			if ((e.Key != Key.Down && e.Key != Key.Up) || !IsEditMode || DropdownListBox == null || DropdownListBox.IsKeyboardFocusWithin || e.Key == Key.LeftShift || e.Key == Key.RightShift)
 			{
 				return;
 			}
@@ -1198,12 +1219,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		private void SelectedItemsControl_OnKeyUp(object sender, KeyEventArgs e)
 		{
+			if (e.Key == Key.RightShift || e.Key == Key.LeftShift || e.Key == Key.Tab)
+				return;
 			if (e.OriginalSource is TextBox textBox && IsEditMode)
 			{
 				var perviousFilterText = FilterTextApplied;
 				FilterTextApplied = textBox.Text.Trim();
 				textBox.Focus();
-
+				
 				switch (e.Key)
 				{
 					case Key.Delete:
@@ -1317,7 +1340,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 						SelectComboBoxItem();
 						IsDropDownOpen = false;
 
-						SelectedItemsFilterTextBox.Text = string.Empty;
+						if (SelectedItemsFilterTextBox != null)
+							SelectedItemsFilterTextBox.Text = string.Empty;
 						FilterTextApplied = string.Empty;
 
 						UpdateItems(string.Empty);
@@ -1824,6 +1848,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		public void Dispose()
 		{
 			PreviewKeyUp -= MultiSelectComboBox_PreviewKeyUp;
+			PreviewKeyDown -= MultiSelectComboBox_PreviewKeyDown;
 
 			if (MultiSelectComboBoxGrid != null)
 			{
