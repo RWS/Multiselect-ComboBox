@@ -64,7 +64,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value >
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal"/>
+                    <WrapPanel Orientation="Horizontal" Background="{Binding SelectedItemsPanelBackground, RelativeSource={RelativeSource AncestorType=sdl:MultiSelectComboBox}}"/>
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -183,7 +183,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <VirtualizingStackPanel />
+                    <VirtualizingStackPanel Background="{Binding DropDownPopupBackground, RelativeSource={RelativeSource AncestorType=sdl:MultiSelectComboBox}}" />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -304,9 +304,9 @@
                             <DataTemplate x:Key="MultiSelectComboBox.SelectedItems.Searchable.ItemTemplate">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_TextBox" IsEnabled="{Binding IsEditMode, RelativeSource={RelativeSource AncestorType=sdl:MultiSelectComboBox}}" 
-                                         Focusable="True" IsTabStop="False" Margin="0" ForceCursor="True" BorderThickness="0" BorderBrush="Transparent" Padding="1" TextWrapping="NoWrap"/>
+                                         Focusable="True" IsTabStop="False" Margin="0" ForceCursor="True" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" Padding="1" TextWrapping="NoWrap"/>
                                     <TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_AutoComplete_TextBox" IsReadOnly="True"
-                                         Focusable="False" IsTabStop="False" Margin="-2,0,0,0" BorderThickness="0" BorderBrush="Transparent" Padding="-3,1,0,1" TextWrapping="NoWrap"/>
+                                         Focusable="False" IsTabStop="False" Margin="-2,0,0,0" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" Padding="-3,1,0,1" TextWrapping="NoWrap"/>
                                 </StackPanel>
                             </DataTemplate>
                         </sdl:ContentItemsControl.Resources>
