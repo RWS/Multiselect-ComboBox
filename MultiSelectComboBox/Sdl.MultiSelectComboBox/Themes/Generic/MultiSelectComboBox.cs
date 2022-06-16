@@ -1359,7 +1359,10 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 								if (DropdownListBox.Items[i] is object item)
 								{
 									var listBoxItem = GetListViewItem(item);
-									listBoxItem.IsChecked = !listBoxItem.IsChecked;
+									if (listBoxItem != null)
+									{
+										listBoxItem.IsChecked = !listBoxItem.IsChecked;
+									}
 								}
 							}
 						}
@@ -1370,7 +1373,10 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 								if (DropdownListBox.Items[i] is object item)
 								{
 									var listBoxItem = GetListViewItem(item);
-									listBoxItem.IsChecked = !listBoxItem.IsChecked;
+									if (listBoxItem != null)
+									{
+										listBoxItem.IsChecked = !listBoxItem.IsChecked;
+									}
 								}
 							}
 						}
