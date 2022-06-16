@@ -11,7 +11,7 @@ using System.Windows.Markup;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Sdl.MultiSelectComboBox")]
-[assembly: AssemblyCopyright("Copyright © SDL 2021")]
+[assembly: AssemblyCopyright("Copyright © SDL 2021-2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,7 +51,7 @@ using System.Windows.Markup;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.20.0")]
+[assembly: AssemblyFileVersion("1.0.21.0")]
 
 [assembly: XmlnsPrefix("http://schemas.sdl.com/xaml", "sdl")]
 [assembly: XmlnsDefinition("http://schemas.sdl.com/xaml", "Sdl.MultiSelectComboBox.Themes.Generic")]
