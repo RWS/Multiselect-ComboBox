@@ -330,12 +330,21 @@
                                 <TextBlock Text="{Binding}" Style="{DynamicResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,0" />
                             </DataTemplate>
                             <DataTemplate x:Key="MultiSelectComboBox.SelectedItems.Searchable.ItemTemplate">
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Name="TextBoxContainer" Orientation="Horizontal">
                                     <TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_TextBox" IsEnabled="{Binding IsEditMode, RelativeSource={RelativeSource AncestorType=generic:MultiSelectComboBox}}" 
                                          Focusable="True" IsTabStop="False" Margin="0" ForceCursor="True" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" Padding="1" TextWrapping="NoWrap"/>
                                     <TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_AutoComplete_TextBox" IsReadOnly="True"
                                          Focusable="False" IsTabStop="False" Margin="-2,0,0,0" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" Padding="-3,1,0,1" TextWrapping="NoWrap"/>
                                 </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType=generic:MultiSelectComboBox}}" Value="False"/>
+                                            <Condition Binding="{Binding EnableFiltering, RelativeSource={RelativeSource AncestorType=generic:MultiSelectComboBox}}" Value="False"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter TargetName="TextBoxContainer" Property="Visibility" Value="Collapsed"/>
+                                    </MultiDataTrigger>
+                                </DataTemplate.Triggers>
                             </DataTemplate>
                         </controls:ContentItemsControl.Resources>
                     </controls:ContentItemsControl>
@@ -351,6 +360,13 @@
                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=IsEditMode}" Value="True">
                                         <Setter Property="ContentTemplate" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.EditMode.Glyph.Template}"/>
                                     </DataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType=generic:MultiSelectComboBox}}" Value="False"/>
+                                            <Condition Binding="{Binding EnableFiltering, RelativeSource={RelativeSource AncestorType=generic:MultiSelectComboBox}}" Value="False"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="ContentTemplate" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.EditMode.Glyph.Template}"/>
+                                    </MultiDataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </ContentControl.Style>
