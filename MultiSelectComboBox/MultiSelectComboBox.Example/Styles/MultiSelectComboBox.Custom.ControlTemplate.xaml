@@ -342,7 +342,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type sdl:MultiSelectComboBox}">
 
-                    <Grid x:Name="PART_MultiSelectComboBox" MaxHeight="{TemplateBinding ActualHeight}" MaxWidth="{TemplateBinding ActualWidth}" Style="{StaticResource MultiSelectComboBox.Style}">
+                    <Grid x:Name="PART_MultiSelectComboBox" MaxWidth="{TemplateBinding ActualWidth}" Style="{StaticResource MultiSelectComboBox.Style}">
                         <ToggleButton KeyboardNavigation.TabNavigation="None" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" IsTabStop="False">
                             <ToggleButton.Template>
                                 <ControlTemplate TargetType="ToggleButton">
@@ -372,6 +372,11 @@
                         </Popup>
                     </Grid>
 
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding VerticalAlignment, RelativeSource={RelativeSource AncestorType=sdl:MultiSelectComboBox}}" Value="Stretch">
+                            <Setter TargetName="PART_MultiSelectComboBox" Property="MaxHeight" Value="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=sdl:MultiSelectComboBox}}"/>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
 
                 </ControlTemplate>
             </Setter.Value>
