@@ -9,7 +9,7 @@ namespace Sdl.MultiSelectComboBox.Services
 
         public string GetAutoCompleteString(object item)
         {
-            return item?.ToString();
+            return item?.ToString() ?? string.Empty;
         }
 
         private static readonly Lazy<DefaultAutoCompleteService> _instance = new Lazy<DefaultAutoCompleteService>(() => new DefaultAutoCompleteService());

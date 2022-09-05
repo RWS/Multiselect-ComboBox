@@ -1646,7 +1646,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		{
 			if (EnableAutoComplete && IsDropDownOpen && item != null && !IsSelectedItem(item) && SelectedItemsFilterAutoCompleteTextBox != null)
 			{
-				string autoCompleteString = CurrentAutoCompleteService.GetAutoCompleteString(item);
+				string autoCompleteString = CurrentAutoCompleteService.GetAutoCompleteString(item) ?? string.Empty;
 				var index = criteria?.Length > 0 ? autoCompleteString.IndexOf(criteria, StringComparison.InvariantCultureIgnoreCase) : 0;
 				var autoCompleteText = index > -1 ? autoCompleteString.Substring(index + (criteria?.Length ?? 0)) : string.Empty;
 
