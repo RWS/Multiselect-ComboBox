@@ -595,9 +595,18 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 		}
 
+		public static readonly DependencyProperty AutoCompleteServiceProperty =
+			DependencyProperty.Register("AutoCompleteService", typeof(IAutoCompleteService), typeof(MultiSelectComboBox));
 
+		public IAutoCompleteService AutoCompleteService
+        {
+            get { return (IAutoCompleteService)GetValue(AutoCompleteServiceProperty); }
+            set { SetValue(AutoCompleteServiceProperty, value); }
+        }
 
-		public static readonly DependencyProperty IsDropDownOpenProperty =
+		private IAutoCompleteService CurrentAutoCompleteService => AutoCompleteService ?? DefaultAutoCompleteService.Instance;
+
+        public static readonly DependencyProperty IsDropDownOpenProperty =
 			DependencyProperty.Register("IsDropDownOpen", typeof(bool), typeof(MultiSelectComboBox),
 				new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
@@ -1637,8 +1646,9 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		{
 			if (EnableAutoComplete && IsDropDownOpen && item != null && !IsSelectedItem(item) && SelectedItemsFilterAutoCompleteTextBox != null)
 			{
-				var index = criteria?.Length > 0 ? item.ToString().IndexOf(criteria, StringComparison.InvariantCultureIgnoreCase) : 0;
-				var autoCompleteText = index > -1 ? item.ToString().Substring(index + (criteria?.Length ?? 0)) : string.Empty;
+				string autoCompleteString = CurrentAutoCompleteService.GetAutoCompleteString(item) ?? string.Empty;
+				var index = criteria?.Length > 0 ? autoCompleteString.IndexOf(criteria, StringComparison.InvariantCultureIgnoreCase) : 0;
+				var autoCompleteText = index > -1 ? autoCompleteString.Substring(index + (criteria?.Length ?? 0)) : string.Empty;
 
 				if (AutoCompleteMaxLength > 0 && autoCompleteText.Length >= AutoCompleteMaxLength)
 				{
