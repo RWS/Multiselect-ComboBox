@@ -1655,14 +1655,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		private void UpdateAutoCompleteFilterText(string criteria, object item)
 		{
 			if (SelectedItemsFilterAutoCompleteTextBox == null)
-            {
+			{
 				return;
-            }
+			}
 
 			if (EnableAutoComplete && IsDropDownOpen)
 			{
 				if (SelectionMode == SelectionModes.Multiple && EnableBatchSelection && TrySelectBatchItemsAsync(criteria))
-                {
+				{
 					Dispatcher.BeginInvoke((Action)delegate {
 						CloseDropdownMenu(true, true);
 						AssignIsEditMode();
@@ -1690,7 +1690,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		}
 
 		private bool TrySelectBatchItemsAsync(string criteria)
-        {
+		{
 			if (string.IsNullOrEmpty(criteria) || ItemsSource == null || SuggestionProvider == null || SelectedItems == null)
 			{
 				return false;
@@ -1712,7 +1712,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 
 			foreach (var item in itemsToSelect)
-            {
+			{
 				if (!SelectedItems.Contains(item))
 				{
 					SelectedItems.Add(item);
