@@ -23,6 +23,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 		private bool _listenToFilterTextChanged;
 		private bool _listenToSelectedItemsChanged;
 		private bool _enableAutoComplete;
+		private bool _enableBatchSelection;
 		private bool _enableGrouping;
 		private bool _useRecentlyUsedGroupingService;
 		private bool _enableFiltering;
@@ -51,6 +52,7 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 			UseRecentlyUsedGroupingService = true;
 
 			EnableAutoComplete = true;
+			EnableBatchSelection = true;
 
 			FilterTextChangedCommand = new FilterTextChangedCommand(UpdateEventLog, CanListenToFilterTextChangedExample);
 			SelectedItemsChangedCommand = new SelectedItemsChangedCommand(UpdateEventLog, UpdateSelectedItems, CanListenToSelectedItemsChangedExample);
@@ -137,6 +139,24 @@ namespace Sdl.MultiSelectComboBox.Example.Models
 				UpdateEventLog(nameof(EnableAutoComplete), _enableAutoComplete.ToString());
 
 				OnPropertyChanged(nameof(EnableAutoComplete));
+			}
+		}
+
+		public bool EnableBatchSelection
+		{
+			get => _enableBatchSelection;
+			set
+			{
+				if (_enableBatchSelection.Equals(value))
+				{
+					return;
+				}
+
+				_enableBatchSelection = value;
+
+				UpdateEventLog(nameof(EnableBatchSelection), _enableBatchSelection.ToString());
+
+				OnPropertyChanged(nameof(EnableBatchSelection));
 			}
 		}
 
