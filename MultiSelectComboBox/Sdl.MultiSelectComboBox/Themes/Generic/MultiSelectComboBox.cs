@@ -475,6 +475,16 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			Single
 		}
 
+		public static readonly DependencyProperty EnableBatchSelectionProperty =
+			DependencyProperty.Register("EnableBatchSelection", typeof(bool), typeof(MultiSelectComboBox),
+				new FrameworkPropertyMetadata(false));
+
+		public bool EnableBatchSelection
+		{
+			get => (bool)GetValue(EnableBatchSelectionProperty);
+			set => SetValue(EnableBatchSelectionProperty, value);
+		}
+
 		public static readonly DependencyProperty EnableAutoCompleteProperty =
 			DependencyProperty.Register("EnableAutoComplete", typeof(bool), typeof(MultiSelectComboBox),
 				new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
@@ -1644,26 +1654,72 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		private void UpdateAutoCompleteFilterText(string criteria, object item)
 		{
-			if (EnableAutoComplete && IsDropDownOpen && item != null && !IsSelectedItem(item) && SelectedItemsFilterAutoCompleteTextBox != null)
+			if (SelectedItemsFilterAutoCompleteTextBox == null)
 			{
-				string autoCompleteString = CurrentAutoCompleteService.GetAutoCompleteString(item) ?? string.Empty;
-				var index = criteria?.Length > 0 ? autoCompleteString.IndexOf(criteria, StringComparison.InvariantCultureIgnoreCase) : 0;
-				var autoCompleteText = index > -1 ? autoCompleteString.Substring(index + (criteria?.Length ?? 0)) : string.Empty;
+				return;
+			}
 
-				if (AutoCompleteMaxLength > 0 && autoCompleteText.Length >= AutoCompleteMaxLength)
+			if (EnableAutoComplete && IsDropDownOpen)
+			{
+				if (SelectionMode == SelectionModes.Multiple && EnableBatchSelection && TrySelectBatchItemsAsync(criteria))
 				{
-					autoCompleteText = autoCompleteText.Substring(0, AutoCompleteMaxLength) + "...";
+					Dispatcher.BeginInvoke((Action)delegate {
+						CloseDropdownMenu(true, true);
+						AssignIsEditMode();
+					}, DispatcherPriority.ContextIdle);
 				}
+				else if (item != null && !IsSelectedItem(item))
+				{
+					string autoCompleteString = CurrentAutoCompleteService.GetAutoCompleteString(item) ?? string.Empty;
+					var index = criteria?.Length > 0 ? autoCompleteString.IndexOf(criteria, StringComparison.InvariantCultureIgnoreCase) : 0;
+					var autoCompleteText = index > -1 ? autoCompleteString.Substring(index + (criteria?.Length ?? 0)) : string.Empty;
 
-				SelectedItemsFilterAutoCompleteTextBox.Text = autoCompleteText;
+					if (AutoCompleteMaxLength > 0 && autoCompleteText.Length >= AutoCompleteMaxLength)
+					{
+						autoCompleteText = autoCompleteText.Substring(0, AutoCompleteMaxLength) + "...";
+					}
 
-				SelectedItemsFilterAutoCompleteTextBox.Background = AutoCompleteBackground;
+					SelectedItemsFilterAutoCompleteTextBox.Text = autoCompleteText;
+					SelectedItemsFilterAutoCompleteTextBox.Background = AutoCompleteBackground;
+					return;
+				}
 			}
-			else if (SelectedItemsFilterAutoCompleteTextBox != null)
+
+			SelectedItemsFilterAutoCompleteTextBox.Text = string.Empty;
+			SelectedItemsFilterAutoCompleteTextBox.Background = Brushes.Transparent;
+		}
+
+		private bool TrySelectBatchItemsAsync(string criteria)
+		{
+			if (string.IsNullOrEmpty(criteria) || ItemsSource == null || SuggestionProvider == null || SelectedItems == null)
 			{
-				SelectedItemsFilterAutoCompleteTextBox.Text = string.Empty;
-				SelectedItemsFilterAutoCompleteTextBox.Background = Brushes.Transparent;
+				return false;
 			}
+
+			var valuesToSelect = criteria.Split(',', ';')
+				.Select(i => i.Trim().ToLower())
+				.ToArray();
+
+			var suggestionProviderToken = _suggestionProviderToken = new CancellationTokenSource();
+			var itemsToSelect = valuesToSelect
+				.Select(value => SuggestionProvider.GetSuggestionsAsync(value, _suggestionProviderToken.Token).GetAwaiter().GetResult().FirstOrDefault())
+				.Where(item => item != null && valuesToSelect.Contains(item.ToString().ToLower()))
+				.ToArray();
+
+			if (itemsToSelect.Length < valuesToSelect.Length)
+			{
+				return false;
+			}
+
+			foreach (var item in itemsToSelect)
+			{
+				if (!SelectedItems.Contains(item))
+				{
+					SelectedItems.Add(item);
+				}
+			}
+
+			return true;
 		}
 
 		private void AssignIsEditMode()
