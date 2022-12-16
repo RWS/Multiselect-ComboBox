@@ -676,6 +676,16 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			control.InitializeInternalElements();
 		}
 
+		public static readonly DependencyProperty SelectedItemProperty =
+			DependencyProperty.Register("SelectedItem", typeof(object), typeof(MultiSelectComboBox),
+				new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, SelectedItemPropertyChangedCallback));
+
+		public object SelectedItem
+		{
+			get => GetValue(SelectedItemProperty);
+			set => SetValue(SelectedItemProperty, value);
+		}
+
 		public static readonly DependencyProperty SelectedItemsProperty =
 			DependencyProperty.Register("SelectedItems", typeof(IList), typeof(MultiSelectComboBox),
 				new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, SelectedItemsPropertyChangedCallback));
@@ -749,6 +759,27 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			return true;
 		}
 
+		private static void SelectedItemPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+		{
+			if (dependencyObject is MultiSelectComboBox control)
+			{
+				control.SelectedItemPropertyChangedCallback();
+			}
+		}
+
+		private void SelectedItemPropertyChangedCallback()
+		{
+			var selectedItem = SelectedItem;
+			foreach (var item in SelectedItems.Cast<object>().Where(i => i != selectedItem).ToArray())
+			{
+				SelectedItems.Remove(item);
+			}
+			if (selectedItem != null && !SelectedItems.Contains(selectedItem))
+			{
+				SelectedItems.Add(selectedItem);
+			}
+		}
+
 		private static void SelectedItemsPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
 		{
 			if (dependencyObject is MultiSelectComboBox control)
@@ -814,6 +845,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 			ToggleDropdownListItemsCheckState(itemsAdded, true);
 			ToggleDropdownListItemsCheckState(itemsRemoved, false);
+
+			SelectedItem = SelectedItems.Cast<object>().FirstOrDefault();
 
 			if (itemsAdded.Count > 0 || itemsRemoved.Count > 0)
 			{
