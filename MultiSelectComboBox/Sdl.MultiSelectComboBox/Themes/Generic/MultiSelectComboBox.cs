@@ -277,6 +277,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			{
 				if (_selectedItemsFilterTextBox != null)
 				{
+					_selectedItemsFilterTextBox.RemoveHandler(CommandManager.ExecutedEvent, (ExecutedRoutedEventHandler)Execute_TextBoxCommand);
+					_selectedItemsFilterTextBox.RemoveHandler(CommandManager.PreviewCanExecuteEvent, (CanExecuteRoutedEventHandler)CanExecute_TextBoxCommand);
 					_selectedItemsFilterTextBox.PreviewTextInput -= SelectedItemsFilterTextBoxPreviewTextInput;
 					_selectedItemsFilterTextBox.TextChanged -= SelectedItemsFilterTextBoxTextChanged;
 				}
@@ -287,6 +289,8 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				{
 					_selectedItemsFilterTextBox.PreviewTextInput += SelectedItemsFilterTextBoxPreviewTextInput;
 					_selectedItemsFilterTextBox.TextChanged += SelectedItemsFilterTextBoxTextChanged;
+					_selectedItemsFilterTextBox.AddHandler(CommandManager.PreviewCanExecuteEvent, (CanExecuteRoutedEventHandler)CanExecute_TextBoxCommand);
+					_selectedItemsFilterTextBox.AddHandler(CommandManager.ExecutedEvent, (ExecutedRoutedEventHandler)Execute_TextBoxCommand);
 				}
 			}
 		}
@@ -1979,5 +1983,28 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				SelectedItemsInternal.Add(null);
 			}
 		}
+
+		public string SelectedItemsAsText =>
+			SelectedItems != null 
+				? string.Join(", ", SelectedItems.Cast<object>().Select(i => i.ToString()))
+				: null;
+
+		private void CanExecute_TextBoxCommand(object sender, CanExecuteRoutedEventArgs e)
+		{
+			if (e.Command == ApplicationCommands.Copy)
+			{
+				e.CanExecute = SelectedItems != null && SelectedItems.Count > 0;
+				e.Handled = true;
+			}
+		}
+
+		private void Execute_TextBoxCommand(object sender, ExecutedRoutedEventArgs e)
+        {
+			if (e.Command == ApplicationCommands.Copy)
+			{
+				Clipboard.SetText(SelectedItemsAsText);
+				e.Handled = true;
+			}
+        }
 	}
 }
