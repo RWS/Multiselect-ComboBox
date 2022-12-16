@@ -10,7 +10,7 @@
         xmlns:converters="clr-namespace:Sdl.MultiSelectComboBox.Example.Converters"
         d:DataContext="{d:DesignInstance {x:Type models:LanguageItems}}"
         mc:Ignorable="d"  
-        Title="Sdl.MultiSelectComboBox Example" Height="600" MinHeight="540" Width="934">
+        Title="Sdl.MultiSelectComboBox Example" Height="620" MinHeight="550" Width="934">
 
     <Window.Resources>
         <ResourceDictionary>
