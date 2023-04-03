@@ -414,9 +414,9 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 
 			InitializeInternalElements();
-		}
+        }
 
-		private void ApplyInternalTemplates(FrameworkElement parent)
+        private void ApplyInternalTemplates(FrameworkElement parent)
 		{
 			if (parent == null)
 				return;
@@ -470,8 +470,10 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				{
 					UpdateSelectedItemsContainer(ItemsSource);
 				}
-			}
-		}
+
+                UpdateItems(SelectedItemsFilterTextBox?.Text ?? string.Empty);
+            }
+        }
 
 		public enum SelectionModes
 		{
