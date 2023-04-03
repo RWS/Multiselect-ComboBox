@@ -471,9 +471,9 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 					UpdateSelectedItemsContainer(ItemsSource);
 				}
 
-                UpdateItems(SelectedItemsFilterTextBox?.Text ?? string.Empty);
-            }
-        }
+				UpdateItems(SelectedItemsFilterTextBox?.Text ?? string.Empty);
+			}
+		}
 
 		public enum SelectionModes
 		{
