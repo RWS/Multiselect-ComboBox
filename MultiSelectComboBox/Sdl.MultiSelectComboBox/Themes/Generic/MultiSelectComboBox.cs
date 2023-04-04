@@ -414,6 +414,13 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 
 			InitializeInternalElements();
+
+			// Ensure initializing SelectedItems if it was not set by the developer so that SelectedItem
+			// property (singular), that is based on this collection internally, would still work properly.
+			if (SelectedItems == null)
+			{
+				SelectedItems = new ObservableCollection<object>();
+			}
 		}
 
 		private void ApplyInternalTemplates(FrameworkElement parent)
