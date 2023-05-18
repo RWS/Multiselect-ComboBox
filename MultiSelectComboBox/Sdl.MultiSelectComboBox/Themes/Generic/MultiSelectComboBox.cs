@@ -782,7 +782,9 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		private void SelectedItemPropertyChangedCallback()
 		{
-			var selectedItem = SelectedItem;
+            if (_isHandlingSelectedItemInternally)
+                return;
+            var selectedItem = SelectedItem;
 			foreach (var item in SelectedItems.Cast<object>().Where(i => i != selectedItem).ToArray())
 			{
 				SelectedItems.Remove(item);
@@ -803,7 +805,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		private void SelectedItemsPropertyChangedCallback()
 		{
-			CleanUpSelectedItemsNotifyingCollection();
+            CleanUpSelectedItemsNotifyingCollection();
 			HandleSelectedItemsChanged();
 			InitializeSelectedItemsNotifyingCollection();
 		}
@@ -842,8 +844,9 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		}
 
 		private bool _isWaitingToHandleSelectedItemsChanged;
+		private bool _isHandlingSelectedItemInternally;
 
-		private void HandleSelectedItemsChanged()
+        private void HandleSelectedItemsChanged()
 		{
 			if (SelectedItems == null)
 			{
@@ -859,9 +862,11 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			ToggleDropdownListItemsCheckState(itemsAdded, true);
 			ToggleDropdownListItemsCheckState(itemsRemoved, false);
 
+            _isHandlingSelectedItemInternally = true;
 			SelectedItem = SelectedItems.Cast<object>().FirstOrDefault();
+            _isHandlingSelectedItemInternally = false;
 
-			if (itemsAdded.Count > 0 || itemsRemoved.Count > 0)
+            if (itemsAdded.Count > 0 || itemsRemoved.Count > 0)
 			{
 				RaiseSelectedItemsChangedEvent(itemsAdded, itemsRemoved, SelectedItemsInternal.Where(a => a != null).ToList());
 			}
