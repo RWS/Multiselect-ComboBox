@@ -275,7 +275,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ContentControl">
-                    <Border x:Name="Bd" BorderThickness="1" CornerRadius="5" Margin="1" BorderBrush="{StaticResource MultiSelectComboBox.SelectedItem.Border}">
+                    <Border x:Name="Bd" BorderThickness="1" CornerRadius="{Binding SelectedItemContainerCornerRadius, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}}" Margin="1" BorderBrush="{StaticResource MultiSelectComboBox.SelectedItem.Border}">
                         <StackPanel Orientation="Horizontal">
                             <ContentControl Content="{Binding}" Margin="2,2,2,4" ContentTemplateSelector="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=SelectedItemTemplateSelector}"/>
 
@@ -382,6 +382,7 @@
     </DataTemplate>
 
     <Style TargetType="{x:Type generic:MultiSelectComboBox}">
+        <Setter Property="SelectedItemContainerCornerRadius" Value="5"/>
         <Setter Property="SelectedItemsPanelBackground" Value="{Binding Background, RelativeSource={RelativeSource Self}}"/>
         <Setter Property="DropDownPopupBackground" Value="{Binding Background, RelativeSource={RelativeSource Self}}"/>
         <Setter Property="Template">

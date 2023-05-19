@@ -1186,7 +1186,16 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			set => SetValue(IsLoadingSuggestionsProperty, value);
 		}
 
-		public static readonly DependencyProperty SelectedItemsPanelBackgroundProperty =
+        public static readonly DependencyProperty SelectedItemContainerCornerRadiusProperty =
+            DependencyProperty.Register("SelectedItemContainerCornerRadius", typeof(double), typeof(MultiSelectComboBox));
+
+        public double SelectedItemContainerCornerRadius
+        {
+            get => (double)GetValue(SelectedItemContainerCornerRadiusProperty);
+            set => SetValue(SelectedItemContainerCornerRadiusProperty, value);
+        }
+
+        public static readonly DependencyProperty SelectedItemsPanelBackgroundProperty =
 			DependencyProperty.Register("SelectedItemsPanelBackground", typeof(Brush), typeof(MultiSelectComboBox));
 
 		public Brush SelectedItemsPanelBackground
@@ -1195,7 +1204,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			set => SetValue(SelectedItemsPanelBackgroundProperty, value);
 		}
 
-		public static readonly DependencyProperty DropDownPopupBackgroundProperty =
+        public static readonly DependencyProperty DropDownPopupBackgroundProperty =
 			DependencyProperty.Register("DropDownPopupBackground", typeof(Brush), typeof(MultiSelectComboBox));
 
 		public Brush DropDownPopupBackground
