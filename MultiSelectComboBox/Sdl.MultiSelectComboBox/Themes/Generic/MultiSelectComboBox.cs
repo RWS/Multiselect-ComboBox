@@ -47,9 +47,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		{
 			Loaded += MultiSelectComboBox_Loaded;
 			Unloaded += MultiSelectComboBox_Unloaded;
-		}
 
-		private void MultiSelectComboBox_Loaded(object sender, RoutedEventArgs e)
+			InputBindings.Add(new KeyBinding(OpenDropDownListCommand, Key.Up, ModifierKeys.Alt));
+            InputBindings.Add(new KeyBinding(OpenDropDownListCommand, Key.Down, ModifierKeys.Alt));
+
+			CommandBindings.Add(new CommandBinding(OpenDropDownListCommand, OpenDropDownListCommandExecuted));
+        }
+
+        private void MultiSelectComboBox_Loaded(object sender, RoutedEventArgs e)
 		{
 			InitializeSelectedItemsNotifyingCollection();
 		}
@@ -1122,32 +1127,52 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			{
 				AssignIsEditMode();
 			}
-
-			
 		}
 
 		private void MultiSelectComboBoxKeyUp(object sender, KeyEventArgs e)
 		{
-			if ((e.Key != Key.Down && e.Key != Key.Up) || !IsEditMode || DropdownListBox == null || DropdownListBox.IsKeyboardFocusWithin || e.Key == Key.LeftShift || e.Key == Key.RightShift)
+			if ((e.Key != Key.Down && e.Key != Key.Up))
 			{
 				return;
 			}
 
-			IsDropDownOpen = true;
-
-			if (DropdownListBox.Items.Count > 0)
-			{
-				SetVisualFocusOnItem(DropdownListBox.SelectedItem);
-
-				Dispatcher.BeginInvoke(DispatcherPriority.Input,
-					new Action(delegate
-					{
-						SetKeyBoardFocusOnItem(DropdownListBox.SelectedItem);
-					}));
-			}
+			OpenDropDownList();
 		}
 
-		public bool OpenDropDownListAlsoWhenNotInEditMode
+        private void OpenDropDownListCommandExecuted(object sender, ExecutedRoutedEventArgs e)
+		{
+            if (!IsEditMode && IsEditable)
+            {
+                AssignIsEditMode();
+            }
+
+            OpenDropDownList();
+		}
+
+        private void OpenDropDownList()
+		{
+			if (!IsEditMode || DropdownListBox == null || DropdownListBox.IsKeyboardFocusWithin)
+			{
+				return;
+			}
+
+            IsDropDownOpen = true;
+
+            if (DropdownListBox.Items.Count > 0)
+            {
+                SetVisualFocusOnItem(DropdownListBox.SelectedItem);
+
+                Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                    new Action(delegate
+                    {
+                        SetKeyBoardFocusOnItem(DropdownListBox.SelectedItem);
+                    }));
+            }
+        }
+
+        private static ICommand OpenDropDownListCommand = new RoutedCommand();
+
+        public bool OpenDropDownListAlsoWhenNotInEditMode
 		{
 			get => (bool)GetValue(OpenDropDownListAlsoWhenNotInEditModeProperty);
 			set => SetValue(OpenDropDownListAlsoWhenNotInEditModeProperty, value);
