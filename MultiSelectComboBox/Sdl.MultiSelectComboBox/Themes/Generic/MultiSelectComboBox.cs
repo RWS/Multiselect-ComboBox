@@ -1151,7 +1151,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
         private void OpenDropDownList()
 		{
-			if (!IsEditMode || DropdownListBox == null || DropdownListBox.IsKeyboardFocusWithin)
+			if (DropdownListBox == null || DropdownListBox.IsKeyboardFocusWithin)
 			{
 				return;
 			}
