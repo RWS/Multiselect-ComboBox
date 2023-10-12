@@ -2102,7 +2102,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
         public MultiSelectComboBoxAutomationPeer(FrameworkElement owner) : base(owner)
         { }
 
-		public new MultiSelectComboBox Owner => base.Owner as MultiSelectComboBox;
+        public new MultiSelectComboBox Owner => base.Owner as MultiSelectComboBox;
 
         protected override AutomationControlType GetAutomationControlTypeCore()
         {
