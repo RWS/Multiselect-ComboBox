@@ -11,6 +11,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Automation.Peers;
+using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
@@ -2087,5 +2090,58 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 				e.Handled = true;
 			}
         }
-	}
+
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            return new MultiSelectComboBoxAutomationPeer(this);
+        }
+    }
+
+    public class MultiSelectComboBoxAutomationPeer : FrameworkElementAutomationPeer, IValueProvider, IExpandCollapseProvider
+    {
+        public MultiSelectComboBoxAutomationPeer(FrameworkElement owner) : base(owner)
+        { }
+
+        public new MultiSelectComboBox Owner => base.Owner as MultiSelectComboBox;
+
+        protected override AutomationControlType GetAutomationControlTypeCore()
+        {
+            return AutomationControlType.ComboBox;
+        }
+
+        public override object GetPattern(PatternInterface patternInterface)
+        {
+            if (patternInterface == PatternInterface.Value || patternInterface == PatternInterface.ExpandCollapse)
+            {
+                return this;
+            }
+
+            return base.GetPattern(patternInterface);
+        }
+
+        public string Value => Owner.SelectedItemsAsText;
+
+        public bool IsReadOnly => !Owner.IsEditable;
+
+        public ExpandCollapseState ExpandCollapseState => 
+			Owner.IsDropDownOpen ? ExpandCollapseState.Expanded : ExpandCollapseState.Collapsed;
+
+        public void SetValue(string value)
+        {
+			// Currently we support only reading the value through automation.
+            throw new NotSupportedException();
+        }
+
+        public void Expand()
+        {
+            // Currently we support only reading the expansion state through automation.
+            throw new NotSupportedException();
+        }
+
+        public void Collapse()
+        {
+            // Currently we support only reading the expansion state through automation.
+            throw new NotSupportedException();
+        }
+    }
 }
