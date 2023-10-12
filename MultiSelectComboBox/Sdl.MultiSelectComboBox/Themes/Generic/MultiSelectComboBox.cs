@@ -1283,7 +1283,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		private void MultiSelectComboBoxGotFocus(object sender, RoutedEventArgs e)
 		{
 			MultiSelectComboBoxHasFocus = true;
-        }
+		}
 
 		private void MultiSelectComboBoxLostFocus(object sender, RoutedEventArgs e)
 		{
