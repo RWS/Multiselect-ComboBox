@@ -787,8 +787,10 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		private void SelectedItemPropertyChangedCallback()
 		{
-            if (_isHandlingSelectedItemInternally)
-                return;
+			if (_isHandlingSelectedItemInternally || SelectedItems == null)
+			{
+				return;
+			}
             var selectedItem = SelectedItem;
 			foreach (var item in SelectedItems.Cast<object>().Where(i => i != selectedItem).ToArray())
 			{
@@ -1647,7 +1649,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		{
 			var criteria = ((TextBox)e.OriginalSource).Text;
 
-			if (ClearSelectionOnFilterChanged && !string.IsNullOrEmpty(criteria) && SelectionMode == SelectionModes.Single)
+			if (ClearSelectionOnFilterChanged && !string.IsNullOrEmpty(criteria) && SelectionMode == SelectionModes.Single && SelectedItems != null)
 			{
 				SelectedItems.Clear();
 				SetValue(SelectedItemsProperty, SelectedItems);
