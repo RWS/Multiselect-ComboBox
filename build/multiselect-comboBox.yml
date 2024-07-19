@@ -22,7 +22,7 @@ jobs:
 - job: Phase_1
   displayName: Agent job 1
   pool:
-    vmImage: windows-2019
+    vmImage: windows-latest
 
   steps:
   - checkout: self
@@ -36,7 +36,7 @@ jobs:
       command: 'restore'
       restoreSolution: '**/*.sln'
       feedsToUse: 'select'
-      vstsFeed: 'af66e256-9c46-4fba-ad75-09bf110ec1cc'
+      vstsFeed: 'SDLNuget'
 
   - task: VSBuild@1
     displayName: 'Build solution **\*.sln'
