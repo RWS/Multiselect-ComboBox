@@ -4,7 +4,6 @@ resources:
     type: git
     ref: master
 
-
 variables:
 - name: Version.MajorMinor
   value: 1.0
@@ -16,8 +15,7 @@ variables:
   value: 'any cpu'
 - name: sdlMultiselectComboBox
   value: 'Sdl.MultiSelectComboBox'
-- name: 'system.debug'
-  value: 'true'
+
 
 name: $(Build.DefinitionName).$(SourceBranchName)_$(Version.MajorMinor).$(Version.Revision)
 
@@ -68,6 +66,3 @@ jobs:
       targetPath: '$(Build.ArtifactStagingDirectory)'
       artifact: 'drop'
       publishLocation: 'pipeline'
-
-
-
