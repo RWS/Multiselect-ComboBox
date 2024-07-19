@@ -1291,7 +1291,10 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 		{
 			MultiSelectComboBoxHasFocus = false;
 
-			AttemptToCloseEditMode();
+			if (IsEditable)
+			{
+				AttemptToCloseEditMode();
+			}
 		}
 
 		private void SelectedItemsControl_CurrentChanged(object sender, System.EventArgs e)
