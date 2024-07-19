@@ -16,6 +16,8 @@ variables:
   value: 'any cpu'
 - name: sdlMultiselectComboBox
   value: 'Sdl.MultiSelectComboBox'
+- name: 'system.debug'
+  value: 'true'
 
 name: $(Build.DefinitionName).$(SourceBranchName)_$(Version.MajorMinor).$(Version.Revision)
 
@@ -68,4 +70,4 @@ jobs:
       publishLocation: 'pipeline'
 
 
-      
+
