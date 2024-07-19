@@ -16,6 +16,7 @@ variables:
 - name: sdlMultiselectComboBox
   value: 'Sdl.MultiSelectComboBox'
 
+
 name: $(Build.DefinitionName).$(SourceBranchName)_$(Version.MajorMinor).$(Version.Revision)
 
 jobs:
@@ -36,7 +37,7 @@ jobs:
       command: 'restore'
       restoreSolution: '**/*.sln'
       feedsToUse: 'select'
-      vstsFeed: 'SDLNuget'
+      vstsFeed : ''
 
   - task: VSBuild@1
     displayName: 'Build solution **\*.sln'
