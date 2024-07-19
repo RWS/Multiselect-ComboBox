@@ -33,20 +33,13 @@ jobs:
 
   - task: NuGetToolInstaller@1
 
-  - task: DotNetCoreCLI@2
-    displayName: NuGet restore
-    inputs:
-      command: 'restore'
-      feedsToUse: 'select'
-      vstsFeed: 'SDLNuget'
-
   - task: NuGetCommand@2
     displayName: NuGet restore
     inputs:
       command: 'restore'
       restoreSolution: '**/*.sln'
       feedsToUse: 'select'
-      vstsFeed: 'SDLNuget'
+      vstsFeed : ''
 
   - task: VSBuild@1
     displayName: 'Build solution **\*.sln'
