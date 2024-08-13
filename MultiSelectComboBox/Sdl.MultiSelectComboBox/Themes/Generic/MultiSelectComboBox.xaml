@@ -155,7 +155,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:ExtendedListBoxItem}">
                     <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
-                        <ToggleButton IsChecked="{TemplateBinding IsChecked}" BorderBrush="White" HorizontalContentAlignment="Stretch" BorderThickness="0" Margin="0" Padding="0">
+                        <ToggleButton IsChecked="{TemplateBinding IsChecked}" BorderBrush="White" HorizontalContentAlignment="Stretch" BorderThickness="0" Margin="0" Padding="0" Width="Auto">
                             <ToggleButton.Template>
                                 <ControlTemplate TargetType="{x:Type ToggleButton}" >
                                     <Border x:Name="border" BorderThickness="1" HorizontalAlignment="Stretch"  BorderBrush="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background }">
@@ -390,7 +390,7 @@
                 <ControlTemplate TargetType="{x:Type generic:MultiSelectComboBox}">
 
                     <Grid x:Name="PART_MultiSelectComboBox" MaxWidth="{TemplateBinding ActualWidth}" Style="{StaticResource MultiSelectComboBox.Style}">
-                        <ToggleButton KeyboardNavigation.TabNavigation="None" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" IsTabStop="False">
+                        <ToggleButton KeyboardNavigation.TabNavigation="None" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" IsTabStop="False" Width="Auto">
                             <ToggleButton.Template>
                                 <ControlTemplate TargetType="ToggleButton">
                                     <ContentControl ContentTemplate="{StaticResource MultiSelectComboBox.SelectedItemsPanel.Template}"/>
