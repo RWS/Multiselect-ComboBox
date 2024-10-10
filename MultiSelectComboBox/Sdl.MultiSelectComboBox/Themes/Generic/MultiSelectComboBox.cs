@@ -2100,7 +2100,14 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
         {
             return new MultiSelectComboBoxAutomationPeer(this);
         }
-    }
+
+        public static readonly DependencyProperty RemoveToolTipStringProperty = DependencyProperty.Register("RemoveToolTipString", typeof(string), typeof(MultiSelectComboBox), new PropertyMetadata("Remove"));
+        public string RemoveToolTipString
+        {
+			get { return (string)GetValue(RemoveToolTipStringProperty); }
+			set { SetValue(RemoveToolTipStringProperty, value); }
+		}
+	}
 
     public class MultiSelectComboBoxAutomationPeer : FrameworkElementAutomationPeer, IValueProvider, IExpandCollapseProvider
     {

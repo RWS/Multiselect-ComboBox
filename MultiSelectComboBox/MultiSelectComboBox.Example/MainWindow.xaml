@@ -111,7 +111,8 @@
                                                      SuggestionProvider="{Binding CustomSuggestionProvider}"
 													 ClearSelectionOnFilterChanged="{Binding ClearSelectionOnFilterChanged}"
                                                      sdl:FilterTextChangedBehaviour.FilterTextChanged="{Binding FilterTextChangedCommand}"
-                                                     sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"/>
+                                                     sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"
+                                                     RemoveToolTipString="Delete"/>
 
 
                             <sdl:MultiSelectComboBox Margin="0,0,0,20"
@@ -133,7 +134,8 @@
                                                      SuggestionProvider="{Binding CustomSuggestionProvider}"
 							                         ClearSelectionOnFilterChanged="{Binding ClearSelectionOnFilterChanged}"
                                                      sdl:FilterTextChangedBehaviour.FilterTextChanged="{Binding FilterTextChangedCommand}"
-                                                     sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"/>
+                                                     sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}"
+                                                     RemoveToolTipString="Delete"/>
 
                             <Button Command="{Binding ClearItemsCommand}" Style="{StaticResource Custom.Button.Style}"  Width="128" Height="20">
                                 <Underline>Clear selected items</Underline>
