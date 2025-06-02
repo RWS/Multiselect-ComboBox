@@ -1335,7 +1335,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			}
 
             IsDropDownOpen = true;
-
+			
             if (DropdownListBox.Items.Count > 0)
             {
                 SetVisualFocusOnItem(DropdownListBox.SelectedItem);
@@ -1678,7 +1678,7 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 			{
 				if (originalSource?.DataContext is object comboBoxItemTo)
 				{
-					var listBoxItemFrom = (IInputElement)DropdownListBox.ItemContainerGenerator.ContainerFromItem(DropdownListBox.SelectedItem);
+					var listBoxItemFrom = (IInputElement)DropdownListBox.ItemContainerGenerator.ContainerFromItem(comboBoxItemFrom);
 					var listBoxItemTo = (IInputElement)DropdownListBox.ItemContainerGenerator.ContainerFromItem(comboBoxItemTo);
 
 					if (listBoxItemFrom != null && listBoxItemTo != null)
@@ -1796,10 +1796,10 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 							ItemsCollectionViewSource.View.MoveCurrentTo(comboBoxItem);
 							DropdownListBox.Items.MoveCurrentTo(comboBoxItem);
 						}
-
-						if (DropdownListBox.SelectedItem != null)
+						var selectedItem = DropdownListBox.SelectedItem;
+						if (selectedItem != null)
 						{
-							DropdownListBox.ScrollIntoView(DropdownListBox.SelectedItem);
+							DropdownListBox.ScrollIntoView(selectedItem);
 
 							UpdateAutoCompleteFilterText(FilterTextApplied, comboBoxItem);
 						}
@@ -2023,17 +2023,19 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
 
 		private void SelectComboBoxItem()
 		{
-			if (DropdownListBox.SelectedItem == null && DropdownListBox.Items.Count > 0)
+			var selectedItem = DropdownListBox.SelectedItem;
+			if (selectedItem == null && DropdownListBox.Items.Count > 0)
 			{
-				DropdownListBox.SelectedItem = DropdownListBox.Items[0];
+				selectedItem = DropdownListBox.SelectedItem = DropdownListBox.Items[0];//potential race
 			}
 
-			if (DropdownListBox.SelectedItem != null)
+			if (selectedItem != null)
 			{
-				var selectedItem = DropdownListBox.SelectedItem;
+				
 
 				var listBoxItem = GetListViewItem(selectedItem);
-				listBoxItem.IsChecked = true;
+				if (listBoxItem != null)//if removed in a race this could be null
+					listBoxItem.IsChecked = true;
 
 				UpdateSelectedItemsContainer(ItemsSource);
 			}
