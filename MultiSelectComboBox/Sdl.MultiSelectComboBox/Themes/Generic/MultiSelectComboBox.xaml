@@ -5,35 +5,6 @@
     xmlns:api="clr-namespace:Sdl.MultiSelectComboBox.API"
     xmlns:controls="clr-namespace:Sdl.MultiSelectComboBox.Controls">
 
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Background" Color="Transparent"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Border" Color="#FF707070"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Disabled.Background" Color="#FFF4F4F4"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Disabled.Border" Color="#FFADB2B5"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Disabled.Foreground" Color="#FF838383"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.MouseOver.Background" Color="#FFF4F4F4"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.MouseOver.Border" Color="#FF3C7FB1"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Pressed.Background" Color="#FFF4F4F4"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.Button.Pressed.Border" Color="#FF2C628B"/>
-
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBox.GroupHeader.Background" Color="#f7f7f7"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBox.GroupHeader.Foreground" Color="Black"/>
-
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBoxItem.SelectedOrder.Foreground" Color="#5291DB"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBoxItem.Selector.Background" Color="#EEF8FE"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBoxItem.Selector.Border" Color="#CDE6F7"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background" Color="#CDE6F7"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.DropDown.ListBoxItem.Selected.Border" Color="#0096D6"/>
-
-    <SolidColorBrush x:Key="MultiSelectComboBox.SelectedItem.Border" Color="#FFACACAC"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.SelectedItem.Button.Foreground" Color="#FF606060"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.SelectedItem.Button.Hover.Background" Color="#F7F7F7"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.SelectedItem.Button.Light.Foreground" Color="#FF808080"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.SelectedItemsPanel.Border" Color="#FFACACAC"/>
-
-    <FontFamily x:Key="MultiSelectComboBox.Text.FontFamily">Segoe UI</FontFamily>
-    <SolidColorBrush x:Key="MultiSelectComboBox.Text.Disabled.Foreground" Color="#FFB8B3B3"/>
-    <SolidColorBrush x:Key="MultiSelectComboBox.Text.Foreground" Color="#FF000000"/>
-
     <Style x:Key="MultiSelectComboBox.FocusVisual">
         <Setter Property="Control.Template">
             <Setter.Value>
@@ -55,7 +26,7 @@
     </Style>
 
     <Style x:Key="MultiSelectComboBox.DefaultTextBlock.Style" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{StaticResource MultiSelectComboBox.Text.FontFamily}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource MultiSelectComboBox.Text.FontFamily}"/>
         <Setter Property="FontSize" Value="11"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -64,17 +35,16 @@
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
         <Setter Property="Padding" Value="1"/>
         <Setter Property="Margin" Value="1"/>
-        <Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.Text.Foreground}"/>
         <Setter Property="TextAlignment" Value="Left"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.Text.Disabled.Foreground}" />
+                <Setter Property="Foreground" Value="{DynamicResource MultiSelectComboBox.Text.Disabled.Foreground}" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
 
     <Style x:Key="MultiSelectComboBox.SelectedItemsPanel.WrapableItemsSource.Style" TargetType="{x:Type ItemsControl}" >
-        <Setter Property="FontFamily" Value="{StaticResource MultiSelectComboBox.Text.FontFamily}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource MultiSelectComboBox.Text.FontFamily}"/>
         <Setter Property="FontSize" Value="11"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="OverridesDefaultStyle" Value="False"/>
@@ -99,8 +69,8 @@
     </Style>
 
     <Style x:Key="MultiSelectComboBox.DropDown.Button.Style" TargetType="{x:Type Button}">
-        <Setter Property="Background" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Background}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Border}"/>
+        <Setter Property="Background" Value="{DynamicResource MultiSelectComboBox.DropDown.Button.Background}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MultiSelectComboBox.DropDown.Button.Border}"/>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -120,19 +90,20 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsDefaulted" Value="true">
                             <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.Button.MouseOver.Background}"/>
-                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.Button.MouseOver.Border}"/>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.Button.MouseOver.Background}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.Button.MouseOver.Border}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter Property="Background" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Pressed.Background}"/>
-                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Pressed.Border}"/>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.Button.Pressed.Background}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.Button.Pressed.Border}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Background" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Disabled.Background}"/>
-                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Disabled.Border}"/>
-                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource MultiSelectComboBox.DropDown.Button.Disabled.Foreground}"/>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.Button.Disabled.Background}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.Button.Disabled.Border}"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{DynamicResource MultiSelectComboBox.DropDown.Button.Disabled.Foreground}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -150,31 +121,33 @@
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="IsEnabled" Value="{Binding Path=IsEnabled}"/>
-        <Setter Property="FocusVisualStyle" Value="{StaticResource MultiSelectComboBox.FocusVisual}"/>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MultiSelectComboBox.FocusVisual}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:ExtendedListBoxItem}">
-                    <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                    <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true" TextElement.Foreground="{DynamicResource MultiSelectComboBox.Text.Foreground}">
                         <ToggleButton IsChecked="{TemplateBinding IsChecked}" BorderBrush="White" HorizontalContentAlignment="Stretch" BorderThickness="0" Margin="0" Padding="0" Width="Auto">
                             <ToggleButton.Template>
                                 <ControlTemplate TargetType="{x:Type ToggleButton}" >
-                                    <Border x:Name="border" BorderThickness="1" HorizontalAlignment="Stretch"  BorderBrush="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background }">
+                                    <Border x:Name="border" BorderThickness="1" HorizontalAlignment="Stretch" BorderBrush="{DynamicResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background}">
                                         <ContentControl Margin="2,-2,0,-2" Content="{Binding}" ContentTemplateSelector="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=DropdownItemTemplateSelector}"/>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="Button.IsDefaulted" Value="true">
-                                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Border}"/>
+                                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Border}"/>
                                         </Trigger>
                                         <Trigger Property="IsMouseOver" Value="true">
-                                            <Setter Property="Background" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background}"/>
-                                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background}"/>
+                                            <Setter Property="Background" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background}"/>
+                                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background}"/>
+                                            <Setter Property="TextElement.Foreground" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Foreground}"/>
                                         </Trigger>
                                         <Trigger Property="IsChecked" Value="false">
                                             <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
                                         </Trigger>
                                         <Trigger Property="IsChecked" Value="true">
-                                            <Setter Property="Background" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background}" />
-                                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Border}"/>
+                                            <Setter Property="Background" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Background}" />
+                                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Border}"/>
+                                            <Setter Property="TextElement.Foreground" TargetName="border" Value="{DynamicResource MultiSelectComboBox.DropDown.ListBoxItem.Selected.Foreground}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -186,7 +159,7 @@
                             <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
                         </Trigger>
                         <Trigger Property="Selector.IsSelected" Value="True">
-                            <Setter Property="Background" TargetName="Bd" Value="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.Selector.Background}"/>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource MultiSelectComboBox.DropDown.ListBoxItem.Selector.Background}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -195,7 +168,7 @@
     </Style>
 
     <Style x:Key="MultiSelectComboBox.Dropdown.ListBox.Style" TargetType="controls:ExtendedListBox">
-        <Setter Property="FontFamily" Value="{StaticResource MultiSelectComboBox.Text.FontFamily}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource MultiSelectComboBox.Text.FontFamily}"/>
         <Setter Property="FontSize" Value="11"/>
         <Setter Property="TextSearch.TextPath" Value="Name"/>
         <Setter Property="IsTextSearchEnabled" Value="True"/>
@@ -207,7 +180,7 @@
         <Setter Property="VirtualizingPanel.IsContainerVirtualizable" Value="True"/>
         <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="ItemContainerStyle" Value="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemContainerStyle}"/>
+        <Setter Property="ItemContainerStyle" Value="{DynamicResource MultiSelectComboBox.Dropdown.ListBox.ItemContainerStyle}"/>
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
@@ -220,7 +193,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
-                            <Border Padding="4" BorderThickness="1" BorderBrush="Gray">
+                            <Border Padding="4" BorderThickness="1" BorderBrush="{DynamicResource MultiSelectComboBox.NoResults.Border}">
                                 <TextBlock>No results found.</TextBlock>
                             </Border>
                         </ControlTemplate>
@@ -231,7 +204,7 @@
     </Style>
 
     <Style x:Key="MultiSelectComboBox.SelectedItemsPanel.RemoveItem.Button.Style" TargetType="{x:Type Button}">
-        <Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.SelectedItem.Button.Light.Foreground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MultiSelectComboBox.SelectedItem.Button.Light.Foreground}"/>
         <Setter Property="Background" Value="{x:Null}"/>
         <Setter Property="BorderBrush" Value="{x:Null}"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -253,7 +226,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" TargetName="border" Value="{StaticResource MultiSelectComboBox.SelectedItem.Button.Hover.Background}"/>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource MultiSelectComboBox.SelectedItem.Button.Hover.Background}"/>
                             <Setter Property="BorderBrush" TargetName="border" Value="{x:Null}"/>
                         </Trigger>
                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=IsEditMode}" Value="False">
@@ -275,12 +248,12 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ContentControl">
-                    <Border x:Name="Bd" BorderThickness="1" CornerRadius="{Binding SelectedItemContainerCornerRadius, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}}" Margin="1" BorderBrush="{StaticResource MultiSelectComboBox.SelectedItem.Border}">
+                    <Border x:Name="Bd" BorderThickness="1" CornerRadius="{Binding SelectedItemContainerCornerRadius, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}}" Margin="1" BorderBrush="{DynamicResource MultiSelectComboBox.SelectedItem.Border}">
                         <StackPanel Orientation="Horizontal">
-                            <ContentControl Content="{Binding}" Margin="2,2,2,4" ContentTemplateSelector="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=SelectedItemTemplateSelector}"/>
+                            <ContentControl Content="{Binding}" Margin="2,2,2,4" ContentTemplateSelector="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=SelectedItemTemplate}"/>
 
-                            <Button x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_RemoveItem_Button" ToolTip="{Binding RemoveToolTipString, RelativeSource={RelativeSource AncestorType=generic:MultiSelectComboBox}}" Style="{StaticResource MultiSelectComboBox.SelectedItemsPanel.RemoveItem.Button.Style}">
-                                <Path SnapsToDevicePixels="False" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Fill="{StaticResource MultiSelectComboBox.SelectedItem.Button.Light.Foreground}"
+                            <Button x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_RemoveItem_Button" ToolTip="{Binding RemoveToolTipString, RelativeSource={RelativeSource AncestorType=generic:MultiSelectComboBox}}" Style="{DynamicResource MultiSelectComboBox.SelectedItemsPanel.RemoveItem.Button.Style}">
+                                <Path SnapsToDevicePixels="False" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Fill="{DynamicResource MultiSelectComboBox.SelectedItem.Button.Light.Foreground}"
                                       Data="F1 M 26.9166,22.1667L 37.9999,33.25L 49.0832,22.1668L 53.8332,26.9168L 42.7499,38L 53.8332,49.0834L 49.0833,53.8334L 37.9999,42.75L 26.9166,53.8334L 22.1666,49.0833L 33.25,38L 22.1667,26.9167L 26.9166,22.1667 Z "/>
                             </Button>
                         </StackPanel>
@@ -304,27 +277,27 @@
 
     <DataTemplate x:Key="MultiSelectComboBox.SelectedItemsPanel.EditMode.Glyph.Template">
         <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z" 
-              Fill="{StaticResource MultiSelectComboBox.SelectedItem.Button.Foreground}" />
+              Fill="{DynamicResource MultiSelectComboBox.SelectedItem.Button.Foreground}" />
     </DataTemplate>
 
     <DataTemplate x:Key="MultiSelectComboBox.SelectedItemsPanel.Readonly.Glyph.Template">
         <Path HorizontalAlignment="Center" VerticalAlignment="Center" Width="13"
               Data="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" 
-              Fill="{StaticResource MultiSelectComboBox.SelectedItem.Button.Foreground}" Stretch="Uniform" />
+              Fill="{DynamicResource MultiSelectComboBox.SelectedItem.Button.Foreground}" Stretch="Uniform" />
     </DataTemplate>
 
     <DataTemplate x:Key="MultiSelectComboBox.SelectedItemsPanel.Template">
-        <Border Background="White" BorderBrush="{StaticResource MultiSelectComboBox.SelectedItemsPanel.Border}" BorderThickness="1">
+        <Border Background="{DynamicResource MultiSelectComboBox.SelectedItemsPanel.Background}" BorderBrush="{DynamicResource MultiSelectComboBox.SelectedItemsPanel.Border}" BorderThickness="1">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="20"/>
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0" Margin="1" Background="White" BorderThickness="0">
+                <Border Grid.Column="0" Margin="1" Background="{DynamicResource MultiSelectComboBox.SelectedItemsPanel.Background}" BorderThickness="0">
                     <controls:ContentItemsControl x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_ItemsControl"                            
-                            ItemContainerStyle="{StaticResource MultiSelectComboBox.SelectedItems.ItemContainer.Style}"                           
-                            Style="{StaticResource MultiSelectComboBox.SelectedItemsPanel.WrapableItemsSource.Style}">
+                            ItemContainerStyle="{DynamicResource MultiSelectComboBox.SelectedItems.ItemContainer.Style}"                           
+                            Style="{DynamicResource MultiSelectComboBox.SelectedItemsPanel.WrapableItemsSource.Style}">
                         <controls:ContentItemsControl.Resources>
                             <DataTemplate x:Key="MultiSelectComboBox.SelectedItems.ItemTemplate">
                                 <TextBlock Text="{Binding}" Style="{DynamicResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,0" />
@@ -334,7 +307,11 @@
                                     <TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_TextBox" IsEnabled="{Binding IsEditMode, RelativeSource={RelativeSource AncestorType=generic:MultiSelectComboBox}}" 
                                          Focusable="True" IsTabStop="False" Margin="0" ForceCursor="True" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" Padding="1" TextWrapping="NoWrap"/>
                                     <TextBox x:Name="PART_MultiSelectComboBox_SelectedItemsPanel_Filter_AutoComplete_TextBox" IsReadOnly="True"
-                                         Focusable="False" IsTabStop="False" Margin="-2,0,0,0" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" Padding="-3,1,0,1" TextWrapping="NoWrap"/>
+                                         Focusable="False" IsTabStop="False"
+                                         Margin="{DynamicResource MultiSelectComboBox.AutoComplete.TextBox.Margin}"
+                                         BorderThickness="0" BorderBrush="Transparent" Background="Transparent"
+                                         Padding="{DynamicResource MultiSelectComboBox.AutoComplete.TextBox.Padding}"
+                                         TextWrapping="NoWrap"/>
                                 </StackPanel>
                                 <DataTemplate.Triggers>
                                     <MultiDataTrigger>
@@ -350,22 +327,22 @@
                     </controls:ContentItemsControl>
                 </Border>
 
-                <Button x:Name="PART_MultiSelectComboBox_Dropdown_Button" Grid.Column="1" Style="{StaticResource MultiSelectComboBox.DropDown.Button.Style}" >
+                <Button x:Name="PART_MultiSelectComboBox_Dropdown_Button" Grid.Column="1" Style="{DynamicResource MultiSelectComboBox.DropDown.Button.Style}" >
                     <ContentControl>
                         <ContentControl.Style>
                             <Style TargetType="ContentControl">
                                 <Setter Property="IsTabStop" Value="False"/>
-                                <Setter Property="ContentTemplate" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.Readonly.Glyph.Template}"/>
+                                <Setter Property="ContentTemplate" Value="{DynamicResource MultiSelectComboBox.SelectedItemsPanel.Readonly.Glyph.Template}"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type generic:MultiSelectComboBox}}, Path=IsEditMode}" Value="True">
-                                        <Setter Property="ContentTemplate" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.EditMode.Glyph.Template}"/>
+                                        <Setter Property="ContentTemplate" Value="{DynamicResource MultiSelectComboBox.SelectedItemsPanel.EditMode.Glyph.Template}"/>
                                     </DataTrigger>
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType=generic:MultiSelectComboBox}}" Value="False"/>
                                             <Condition Binding="{Binding EnableFiltering, RelativeSource={RelativeSource AncestorType=generic:MultiSelectComboBox}}" Value="False"/>
                                         </MultiDataTrigger.Conditions>
-                                        <Setter Property="ContentTemplate" Value="{StaticResource MultiSelectComboBox.SelectedItemsPanel.EditMode.Glyph.Template}"/>
+                                        <Setter Property="ContentTemplate" Value="{DynamicResource MultiSelectComboBox.SelectedItemsPanel.EditMode.Glyph.Template}"/>
                                     </MultiDataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -378,7 +355,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.Header.Template" DataType="api:IItemGroup">
-        <TextBlock Text="{Binding Path=Name}" TextTrimming="CharacterEllipsis"  Padding="7, 5" Margin="0,0,0,2" FontWeight="Bold" FontFamily="{StaticResource MultiSelectComboBox.Text.FontFamily}" Foreground="{StaticResource MultiSelectComboBox.DropDown.ListBox.GroupHeader.Foreground}" Background="{StaticResource MultiSelectComboBox.DropDown.ListBox.GroupHeader.Background}" />
+        <TextBlock Text="{Binding Path=Name}" TextTrimming="CharacterEllipsis"  Padding="7, 5" Margin="0,0,0,2" FontWeight="Bold" FontFamily="{DynamicResource MultiSelectComboBox.Text.FontFamily}" Foreground="{DynamicResource MultiSelectComboBox.DropDown.ListBox.GroupHeader.Foreground}" Background="{DynamicResource MultiSelectComboBox.DropDown.ListBox.GroupHeader.Background}" />
     </DataTemplate>
 
     <Style TargetType="{x:Type generic:MultiSelectComboBox}">
@@ -389,11 +366,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type generic:MultiSelectComboBox}">
 
-                    <Grid x:Name="PART_MultiSelectComboBox" MaxWidth="{TemplateBinding ActualWidth}" Style="{StaticResource MultiSelectComboBox.Style}">
+                    <Grid x:Name="PART_MultiSelectComboBox" MaxWidth="{TemplateBinding ActualWidth}" Style="{DynamicResource MultiSelectComboBox.Style}">
                         <ToggleButton KeyboardNavigation.TabNavigation="None" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" IsTabStop="False" Width="Auto">
                             <ToggleButton.Template>
                                 <ControlTemplate TargetType="ToggleButton">
-                                    <ContentControl ContentTemplate="{StaticResource MultiSelectComboBox.SelectedItemsPanel.Template}"/>
+                                    <ContentControl ContentTemplate="{DynamicResource MultiSelectComboBox.SelectedItemsPanel.Template}"/>
                                 </ControlTemplate>
                             </ToggleButton.Template>
                         </ToggleButton>
@@ -404,13 +381,13 @@
                                     <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
                                         <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
                                     </Canvas>
-                                    <controls:ExtendedListBox x:Name="PART_MultiSelectComboBox_Dropdown_ListBox" Style="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Style}">
+                                    <controls:ExtendedListBox x:Name="PART_MultiSelectComboBox_Dropdown_ListBox" Style="{DynamicResource MultiSelectComboBox.Dropdown.ListBox.Style}">
                                         <controls:ExtendedListBox.GroupStyle>
                                             <GroupStyle HeaderTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.Header.Template}"/>
                                         </controls:ExtendedListBox.GroupStyle>
                                         <controls:ExtendedListBox.Resources>
                                             <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate">
-                                                <TextBlock Text="{Binding}" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,2,2,3"/>
+                                                <TextBlock Text="{Binding}" Style="{DynamicResource MultiSelectComboBox.DefaultTextBlock.Style}" Margin="2,2,2,3"/>
                                             </DataTemplate>
                                         </controls:ExtendedListBox.Resources>
                                     </controls:ExtendedListBox>

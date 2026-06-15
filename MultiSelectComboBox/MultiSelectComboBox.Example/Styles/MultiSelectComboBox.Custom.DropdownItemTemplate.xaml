@@ -19,7 +19,7 @@
 
             <TextBlock Grid.Column="1" Text="{Binding Path=Name}" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}"/>
 
-            <TextBlock Grid.Column="2" Text="{Binding Path=SelectedOrder}" Margin="5,0" Foreground="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.SelectedOrder.Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Grid.Column="2" Text="{Binding Path=SelectedOrder}" Margin="5,0" Foreground="{DynamicResource MultiSelectComboBox.DropDown.ListBoxItem.SelectedOrder.Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Style.Triggers>
@@ -48,7 +48,7 @@
                 <Run Text="{Binding Name}"/>
             </TextBlock>
 
-            <TextBlock Grid.Column="2" Text="{Binding Path=SelectedOrder}" Margin="5,0" Foreground="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.SelectedOrder.Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Grid.Column="2" Text="{Binding Path=SelectedOrder}" Margin="5,0" Foreground="{DynamicResource MultiSelectComboBox.DropDown.ListBoxItem.SelectedOrder.Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Style.Triggers>
