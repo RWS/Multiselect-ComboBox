@@ -169,7 +169,7 @@ Additionally, both the selected and dropdown list item templates are customized 
         <Image Grid.Column="0" Style="{StaticResource MultiSelectComboBox.Image.Style}"/>
         <TextBlock Grid.Column="1" Text="{Binding Path=Name}" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}"/>
         <TextBlock Grid.Column="2" Text="{Binding Path=SelectedOrder}" Margin="5,0"
-                Foreground="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.SelectedOrder.Foreground}"
+                Foreground="{DynamicResource MultiSelectComboBox.DropDown.ListBoxItem.SelectedOrder.Foreground}"
                 VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
@@ -218,11 +218,11 @@ Additionally, both the selected and dropdown list item templates are customized 
     <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
     <Setter Property="Padding" Value="1"/>
     <Setter Property="Margin" Value="1"/>
-    <Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.Text.Foreground}"/>
+    <Setter Property="Foreground" Value="{DynamicResource MultiSelectComboBox.Text.Foreground}"/>
     <Setter Property="TextAlignment" Value="Left"/>
     <Style.Triggers>
         <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}" Value="False">
-            <Setter Property="Foreground" Value="{StaticResource MultiSelectComboBox.Text.Disabled.Foreground}" />
+            <Setter Property="Foreground" Value="{DynamicResource MultiSelectComboBox.Text.Disabled.Foreground}" />
         </DataTrigger>
     </Style.Triggers>
 </Style>
