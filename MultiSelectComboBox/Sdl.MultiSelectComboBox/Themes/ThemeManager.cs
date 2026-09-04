@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Sdl.MultiSelectComboBox.Themes
 {
@@ -14,43 +9,68 @@ namespace Sdl.MultiSelectComboBox.Themes
             "pack://application:,,,/Sdl.MultiSelectComboBox;component/Themes/Default.xaml",
             UriKind.Absolute);
 
+        private static readonly Uri DarkThemeUri = new Uri(
+            "pack://application:,,,/Sdl.MultiSelectComboBox;component/Themes/Dark.xaml",
+            UriKind.Absolute);
+
         private static readonly Uri HighContrastThemeUri = new Uri(
             "pack://application:,,,/Sdl.MultiSelectComboBox;component/Themes/HighContrast.xaml",
             UriKind.Absolute);
 
-        private static ResourceDictionary _controlResources;
-
+        private static readonly ResourceDictionary SharedThemeDictionary = new ResourceDictionary();
+        private static MultiSelectComboBoxTheme _requestedTheme = MultiSelectComboBoxTheme.Light;
+        private static bool _initialized;
 
         public static void Startup(ResourceDictionary controlResources)
         {
-            _controlResources = controlResources;
-
-            ApplyTheme();
-
-            SystemParameters.StaticPropertyChanged += (_, e) =>
+            if (!_initialized)
             {
-                if (e.PropertyName == nameof(SystemParameters.HighContrast))
+                ApplyTheme();
+
+                SystemParameters.StaticPropertyChanged += (_, e) =>
                 {
-                    ApplyTheme();
-                }
-            };
+                    if (e.PropertyName == nameof(SystemParameters.HighContrast))
+                    {
+                        ApplyTheme();
+                    }
+                };
+
+                _initialized = true;
+            }
+
+            if (!controlResources.MergedDictionaries.Contains(SharedThemeDictionary))
+            {
+                controlResources.MergedDictionaries.Insert(0, SharedThemeDictionary);
+            }
+        }
+
+        /// <summary>
+        /// Called by the host application to switch between Light and Dark. Has no effect when
+        /// Windows High Contrast is active, since that always takes precedence. If never called,
+        /// the control stays on <see cref="MultiSelectComboBoxTheme.Light"/>.
+        /// </summary>
+        public static void SetTheme(MultiSelectComboBoxTheme theme)
+        {
+            _requestedTheme = theme;
+            ApplyTheme();
         }
 
         private static void ApplyTheme()
         {
-            var targetUri = SystemParameters.HighContrast ? HighContrastThemeUri : DefaultThemeUri;
-            var merged = _controlResources.MergedDictionaries;
+            var targetUri = GetTargetThemeUri();
 
-            for (int i = merged.Count - 1; i >= 0; i--)
+            SharedThemeDictionary.MergedDictionaries.Clear();
+            SharedThemeDictionary.MergedDictionaries.Add(new ResourceDictionary { Source = targetUri });
+        }
+
+        private static Uri GetTargetThemeUri()
+        {
+            if (SystemParameters.HighContrast)
             {
-                var src = merged[i].Source;
-                if (src == DefaultThemeUri || src == HighContrastThemeUri)
-                {
-                    merged.RemoveAt(i);
-                }
+                return HighContrastThemeUri;
             }
 
-            merged.Insert(0, new ResourceDictionary { Source = targetUri });
+            return _requestedTheme == MultiSelectComboBoxTheme.Dark ? DarkThemeUri : DefaultThemeUri;
         }
     }
 }

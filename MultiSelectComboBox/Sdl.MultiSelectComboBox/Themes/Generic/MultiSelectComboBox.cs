@@ -1852,6 +1852,11 @@ namespace Sdl.MultiSelectComboBox.Themes.Generic
                 var selectedItem = DropdownListBox.SelectedItem;
 
                 var listBoxItem = GetListViewItem(selectedItem);
+                if (listBoxItem == null)
+                {
+                    return;
+                }
+
                 listBoxItem.IsChecked = true;
 
                 UpdateSelectedItemsContainer(ItemsSource);
