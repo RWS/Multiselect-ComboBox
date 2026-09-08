@@ -54,7 +54,7 @@ jobs:
 
   - task: NuGetCommand@2
     displayName: 'NuGet push'
-    condition: ne(variables['Build.Reason'], 'PullRequest')
+    condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     inputs:
       command: 'push'
       packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
